@@ -22,11 +22,16 @@ Comments on the source code
 ---------------------------
 
 - Class `tbb::tick_count` used for time measurements.
-- Switch between MIC cards by modifying `MIC_NUM`.
+- command-line args:
+  
+  - argument `-m` for switching between MIC cards
+  - argument `-i` for number of iterations
+  - argument `-e` for number of elements
+
 - Use `ALLOC`, `REUSE` and `FREE` to configure `offload` mode:
 
-  - Allocate on MIC?
-  - Deallocate on MIC?
+  - Whether to allocate on the MIC...
+  - Whether to deallocate on the MIC...
     
 - Variable `pData` points to data to be offloaded to MIC.
   
@@ -222,3 +227,49 @@ or in `VERBOSE_MODE`::
   Transfered: 200 GB
   Total time: 30.1241 secs
   Bandwidth: 6.6392 GBps
+
+Parallel run on all available MICs
+----------------------------------
+
+For running on all 4 MICs available at `lhcb-phi` machine, launch::
+
+  [kha@lhcb-phi offload-bandwidth]$ ./run-on-all-MICs.sh 
+  icpc -lrt main.cpp -o offload-bandwidth.exe
+  Launching offload-bandwith on MIC 0...
+  Launching offload-bandwith on MIC 1...
+  Launching offload-bandwith on MIC 2...
+  Launching offload-bandwith on MIC 3...
+
+  [kha@lhcb-phi offload-bandwidth]$ cat *.out
+  Using MIC0...
+  Transferred: 20 GB
+  Total time: 4.39036 secs
+  Bandwidth: 4.55544 GBps
+  Using MIC1...
+  Transferred: 20 GB
+  Total time: 4.53063 secs
+  Bandwidth: 4.4144 GBps
+  Using MIC2...
+  Transferred: 20 GB
+  Total time: 4.39714 secs
+  Bandwidth: 4.54841 GBps
+  Using MIC3...
+  Transferred: 20 GB
+  Total time: 4.52327 secs
+  Bandwidth: 4.42158 GBps
+
+Instead of a single run::
+
+  [kha@lhcb-phi offload-bandwidth]$ ./offload-bandwidth.exe -i 20 -e 1500000000
+  Using MIC0...
+  Transferred: 20 GB
+  Total time: 4.37642 secs
+  Bandwidth: 4.56995 GBps
+
+However, when larger array of data is transferred, bandwidth increases::
+
+  [kha@lhcb-phi offload-bandwidth]$ ./offload-bandwidth.exe -i 20 -e 5000000000
+  Using MIC0...
+  Transferred: 100 GB
+  Total time: 14.609 secs
+  Bandwidth: 6.8451 GBps

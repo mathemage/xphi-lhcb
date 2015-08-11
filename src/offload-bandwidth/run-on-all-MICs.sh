@@ -1,8 +1,8 @@
 #!/bin/bash
 
-last_mic_num=3
+last_mic_num=${1:-3}
 iters=20
-elems=2000000000
+elems=1500000000
 
 make || exit
 

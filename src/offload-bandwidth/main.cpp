@@ -5,7 +5,7 @@
 
    * Creation Date : 09-08-2015
 
-   * Last Modified : Tue 11 Aug 2015 05:32:49 PM CEST
+   * Last Modified : Wed 12 Aug 2015 04:36:05 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -21,7 +21,7 @@
 #define FREE alloc_if(0) free_if(1)
 //#define VERBOSE_MODE
 
-typedef char data_type;
+typedef char data_t;
 
 using namespace std;
 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   // initial allocation on MIC
-  data_type *pData = (data_type*) calloc(elements, sizeof(data_type));
+  data_t *pData = (data_t*) calloc(elements, sizeof(data_t));
 #pragma offload_transfer target(mic:mic_num) nocopy(pData:length(elements) ALLOC)
 
   /* ------------------------------------------------------------------------ */
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
   free(pData);
 
   const unsigned long long bytes_in_gb = 1000000000;
-  const unsigned long long total_size = elements / bytes_in_gb * iterations * sizeof(data_type) ;
+  const unsigned long long total_size = elements / bytes_in_gb * iterations * sizeof(data_t) ;
   printf("Transferred: %llu GB\n", total_size);
   printf("Total time: %g secs\n", total_time.seconds());
   printf("Bandwidth: %g GBps\n", total_size / total_time.seconds());

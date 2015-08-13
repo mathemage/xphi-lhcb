@@ -1,4 +1,4 @@
-CC = icpc
+CXX = icpc
 CFLAGS = -lrt
 
 # typing 'make' will invoke the first target entry in the file (in this case
@@ -8,7 +8,7 @@ CFLAGS = -lrt
 default: offload-bandwidth
 
 offload-bandwidth:
-	$(CC) $(CFLAGS) main.cpp -o offload-bandwidth.exe
+	$(CXX) $(CFLAGS) main.cpp -o offload-bandwidth.exe
 
 # To start over from scratch, type 'make clean'.  This removes the executable
 # file, as well as old .o object files and *~ backup files:

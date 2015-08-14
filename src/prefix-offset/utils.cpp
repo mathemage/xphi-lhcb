@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 13 Aug 2015 03:44:27 PM CEST
+   * Last Modified : Fri 14 Aug 2015 03:50:16 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -42,6 +42,10 @@ void show_offsets(offset_t *offsets, size_t elems) {
 length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
   length_t range_len = max_len - min_len + 1;
   length_t *lengths = (length_t *) calloc(elems, sizeof(length_t));
+#ifdef VERBOSE_MODE
+  printf("%d-array allocated...\n", elems);
+#endif
+
   if (range_len <= 0) {
     fprintf(stderr, "Invalid range of lengths!\n");
     exit(EXIT_FAILURE);
@@ -51,6 +55,9 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
   for (size_t i = 0; i < elems; i++) {
     lengths[i] = min_len + (rand() % range_len);
   }
+#ifdef VERBOSE_MODE
+  printf("%d random lengths generated...\n", elems);
+#endif
   printf("Lengths:\n");
   show_lengths(lengths, elems);
   return lengths;

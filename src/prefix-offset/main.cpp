@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Fri 14 Aug 2015 02:07:32 PM CEST
+   * Last Modified : Fri 14 Aug 2015 05:23:34 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -16,7 +16,8 @@
 #include "prefix-sum.h"
 
 int main() {
-  const size_t elems = 1000000000;
+  const size_t elems = 60000;
+  const int iterations = 100000;
   length_t *lengths = generate_random_lengths(elems, 0, 65534);
 
   printf("\n");
@@ -26,7 +27,12 @@ int main() {
   /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
   offset_t *read_offsets = (offset_t *) calloc(elems, sizeof(offset_t));
   start = tbb::tick_count::now();
-  prefix_sum_sequential<length_t, offset_t>(lengths, read_offsets, elems, 0);
+  for (int i = 0; i < iterations; i++) {
+#ifdef VERBOSE_MODE
+    printf("Iteration #%d\n", i+1);
+#endif
+    prefix_sum_sequential<length_t, offset_t>(lengths, read_offsets, elems, 0);
+  }
   end = tbb::tick_count::now();
   printf("Offsets:\n");
   show_offsets(read_offsets, elems);
@@ -36,10 +42,11 @@ int main() {
   free(lengths);
 
   tbb::tick_count::interval_t total_time = end - start;
+  printf("Total elements: %llu\n", elems * iterations);
   printf("Total time: %g secs\n", total_time.seconds());
-  printf("Processed: %g elements per second\n", elems / total_time.seconds());
+  printf("Processed: %g elements per second\n", elems / total_time.seconds() * iterations);
   const unsigned long long bytes_in_gb = 1000000000;
-  const unsigned long long total_size = elems * sizeof(length_t) / bytes_in_gb;
+  const unsigned long long total_size = elems * iterations / bytes_in_gb * sizeof(length_t);
   printf("Processed: %g GBps\n", total_size / total_time.seconds());
   return 0;
 }

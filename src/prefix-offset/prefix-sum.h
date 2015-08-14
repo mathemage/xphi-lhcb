@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 13 Aug 2015 04:15:38 PM CEST
+   * Last Modified : Fri 14 Aug 2015 02:07:33 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -17,7 +17,7 @@
 #include "commons.h"
 
 template<typename IN_T, typename SUM_T>
-void calculate_prefix_sum(IN_T *in_arr, SUM_T *sum_arr, size_t elems, SUM_T identity_element) {
+void prefix_sum_sequential(IN_T *in_arr, SUM_T *sum_arr, size_t elems, SUM_T identity_element) {
   sum_arr[0] = identity_element;
   for (size_t i = 1; i < elems; i++) {
     sum_arr[i] = sum_arr[i-1] + in_arr[i-1];

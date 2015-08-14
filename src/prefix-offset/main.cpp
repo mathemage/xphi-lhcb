@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Thu 13 Aug 2015 05:22:36 PM CEST
+   * Last Modified : Fri 14 Aug 2015 02:07:32 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -16,7 +16,7 @@
 #include "prefix-sum.h"
 
 int main() {
-  const size_t elems = 2000000000;
+  const size_t elems = 1000000000;
   length_t *lengths = generate_random_lengths(elems, 0, 65534);
 
   printf("\n");
@@ -26,7 +26,7 @@ int main() {
   /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
   offset_t *read_offsets = (offset_t *) calloc(elems, sizeof(offset_t));
   start = tbb::tick_count::now();
-  calculate_prefix_sum<length_t, offset_t>(lengths, read_offsets, elems, 0);
+  prefix_sum_sequential<length_t, offset_t>(lengths, read_offsets, elems, 0);
   end = tbb::tick_count::now();
   printf("Offsets:\n");
   show_offsets(read_offsets, elems);

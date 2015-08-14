@@ -1,6 +1,6 @@
-==========
-PREFIX SUM
-==========
+=============
+PREFIX OFFSET
+=============
 
 :Author: Karel Ha
 :Contact: karel.ha@cern.ch, mathemage@gmail.com

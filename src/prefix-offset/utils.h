@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 13 Aug 2015 02:36:41 PM CEST
+   * Last Modified : Mon 17 Aug 2015 04:11:35 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -16,6 +16,9 @@
 
 #include "commons.h"
 #include <ctime>
+#include <string>
+
+long long get_argument_long_value(char *optarg, char *optname);
 
 template<typename T>
 void show_array(T *arr, size_t elems, const int fixed_width, const size_t show_limit, const size_t elems_on_line);

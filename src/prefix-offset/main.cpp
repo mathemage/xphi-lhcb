@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Fri 14 Aug 2015 05:23:34 PM CEST
+   * Last Modified : Mon 17 Aug 2015 04:15:45 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -15,38 +15,65 @@
 #include "utils.h"
 #include "prefix-sum.h"
 
-int main() {
-  const size_t elems = 60000;
-  const int iterations = 100000;
-  length_t *lengths = generate_random_lengths(elems, 0, 65534);
+int main(int argc, char *argv[]) {
+  /* ------------------------------------------------------------------------ */
+  /* PARSING ARGUMENTS */
+  int opt;
+  int mic_num = 0;
+  long long elements = 60000;
+  long long iterations = 100000;
+
+  while ((opt = getopt(argc, argv, "m:i:e:")) != -1) {
+    switch (opt) {
+      case 'm':
+        mic_num = (int) get_argument_long_value(optarg, "-m");
+        break;
+      case 'i':
+        iterations = get_argument_long_value(optarg, "-i");
+        break;
+      case 'e':
+        elements = get_argument_long_value(optarg, "-e");
+        break;
+      default:
+        fprintf(stderr, "Usage: %s [-m]\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+  }
+  printf("Using MIC%d...\n", mic_num);
+  /* ------------------------------------------------------------------------ */
+  length_t *lengths = generate_random_lengths(elements, 0, 65534);
 
   printf("\n");
 
   tbb::tick_count start, end;
   /* ------------------------------------------------------------------------ */
   /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
-  offset_t *read_offsets = (offset_t *) calloc(elems, sizeof(offset_t));
+  offset_t *read_offsets = (offset_t *) calloc(elements, sizeof(offset_t));
   start = tbb::tick_count::now();
-  for (int i = 0; i < iterations; i++) {
+  for (long long i = 0; i < iterations; i++) {
 #ifdef VERBOSE_MODE
     printf("Iteration #%d\n", i+1);
 #endif
-    prefix_sum_sequential<length_t, offset_t>(lengths, read_offsets, elems, 0);
+    prefix_sum_sequential<length_t, offset_t>(lengths, read_offsets, elements, 0);
   }
   end = tbb::tick_count::now();
   printf("Offsets:\n");
-  show_offsets(read_offsets, elems);
+  show_offsets(read_offsets, elements);
   /* ------------------------------------------------------------------------ */
 
   free(read_offsets);
   free(lengths);
 
+  const long long total_elements = elements * iterations;
+  printf("Total elements: %llu\n", total_elements);
+
   tbb::tick_count::interval_t total_time = end - start;
-  printf("Total elements: %llu\n", elems * iterations);
   printf("Total time: %g secs\n", total_time.seconds());
-  printf("Processed: %g elements per second\n", elems / total_time.seconds() * iterations);
+  printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
+
   const unsigned long long bytes_in_gb = 1000000000;
-  const unsigned long long total_size = elems * iterations / bytes_in_gb * sizeof(length_t);
+  const unsigned long long total_size = total_elements / bytes_in_gb * sizeof(length_t);
   printf("Processed: %g GBps\n", total_size / total_time.seconds());
+
   return 0;
 }

@@ -5,13 +5,24 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Fri 14 Aug 2015 03:50:16 PM CEST
+   * Last Modified : Mon 17 Aug 2015 03:29:16 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
    ==========================================*/
 
 #include "utils.h"
+
+long long get_argument_long_value(char *optarg, char *optname) {
+  char* endp = NULL;
+  long value = -1;
+  if (!optarg ||  ((value=strtol(optarg, &endp, 10)),(endp && *endp)) ) {
+    fprintf(stderr, "Invalid '%s' option %s - expecting a number\n", optname,
+        optarg ? optarg : "");
+    exit(EXIT_FAILURE);
+  };
+  return value;
+}
 
 template<typename T>
 void show_array(T *arr, size_t elems, const int fixed_width, const size_t

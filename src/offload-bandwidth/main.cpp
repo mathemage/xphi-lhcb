@@ -5,7 +5,7 @@
 
    * Creation Date : 09-08-2015
 
-   * Last Modified : Wed 12 Aug 2015 04:36:05 PM CEST
+   * Last Modified : Tue 18 Aug 2015 05:46:04 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -19,7 +19,8 @@
 #define ALLOC alloc_if(1) free_if(0)
 #define REUSE alloc_if(0) free_if(0)
 #define FREE alloc_if(0) free_if(1)
-//#define VERBOSE_MODE
+// #define VERBOSE_MODE
+// #define TWO_WAY_OFFLOAD
 
 typedef char data_t;
 
@@ -83,7 +84,11 @@ int main(int argc, char *argv[]) {
 #endif
 
     start = tbb::tick_count::now();
+#ifdef TWO_WAY_OFFLOAD
+#pragma offload target(mic:mic_num) inout(pData:length(elements) REUSE)
+#else
 #pragma offload target(mic:mic_num) in(pData:length(elements) REUSE)
+#endif
     {
 #ifdef VERBOSE_MODE
       sprintf(mic_message, "pData@MIC%d: %p\t\t pData[0]@MIC%d == %c\n", mic_num,
@@ -104,8 +109,13 @@ int main(int argc, char *argv[]) {
 
   free(pData);
 
+#ifdef TWO_WAY_OFFLOAD
+  const unsigned long long round_trips = 2;
+#else
+  const unsigned long long round_trips = 1;
+#endif
   const unsigned long long bytes_in_gb = 1000000000;
-  const unsigned long long total_size = elements / bytes_in_gb * iterations * sizeof(data_t) ;
+  const unsigned long long total_size = round_trips * elements * iterations * sizeof(data_t) / bytes_in_gb;
   printf("Transferred: %llu GB\n", total_size);
   printf("Total time: %g secs\n", total_time.seconds());
   printf("Bandwidth: %g GBps\n", total_size / total_time.seconds());

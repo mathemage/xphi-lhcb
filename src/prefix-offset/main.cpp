@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Mon 17 Aug 2015 04:15:45 PM CEST
+   * Last Modified : Tue 18 Aug 2015 10:31:20 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -23,11 +23,8 @@ int main(int argc, char *argv[]) {
   long long elements = 60000;
   long long iterations = 100000;
 
-  while ((opt = getopt(argc, argv, "m:i:e:")) != -1) {
+  while ((opt = getopt(argc, argv, "i:e:")) != -1) {
     switch (opt) {
-      case 'm':
-        mic_num = (int) get_argument_long_value(optarg, "-m");
-        break;
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
         break;
@@ -35,15 +32,13 @@ int main(int argc, char *argv[]) {
         elements = get_argument_long_value(optarg, "-e");
         break;
       default:
-        fprintf(stderr, "Usage: %s [-m]\n", argv[0]);
+        fprintf(stderr, "Usage: %s [-i number_of_iterations] \
+            [-e number_of_array_elements]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
   }
-  printf("Using MIC%d...\n", mic_num);
   /* ------------------------------------------------------------------------ */
   length_t *lengths = generate_random_lengths(elements, 0, 65534);
-
-  printf("\n");
 
   tbb::tick_count start, end;
   /* ------------------------------------------------------------------------ */

@@ -235,57 +235,57 @@ For running on all 4 MICs available at `lhcb-phi` machine, launch
 
 - 20 iterations of 1500000000 elements::
 
-  [kha@lhcb-phi offload-bandwidth]$ ./run-on-all-MICs.sh 
-  icpc -lrt main.cpp -o offload-bandwidth.exe
-  Launching offload-bandwith on MIC 0...
-  Launching offload-bandwith on MIC 1...
-  Launching offload-bandwith on MIC 2...
-  Launching offload-bandwith on MIC 3...
+    [kha@lhcb-phi offload-bandwidth]$ ./run-on-all-MICs.sh 
+    icpc -lrt main.cpp -o offload-bandwidth.exe
+    Launching offload-bandwith on MIC 0...
+    Launching offload-bandwith on MIC 1...
+    Launching offload-bandwith on MIC 2...
+    Launching offload-bandwith on MIC 3...
 
-  [kha@lhcb-phi offload-bandwidth]$ cat *.out
-  Using MIC0...
-  Transferred: 30 GB
-  Total time: 4.38711 secs
-  Bandwidth: 6.83821 GBps
-  Using MIC1...
-  Transferred: 30 GB
-  Total time: 4.51373 secs
-  Bandwidth: 6.64638 GBps
-  Using MIC2...
-  Transferred: 30 GB
-  Total time: 4.38388 secs
-  Bandwidth: 6.84325 GBps
-  Using MIC3...
-  Transferred: 30 GB
-  Total time: 4.52185 secs
-  Bandwidth: 6.63446 GBps
+    [kha@lhcb-phi offload-bandwidth]$ cat *.out
+    Using MIC0...
+    Transferred: 30 GB
+    Total time: 4.38711 secs
+    Bandwidth: 6.83821 GBps
+    Using MIC1...
+    Transferred: 30 GB
+    Total time: 4.51373 secs
+    Bandwidth: 6.64638 GBps
+    Using MIC2...
+    Transferred: 30 GB
+    Total time: 4.38388 secs
+    Bandwidth: 6.84325 GBps
+    Using MIC3...
+    Transferred: 30 GB
+    Total time: 4.52185 secs
+    Bandwidth: 6.63446 GBps
 
 - 90 iterations of 1000000000 elements::
 
-  [kha@lhcb-phi offload-bandwidth]$ ./run-on-all-MICs.sh 
-  icpc -lrt main.cpp -o offload-bandwidth.exe
-  Launching offload-bandwith on MIC 0...
-  Launching offload-bandwith on MIC 1...
-  Launching offload-bandwith on MIC 2...
-  Launching offload-bandwith on MIC 3...
+    [kha@lhcb-phi offload-bandwidth]$ ./run-on-all-MICs.sh 
+    icpc -lrt main.cpp -o offload-bandwidth.exe
+    Launching offload-bandwith on MIC 0...
+    Launching offload-bandwith on MIC 1...
+    Launching offload-bandwith on MIC 2...
+    Launching offload-bandwith on MIC 3...
 
-  [kha@lhcb-phi offload-bandwidth]$ cat *.out
-  Using MIC0...
-  Transferred: 90 GB
-  Total time: 13.1536 secs
-  Bandwidth: 6.84226 GBps
-  Using MIC1...
-  Transferred: 90 GB
-  Total time: 13.533 secs
-  Bandwidth: 6.6504 GBps
-  Using MIC2...
-  Transferred: 90 GB
-  Total time: 13.1525 secs
-  Bandwidth: 6.8428 GBps
-  Using MIC3...
-  Transferred: 90 GB
-  Total time: 13.5487 secs
-  Bandwidth: 6.64268 GBps
+    [kha@lhcb-phi offload-bandwidth]$ cat *.out
+    Using MIC0...
+    Transferred: 90 GB
+    Total time: 13.1536 secs
+    Bandwidth: 6.84226 GBps
+    Using MIC1...
+    Transferred: 90 GB
+    Total time: 13.533 secs
+    Bandwidth: 6.6504 GBps
+    Using MIC2...
+    Transferred: 90 GB
+    Total time: 13.1525 secs
+    Bandwidth: 6.8428 GBps
+    Using MIC3...
+    Transferred: 90 GB
+    Total time: 13.5487 secs
+    Bandwidth: 6.64268 GBps
 
 Two-way offload
 ---------------
@@ -298,35 +298,35 @@ For comparison:
 
 - offloading only to the device::
 
-  [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000
-  icpc -lrt main.cpp -o offload-bandwidth.exe
-  Using MIC0...
-  Transferred: 30 GB
-  Total time: 4.37726 secs
-  Bandwidth: 6.8536 GBps
+    [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000
+    icpc -lrt main.cpp -o offload-bandwidth.exe
+    Using MIC0...
+    Transferred: 30 GB
+    Total time: 4.37726 secs
+    Bandwidth: 6.8536 GBps
 
-  [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000 -m 3
-  icpc -lrt main.cpp -o offload-bandwidth.exe
-  Using MIC3...
-  Transferred: 30 GB
-  Total time: 4.51126 secs
-  Bandwidth: 6.65003 GBps
+    [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000 -m 3
+    icpc -lrt main.cpp -o offload-bandwidth.exe
+    Using MIC3...
+    Transferred: 30 GB
+    Total time: 4.51126 secs
+    Bandwidth: 6.65003 GBps
 
 - offloading only to the device, and copying the result [#]_ back::
 
-  [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000
-  icpc -lrt main.cpp -o offload-bandwidth.exe
-  Using MIC0...
-  Transferred: 60 GB
-  Total time: 8.67822 secs
-  Bandwidth: 6.91386 GBps
+    [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000
+    icpc -lrt main.cpp -o offload-bandwidth.exe
+    Using MIC0...
+    Transferred: 60 GB
+    Total time: 8.67822 secs
+    Bandwidth: 6.91386 GBps
 
-  [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000 -m 3
-  icpc -lrt main.cpp -o offload-bandwidth.exe
-  Using MIC3...
-  Transferred: 60 GB
-  Total time: 8.81137 secs
-  Bandwidth: 6.80939 GBps
+    [kha@lhcb-phi offload-bandwidth]$ make && ./offload-bandwidth.exe -i 20 -e 1500000000 -m 3
+    icpc -lrt main.cpp -o offload-bandwidth.exe
+    Using MIC3...
+    Transferred: 60 GB
+    Total time: 8.81137 secs
+    Bandwidth: 6.80939 GBps
 
 
 .. [#] Here the result stays identical to the originial offloaded input.

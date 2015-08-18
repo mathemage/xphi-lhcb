@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Tue 18 Aug 2015 10:31:20 AM CEST
+   * Last Modified : Tue 18 Aug 2015 06:13:31 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
 
   const unsigned long long bytes_in_gb = 1000000000;
-  const unsigned long long total_size = total_elements / bytes_in_gb * sizeof(length_t);
+  const unsigned long long total_size = total_elements * sizeof(length_t) / bytes_in_gb;
   printf("Processed: %g GBps\n", total_size / total_time.seconds());
 
   return 0;

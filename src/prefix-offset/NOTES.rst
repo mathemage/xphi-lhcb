@@ -155,3 +155,36 @@ To verify the correctness of `prefix_sum_sequential()`, launch for an array of 8
   Total time: 2.048e-06 secs
   Processed: 3.90625e+07 elements per second
   Processed: 0 GBps
+
+Results after compilation by gcc
+--------------------------------
+
+For a `gcc` cross-compiler, use `/usr/linux-k1om-4.7/bin/x86_64-k1om-linux-gcc`
+according to https://software.intel.com/en-us/forums/topic/388552 .
+
+Run the script with `gcc` flag `-g`::
+
+  [kha@lhcb-phi prefix-offset]$ ./upload-to-MIC.sh -g
+  Compiling with gcc
+  /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-gcc -lrt main.cpp utils.cpp prefix-sum.cpp -o mic-gcc-prefix-offset.exe
+  main.cpp: In function 'int main(int, char**)':
+  main.cpp:29:58: warning: deprecated conversion from string constant to 'char*' [-Wwrite-strings]
+  main.cpp:32:56: warning: deprecated conversion from string constant to 'char*' [-Wwrite-strings]
+  mic-gcc-prefix-offset.exe                                                                          100%   15KB  15.2KB/s   00:00    
+  Lengths:
+  Too many numbers to display!
+  Offsets:
+  Too many numbers to display!
+  Total elements: 6000000000
+  Total time: 270.995 secs
+  Processed: 2.21406e+07 elements per second
+  Processed: 0.0442812 GBps
+
+  [kha@lhcb-phi prefix-offset]$ ./upload-to-MIC.sh -gm 2
+  Compiling with gcc
+  Using MIC2...
+  ...
+  Total elements: 6000000000
+  Total time: 270.673 secs
+  Processed: 2.2167e+07 elements per second
+  Processed: 0.044334 GBps

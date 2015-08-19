@@ -1,4 +1,5 @@
-CXX = icpc
+ICXX = icpc
+GCXX = /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-gcc
 CFLAGS = -lrt
 CXXFILES=main.cpp utils.cpp prefix-sum.cpp
 
@@ -12,7 +13,10 @@ prefix-offset:
 	$(CXX) $(CFLAGS) $(CXXFILES) -o prefix-offset.exe
 
 mic:
-	$(CXX) $(CFLAGS) -mmic $(CXXFILES) -o mic-prefix-offset.exe
+	$(ICXX) $(CFLAGS) -mmic $(CXXFILES) -o mic-prefix-offset.exe
+
+mic-gcc:
+	$(GCXX) $(CFLAGS) $(CXXFILES) -o mic-gcc-prefix-offset.exe
 
 # To start over from scratch, type 'make clean'.  This removes the executable
 # file, as well as old .o object files and *~ backup files:

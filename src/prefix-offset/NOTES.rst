@@ -60,6 +60,10 @@ The script compiles the program via::
   
   make mic
 
+or::
+
+  make mic-gcc
+
 Afterwards, it copies to a MIC and executes the program there.
 
 Output

@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 24 Aug 2015 12:04:33 PM CEST
+   * Last Modified : Mon 24 Aug 2015 03:43:07 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -14,7 +14,7 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include "../../include/commons.h"
+#include "commons.h"
 #include <ctime>
 #include <string>
 

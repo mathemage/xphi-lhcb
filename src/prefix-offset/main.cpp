@@ -5,13 +5,13 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Mon 24 Aug 2015 12:04:00 PM CEST
+   * Last Modified : Mon 24 Aug 2015 03:42:37 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
    ==========================================*/
 
-#include "../../include/commons.h"
+#include "commons.h"
 #include "utils.h"
 #include "prefix-sum.h"
 

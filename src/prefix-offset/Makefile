@@ -1,6 +1,7 @@
 ICXX = icpc
 GCXX = /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-gcc
-CFLAGS = -lrt
+INC=-I../../include
+CFLAGS = -lrt $(INC)
 CXXFILES=main.cpp utils.cpp prefix-sum.cpp
 
 # typing 'make' will invoke the first target entry in the file (in this case

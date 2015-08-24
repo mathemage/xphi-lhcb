@@ -1,5 +1,6 @@
 ICXX = icpc
 GCXX = /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-gcc
+CXX=$(ICXX)
 INC=-I../../include
 CFLAGS = -lrt $(INC)
 CXXFILES=main.cpp utils.cpp prefix-sum.cpp

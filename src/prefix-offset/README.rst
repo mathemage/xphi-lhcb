@@ -34,8 +34,8 @@ main.cpp
 - `lengths` = input, the lengths of frames / events
 - `read_offsets` = absolute positions for each frame, calculated as prefix_sum of preceding lengths
 
-commons.h
-~~~~~~~~~
+../../include/commons.h
+~~~~~~~~~~~~~~~~~~~~~~~
 
 This file contain common includes, typedefs, defines...
 

@@ -4,7 +4,7 @@
 
    * Creation Date : 24-08-2015
 
-   * Last Modified : Mon 24 Aug 2015 02:01:39 PM CEST
+   * Last Modified : Tue 25 Aug 2015 05:22:11 PM CEST
 
    * Created By : Rainer Schwemmer <rschwemm@cern.ch>
    
@@ -15,7 +15,8 @@
 #ifndef _EVENTFRAMEGENERATOR_H_
 #define _EVENTFRAMEGENERATOR_H_
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
 
 struct MEPFragmentHeader
 {

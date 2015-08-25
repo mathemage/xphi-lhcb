@@ -23,4 +23,4 @@ $(GCC_NAME):
 # file, as well as old .o object files and *~ backup files:
 #
 clean:
-	$(RM) $(PROG_NAME).exe *.o *~
+	$(RM) $(PROG_NAME).exe $(GCC_NAME).exe *.o *~

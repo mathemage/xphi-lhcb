@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 17 Aug 2015 03:29:16 PM CEST
+   * Last Modified : Wed 26 Aug 2015 01:55:21 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -17,7 +17,7 @@ long long get_argument_long_value(char *optarg, char *optname) {
   char* endp = NULL;
   long value = -1;
   if (!optarg ||  ((value=strtol(optarg, &endp, 10)),(endp && *endp)) ) {
-    fprintf(stderr, "Invalid '%s' option %s - expecting a number\n", optname,
+    fprintf(stderr, "Invalid '%s' option: '%s' ... expecting a number\n", optname,
         optarg ? optarg : "");
     exit(EXIT_FAILURE);
   };

@@ -1,9 +1,10 @@
 ICXX = icpc
 GCXX = /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-gcc
 CXX=$(ICXX)
-INC=-I../../include
+INC_DIR=../../include
+INC=-I$(INC_DIR)
 CFLAGS = -lrt $(INC)
-CXXFILES=main.cpp utils.cpp prefix-sum.cpp
+CXXFILES=main.cpp $(INC_DIR)/utils.cpp prefix-sum.cpp
 
 # typing 'make' will invoke the first target entry in the file (in this case
 # the default target entry) you can name this target entry anything, but

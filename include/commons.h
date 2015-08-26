@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Fri 14 Aug 2015 04:36:15 PM CEST
+   * Last Modified : Wed 26 Aug 2015 02:09:34 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -23,5 +23,4 @@
 typedef uint16_t length_t;
 typedef uint32_t offset_t;
 
-//#define VERBOSE_MODE
 #endif

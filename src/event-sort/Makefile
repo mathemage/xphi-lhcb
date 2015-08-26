@@ -1,9 +1,10 @@
 ICXX = icpc
 GCXX = /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-g++
 CXX=$(ICXX)
-INC=-I../../include
-CFLAGS=-lrt $(INC)
-CXXFILES=main.cpp
+INC_DIR=../../include
+CFLAGS=-lrt -I$(INC_DIR)
+PREF_OFF_DIR=../prefix-offset
+CXXFILES=main.cpp $(PREF_OFF_DIR)/prefix-sum.cpp $(INC_DIR)/utils.cpp
 PROG_NAME=event-sort
 GXX_NAME=$(PROG_NAME)-gxx
 

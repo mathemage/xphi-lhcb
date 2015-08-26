@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 26 Aug 2015 01:55:21 PM CEST
+   * Last Modified : Wed 26 Aug 2015 04:34:02 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -68,8 +68,8 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
   }
 #ifdef VERBOSE_MODE
   printf("%d random lengths generated...\n", elems);
-#endif
   printf("Lengths:\n");
   show_lengths(lengths, elems);
+#endif
   return lengths;
 }

@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 26 Aug 2015 04:34:02 PM CEST
+   * Last Modified : Wed 26 Aug 2015 05:06:30 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -62,14 +62,17 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
     exit(EXIT_FAILURE);
   }
 
-  srand(time(NULL));
+  static bool srand_not_called = true;
+  if (srand_not_called) {
+    srand(time(NULL));
+    srand_not_called = false;
+  }
+
   for (size_t i = 0; i < elems; i++) {
     lengths[i] = min_len + (rand() % range_len);
   }
 #ifdef VERBOSE_MODE
   printf("%d random lengths generated...\n", elems);
-  printf("Lengths:\n");
-  show_lengths(lengths, elems);
 #endif
   return lengths;
 }

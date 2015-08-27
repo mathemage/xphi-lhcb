@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 26 Aug 2015 05:06:30 PM CEST
+   * Last Modified : Thu 27 Aug 2015 04:23:45 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -62,10 +62,10 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
     exit(EXIT_FAILURE);
   }
 
-  static bool srand_not_called = true;
-  if (srand_not_called) {
+  static bool srand_for_first_time = true;
+  if (srand_for_first_time) {
     srand(time(NULL));
-    srand_not_called = false;
+    srand_for_first_time = false;
   }
 
   for (size_t i = 0; i < elems; i++) {
@@ -75,4 +75,43 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
   printf("%d random lengths generated...\n", elems);
 #endif
   return lengths;
+}
+
+length_t ** allocate_sources(long long total_sources, size_t mep_factor) {
+  length_t **sources = (length_t **) calloc(total_sources, sizeof(length_t *));
+  for (long long i = 0; i < total_sources; ++i) {
+    sources[i] = (length_t *) calloc(mep_factor, sizeof(length_t));
+  }
+  return sources;
+}
+
+void deallocate_sources(length_t **sources, long long total_sources) {
+  for (long long i = 0; i < total_sources; ++i) {
+    free(sources[i]);
+  }
+  free(sources);
+}
+
+
+void fill_sources_with_random_lengths(length_t **sources, long long
+    total_sources, size_t mep_factor, length_t min_len, length_t max_len) {
+
+  length_t range_len = max_len - min_len + 1;
+  if (range_len <= 0) {
+    fprintf(stderr, "Invalid range of lengths!\n");
+    exit(EXIT_FAILURE);
+  }
+
+  static bool srand_for_first_time = true;
+  if (srand_for_first_time) {
+    srand(time(NULL));
+    srand_for_first_time = false;
+  }
+
+  for (long long si = 0; si < total_sources; si++) {
+    for (long long mi = 0; mi < mep_factor; mi++) {
+      // Segmantation fault can occur here, let system handle such scenario...
+      sources[si][mi] = min_len + (rand() % range_len);
+    }
+  }
 }

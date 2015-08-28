@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 28 Aug 2015 03:27:16 PM CEST
+ * Last Modified : Fri 28 Aug 2015 04:37:07 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -47,10 +47,11 @@ int main(int argc, char *argv[]) {
         min_length = get_argument_long_value(optarg, "-n");
         break;
       default:
-        fprintf(stderr, "Usage: %s [-i number_of_iterations] \
-            [-m mep_factor] [-s number_of_sources] \
-            [-x max_length] [-n min_length] \
-            \n", argv[0]);
+        fprintf(stderr, "Usage: %s", argv[0]);
+        fprintf(stderr, " [-i number_of_iterations] [-m mep_factor]");
+        fprintf(stderr, " [-s number_of_sources]");
+        fprintf(stderr, " [-x max_length] [-n min_length]");
+        fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }
   }
@@ -59,6 +60,8 @@ int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
   /* TRANSPOSE OF MEPs */
   length_t **sources = allocate_sources(total_sources, mep_factor);
+  fill_sources_with_random_lengths(sources, total_sources, mep_factor, min_length, max_length);
+
   offset_t *read_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
   // TODO write_offsets
   
@@ -70,8 +73,7 @@ int main(int argc, char *argv[]) {
     printf("\n---------------------------\n");
     printf("Iteration #%d\n", i+1);
 #endif
-    fill_sources_with_random_lengths(sources, total_sources, mep_factor,
-        min_length, max_length);
+    modify_lengths_randomly(sources, total_sources, min_length, max_length);
 
     start = tbb::tick_count::now();
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -112,7 +114,8 @@ int main(int argc, char *argv[]) {
   const unsigned long long bytes_in_gb = 1000000000;
   const double total_size = total_elements * sizeof(length_t) / bytes_in_gb;
   printf("Total size: %g GB\n", total_size);
-  printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
+  printf("Processed (prefix sum): %g elements per second\n", total_elements /
+      total_time.seconds());
   printf("Throughput: %g GBps\n", total_size / total_time.seconds());
   printf("---------------------------\n");
   return 0;

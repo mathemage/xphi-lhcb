@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 27 Aug 2015 04:23:45 PM CEST
+   * Last Modified : Fri 28 Aug 2015 04:28:05 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -113,5 +113,27 @@ void fill_sources_with_random_lengths(length_t **sources, long long
       // Segmantation fault can occur here, let system handle such scenario...
       sources[si][mi] = min_len + (rand() % range_len);
     }
+  }
+}
+
+// modify_lengths_randomly() modifies only the 1st element with random number,
+// which will affect all the prefix sums
+void modify_lengths_randomly(length_t **sources, long long total_sources,
+    length_t min_len, length_t max_len) {
+
+  length_t range_len = max_len - min_len + 1;
+  if (range_len <= 0) {
+    fprintf(stderr, "Invalid range of lengths!\n");
+    exit(EXIT_FAILURE);
+  }
+
+  static bool srand_for_first_time = true;
+  if (srand_for_first_time) {
+    srand(time(NULL));
+    srand_for_first_time = false;
+  }
+
+  for (long long si = 0; si < total_sources; si++) {
+    sources[si][0] = min_len + (rand() % range_len);
   }
 }

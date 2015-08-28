@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 27 Aug 2015 05:38:15 PM CEST
+   * Last Modified : Fri 28 Aug 2015 04:24:54 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -30,5 +30,7 @@ length_t ** allocate_sources(long long total_sources, size_t mep_factor);
 void deallocate_sources(length_t **sources, long long total_sources);
 void fill_sources_with_random_lengths(length_t **sources, long long
     total_sources, size_t mep_factor, length_t min_len, length_t max_len);
+void modify_lengths_randomly(length_t **sources, long long total_sources,
+    length_t min_len, length_t max_len);
 
 #endif

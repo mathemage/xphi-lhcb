@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 31 Aug 2015 03:19:20 PM CEST
+   * Last Modified : Mon 31 Aug 2015 05:31:10 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -51,6 +51,7 @@ void show_offsets(offset_t *offsets, size_t elems) {
   show_array<offset_t>(offsets, elems, 10, 80, 8);
 }
 
+
 length_t get_range(length_t min_len, length_t max_len) {
   length_t range_len = max_len - min_len + 1;
   if (range_len <= 0) {
@@ -60,6 +61,7 @@ length_t get_range(length_t min_len, length_t max_len) {
   return range_len;
 }
 
+
 void init_srand() {
   static bool srand_for_first_time = true;
   if (srand_for_first_time) {
@@ -68,16 +70,14 @@ void init_srand() {
   }
 }
 
+
 length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
   length_t *lengths = (length_t *) calloc(elems, sizeof(length_t));
 #ifdef VERBOSE_MODE
   printf("%d-array allocated...\n", elems);
 #endif
-
   length_t range_len = get_range(min_len, max_len);
-
   init_srand();
-
   for (size_t i = 0; i < elems; i++) {
     lengths[i] = min_len + (rand() % range_len);
   }
@@ -86,6 +86,7 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
 #endif
   return lengths;
 }
+
 
 length_t ** allocate_sources(long long total_sources, size_t mep_factor) {
   length_t **sources = (length_t **) calloc(total_sources, sizeof(length_t *));
@@ -105,7 +106,6 @@ void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float 
 #ifdef VERBOSE_MODE
   unsigned long long total_alloc_mem = 0;
 #endif
-
   void **sources = (void **) calloc(total_sources, sizeof(void *));
   for (long long i = 0; i < total_sources; ++i) {
     sources[i] = (void *) calloc(margin_factor * mep_factor, element_size);
@@ -113,7 +113,6 @@ void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float 
     total_alloc_mem += margin_factor * mep_factor * element_size;
 #endif
   }
-
 #ifdef VERBOSE_MODE
   printf("Total allocated memory for MEP contents: %llu\n", total_alloc_mem);
 #endif
@@ -141,9 +140,7 @@ void fill_sources_with_random_lengths(length_t **sources, long long
     total_sources, size_t mep_factor, length_t min_len, length_t max_len) {
 
   length_t range_len = get_range(min_len, max_len);
-
   init_srand();
-
   for (long long si = 0; si < total_sources; si++) {
     for (long long mi = 0; mi < mep_factor; mi++) {
       // Segmantation fault can occur here, let system handle such scenario...
@@ -151,6 +148,7 @@ void fill_sources_with_random_lengths(length_t **sources, long long
     }
   }
 }
+
 
 // modify_lengths_randomly() modifies only the 1st element with random number,
 // which will affect all the prefix sums

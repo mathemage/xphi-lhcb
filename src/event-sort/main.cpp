@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 31 Aug 2015 11:29:52 AM CEST
+ * Last Modified : Mon 31 Aug 2015 12:11:38 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -15,7 +15,7 @@
 #include "utils.h"
 #include "prefix-sum.h"
 
-// #define VERBOSE_MODE
+#define VERBOSE_MODE
 
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */

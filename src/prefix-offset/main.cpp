@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Mon 31 Aug 2015 11:29:05 AM CEST
+   * Last Modified : Mon 31 Aug 2015 11:51:49 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -15,7 +15,7 @@
 #include "utils.h"
 #include "prefix-sum.h"
 
-// #define VERBOSE_MODE
+#define VERBOSE_MODE
 
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
@@ -50,16 +50,19 @@ int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
   /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
   offset_t *read_offsets = (offset_t *) calloc(elements, sizeof(offset_t));
+
   start = tbb::tick_count::now();
   for (long long i = 0; i < iterations; i++) {
-#ifdef VERBOSE_MODE
-    printf("Iteration #%d\n", i+1);
-#endif
     prefix_sum_sequential<length_t, offset_t>(lengths, read_offsets, elements, 0);
   }
   end = tbb::tick_count::now();
+
+#ifdef VERBOSE_MODE
+  printf("Generated random lengths:\n");
+  show_lengths(lengths, elements);
   printf("Offsets:\n");
   show_offsets(read_offsets, elements);
+#endif
   /* ------------------------------------------------------------------------ */
 
   free(read_offsets);

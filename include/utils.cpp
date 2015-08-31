@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Fri 28 Aug 2015 04:28:05 PM CEST
+   * Last Modified : Mon 31 Aug 2015 12:13:40 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -50,17 +50,22 @@ void show_offsets(offset_t *offsets, size_t elems) {
   show_array<offset_t>(offsets, elems, 10, 80, 8);
 }
 
-length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
+length_t get_range(length_t min_len, length_t max_len) {
   length_t range_len = max_len - min_len + 1;
+  if (range_len <= 0) {
+    fprintf(stderr, "Invalid range of lengths!\n");
+    exit(EXIT_FAILURE);
+  }
+  return range_len;
+}
+
+length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
   length_t *lengths = (length_t *) calloc(elems, sizeof(length_t));
 #ifdef VERBOSE_MODE
   printf("%d-array allocated...\n", elems);
 #endif
 
-  if (range_len <= 0) {
-    fprintf(stderr, "Invalid range of lengths!\n");
-    exit(EXIT_FAILURE);
-  }
+  length_t range_len = get_range(min_len, max_len);
 
   static bool srand_for_first_time = true;
   if (srand_for_first_time) {
@@ -96,11 +101,7 @@ void deallocate_sources(length_t **sources, long long total_sources) {
 void fill_sources_with_random_lengths(length_t **sources, long long
     total_sources, size_t mep_factor, length_t min_len, length_t max_len) {
 
-  length_t range_len = max_len - min_len + 1;
-  if (range_len <= 0) {
-    fprintf(stderr, "Invalid range of lengths!\n");
-    exit(EXIT_FAILURE);
-  }
+  length_t range_len = get_range(min_len, max_len);
 
   static bool srand_for_first_time = true;
   if (srand_for_first_time) {
@@ -121,11 +122,7 @@ void fill_sources_with_random_lengths(length_t **sources, long long
 void modify_lengths_randomly(length_t **sources, long long total_sources,
     length_t min_len, length_t max_len) {
 
-  length_t range_len = max_len - min_len + 1;
-  if (range_len <= 0) {
-    fprintf(stderr, "Invalid range of lengths!\n");
-    exit(EXIT_FAILURE);
-  }
+  length_t range_len = get_range(min_len, max_len);
 
   static bool srand_for_first_time = true;
   if (srand_for_first_time) {

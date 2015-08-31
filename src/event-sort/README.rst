@@ -47,3 +47,4 @@ Following functions has been added:
 - `allocate_sources()` = allocate buffers per each source: (`total_sources` x `mep_factor`) random lengths
 - `fill_sources_with_random_lengths()` = fill all pre-allocated buffers with random integers in the range [`min_len`, `max_len`]
 - `deallocate_sources()` = deallocate memory allocated for buffers by `allocate_sources()`
+- `modify_lengths_randomly()` = modify arrays of lengths randomly instead of generating new random numbers every iteration (currently: the first length is changed to another random number, thus affecting all the next offsets)

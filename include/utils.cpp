@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 31 Aug 2015 12:13:40 PM CEST
+   * Last Modified : Mon 31 Aug 2015 01:53:54 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -40,6 +40,7 @@ void show_array(T *arr, size_t elems, const int fixed_width, const size_t
       printf("\t");
     }
   }
+  printf("\n");
 }
 
 void show_lengths(length_t *lengths, size_t elems) {
@@ -59,6 +60,14 @@ length_t get_range(length_t min_len, length_t max_len) {
   return range_len;
 }
 
+void init_srand() {
+  static bool srand_for_first_time = true;
+  if (srand_for_first_time) {
+    srand(time(NULL));
+    srand_for_first_time = false;
+  }
+}
+
 length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
   length_t *lengths = (length_t *) calloc(elems, sizeof(length_t));
 #ifdef VERBOSE_MODE
@@ -67,11 +76,7 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
 
   length_t range_len = get_range(min_len, max_len);
 
-  static bool srand_for_first_time = true;
-  if (srand_for_first_time) {
-    srand(time(NULL));
-    srand_for_first_time = false;
-  }
+  init_srand();
 
   for (size_t i = 0; i < elems; i++) {
     lengths[i] = min_len + (rand() % range_len);
@@ -103,11 +108,7 @@ void fill_sources_with_random_lengths(length_t **sources, long long
 
   length_t range_len = get_range(min_len, max_len);
 
-  static bool srand_for_first_time = true;
-  if (srand_for_first_time) {
-    srand(time(NULL));
-    srand_for_first_time = false;
-  }
+  init_srand();
 
   for (long long si = 0; si < total_sources; si++) {
     for (long long mi = 0; mi < mep_factor; mi++) {
@@ -124,11 +125,7 @@ void modify_lengths_randomly(length_t **sources, long long total_sources,
 
   length_t range_len = get_range(min_len, max_len);
 
-  static bool srand_for_first_time = true;
-  if (srand_for_first_time) {
-    srand(time(NULL));
-    srand_for_first_time = false;
-  }
+  init_srand();
 
   for (long long si = 0; si < total_sources; si++) {
     sources[si][0] = min_len + (rand() % range_len);

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 28 Aug 2015 04:37:07 PM CEST
+ * Last Modified : Mon 31 Aug 2015 11:29:52 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
   length_t min_length = 80;
   length_t max_length = 150;
 
-  while ((opt = getopt(argc, argv, "i:m:s:x:n")) != -1) {
+  while ((opt = getopt(argc, argv, "i:m:s:x:n:h")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
@@ -46,6 +46,13 @@ int main(int argc, char *argv[]) {
       case 'n':
         min_length = get_argument_long_value(optarg, "-n");
         break;
+      case 'h':
+        printf("Usage: %s", argv[0]);
+        printf(" [-i number_of_iterations] [-m mep_factor]");
+        printf(" [-s number_of_sources]");
+        printf(" [-x max_length] [-n min_length]");
+        printf("\n");
+        exit(EXIT_SUCCESS);
       default:
         fprintf(stderr, "Usage: %s", argv[0]);
         fprintf(stderr, " [-i number_of_iterations] [-m mep_factor]");

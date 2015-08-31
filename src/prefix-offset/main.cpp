@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Wed 26 Aug 2015 02:10:37 PM CEST
+   * Last Modified : Mon 31 Aug 2015 11:29:05 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
   long long elements = 60000;
   long long iterations = 100000;
 
-  while ((opt = getopt(argc, argv, "i:e:")) != -1) {
+  while ((opt = getopt(argc, argv, "i:e:h")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
@@ -33,9 +33,13 @@ int main(int argc, char *argv[]) {
       case 'e':
         elements = get_argument_long_value(optarg, "-e");
         break;
+      case 'h':
+        printf("Usage: %s ", argv[0]);
+        printf("[-i number_of_iterations] [-e number_of_array_elements]\n");
+        exit(EXIT_SUCCESS);
       default:
-        fprintf(stderr, "Usage: %s [-i number_of_iterations] \
-            [-e number_of_array_elements]\n", argv[0]);
+        fprintf(stderr, "Usage: %s ", argv[0]);
+        fprintf(stderr, "[-i number_of_iterations] [-e number_of_array_elements]\n");
         exit(EXIT_FAILURE);
     }
   }

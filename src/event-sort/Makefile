@@ -4,7 +4,7 @@ CXX=$(ICXX)
 INC_DIR=../../include
 CFLAGS=-g -lrt -I$(INC_DIR)
 PREF_OFF_DIR=../prefix-offset
-CXXFILES=main.cpp $(PREF_OFF_DIR)/prefix-sum.cpp $(INC_DIR)/utils.cpp
+CXXFILES=main.cpp $(PREF_OFF_DIR)/prefix-sum.cpp ../utils.cpp
 PROG_NAME=event-sort
 GXX_NAME=$(PROG_NAME)-gxx
 

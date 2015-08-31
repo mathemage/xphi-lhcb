@@ -34,6 +34,8 @@ main.cpp
 - `lengths` = input, the lengths of frames / events
 - `read_offsets` = absolute positions for each frame, calculated as prefix_sum of preceding lengths
 
+Use `-h` flag for help with command-line flags.
+
 ../../include/commons.h
 ~~~~~~~~~~~~~~~~~~~~~~~
 

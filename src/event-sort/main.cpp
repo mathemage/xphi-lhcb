@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 31 Aug 2015 12:11:38 PM CEST
+ * Last Modified : Mon 31 Aug 2015 03:23:00 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -15,7 +15,7 @@
 #include "utils.h"
 #include "prefix-sum.h"
 
-#define VERBOSE_MODE
+// #define VERBOSE_MODE
 
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
 
   offset_t *read_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
   // TODO write_offsets
+  void **mep_contents = allocate_mep_contents(total_sources, mep_factor, 1.5, (min_length+max_length) / 2);
   
   tbb::tick_count start, end;
   tbb::tick_count::interval_t total_time;
@@ -112,6 +113,7 @@ int main(int argc, char *argv[]) {
 
   deallocate_sources(sources, total_sources);
   free(read_offsets);
+  deallocate_mep_contents(mep_contents, total_sources);
   /* ------------------------------------------------------------------------ */
 
   printf("\n----------SUMMARY----------\n");

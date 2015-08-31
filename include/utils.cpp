@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 31 Aug 2015 01:53:54 PM CEST
+   * Last Modified : Mon 31 Aug 2015 03:19:20 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -95,11 +95,45 @@ length_t ** allocate_sources(long long total_sources, size_t mep_factor) {
   return sources;
 }
 
+
+void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float margin_factor, size_t element_size) {
+  if (margin_factor < 1) {
+    fprintf(stderr, "Invalid value of margin!\n");
+    exit(EXIT_FAILURE);
+  }
+
+#ifdef VERBOSE_MODE
+  unsigned long long total_alloc_mem = 0;
+#endif
+
+  void **sources = (void **) calloc(total_sources, sizeof(void *));
+  for (long long i = 0; i < total_sources; ++i) {
+    sources[i] = (void *) calloc(margin_factor * mep_factor, element_size);
+#ifdef VERBOSE_MODE
+    total_alloc_mem += margin_factor * mep_factor * element_size;
+#endif
+  }
+
+#ifdef VERBOSE_MODE
+  printf("Total allocated memory for MEP contents: %llu\n", total_alloc_mem);
+#endif
+  return sources;
+}
+
+
 void deallocate_sources(length_t **sources, long long total_sources) {
   for (long long i = 0; i < total_sources; ++i) {
     free(sources[i]);
   }
   free(sources);
+}
+
+
+void deallocate_mep_contents(void **mep_contents, long long total_sources) {
+  for (long long i = 0; i < total_sources; ++i) {
+    free(mep_contents[i]);
+  }
+  free(mep_contents);
 }
 
 

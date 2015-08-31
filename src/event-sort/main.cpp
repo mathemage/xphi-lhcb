@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 31 Aug 2015 03:23:00 PM CEST
+ * Last Modified : Mon 31 Aug 2015 03:57:23 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -71,7 +71,10 @@ int main(int argc, char *argv[]) {
 
   offset_t *read_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
   // TODO write_offsets
-  void **mep_contents = allocate_mep_contents(total_sources, mep_factor, 1.5, (min_length+max_length) / 2);
+  float margin_factor = 1.5;
+  size_t mep_element_size = (min_length+max_length) / 2;
+  void **mep_contents = allocate_mep_contents(total_sources, mep_factor, margin_factor, mep_element_size);
+  void *sorted_events_buffer = malloc(total_sources * mep_factor * margin_factor * mep_element_size);
   
   tbb::tick_count start, end;
   tbb::tick_count::interval_t total_time;
@@ -114,6 +117,7 @@ int main(int argc, char *argv[]) {
   deallocate_sources(sources, total_sources);
   free(read_offsets);
   deallocate_mep_contents(mep_contents, total_sources);
+  free(sorted_events_buffer);
   /* ------------------------------------------------------------------------ */
 
   printf("\n----------SUMMARY----------\n");

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 31 Aug 2015 03:57:23 PM CEST
+ * Last Modified : Wed 02 Sep 2015 06:33:34 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
   fill_sources_with_random_lengths(sources, total_sources, mep_factor, min_length, max_length);
 
   offset_t *read_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
-  // TODO write_offsets
+  offset_t *write_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
   float margin_factor = 1.5;
   size_t mep_element_size = (min_length+max_length) / 2;
   void **mep_contents = allocate_mep_contents(total_sources, mep_factor, margin_factor, mep_element_size);
@@ -80,29 +80,35 @@ int main(int argc, char *argv[]) {
   tbb::tick_count::interval_t total_time;
 
   for (long long i = 0; i < iterations; i++) {
+    modify_lengths_randomly(sources, total_sources, min_length, max_length);
 #ifdef VERBOSE_MODE
     printf("\n---------------------------\n");
     printf("Iteration #%d\n", i+1);
+    printf("\nGenerated lengths of MEPs:\n");
+    for (long long si = 0; si < total_sources; si++) {
+      printf("Source #%lld:\n", si);
+      show_lengths(sources[si], mep_factor);
+      printf("\n");
+    }
 #endif
-    modify_lengths_randomly(sources, total_sources, min_length, max_length);
 
     start = tbb::tick_count::now();
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
-    for (long long si = 0; si < total_sources; si++) {
-      prefix_sum_sequential<length_t, offset_t>
-        (sources[si], &read_offsets[si * mep_factor], mep_factor, 0);
-#ifdef VERBOSE_MODE
-      printf("\nGenerated lengths of MEPs:\n");
-      show_lengths(sources[si], mep_factor);
-      printf("\nOffsets:\n");
-      show_offsets(&read_offsets[si * mep_factor], mep_factor);
-#endif
-    }
-
+    get_read_offsets_serial_vesion(sources, read_offsets, total_sources,
+        mep_factor);
 #ifdef VERBOSE_MODE
     printf("\nAll read_offsets:\n");
     show_offsets(read_offsets, mep_factor * total_sources);
+#endif
+    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    /* PREFIX OFFSETS FOR WRITING: EXCLUSIVE SCAN */
+    get_write_offsets_serial_vesion(sources, write_offsets, total_sources, mep_factor);
+#ifdef VERBOSE_MODE
+    printf("\nAll write_offsets:\n");
+    show_offsets(write_offsets, mep_factor * total_sources);
 #endif
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -116,19 +122,20 @@ int main(int argc, char *argv[]) {
 
   deallocate_sources(sources, total_sources);
   free(read_offsets);
+  free(write_offsets);
   deallocate_mep_contents(mep_contents, total_sources);
   free(sorted_events_buffer);
   /* ------------------------------------------------------------------------ */
 
   printf("\n----------SUMMARY----------\n");
-  const double total_elements = mep_factor * total_sources * iterations;
-  printf("Total elements: %g\n", total_elements);
+  const double total_elements_prefix_summed = 2 * mep_factor * total_sources * iterations;
+  printf("Total elements: %g\n", total_elements_prefix_summed);
   printf("Total time: %g secs\n", total_time.seconds());
   const unsigned long long bytes_in_gb = 1000000000;
-  const double total_size = total_elements * sizeof(length_t) / bytes_in_gb;
+  const double total_size = total_elements_prefix_summed * sizeof(length_t) /
+    bytes_in_gb;
   printf("Total size: %g GB\n", total_size);
-  printf("Processed (prefix sum): %g elements per second\n", total_elements /
-      total_time.seconds());
+  printf("Processed (prefix sum): %g elements per second\n", total_elements_prefix_summed / total_time.seconds());
   printf("Throughput: %g GBps\n", total_size / total_time.seconds());
   printf("---------------------------\n");
   return 0;

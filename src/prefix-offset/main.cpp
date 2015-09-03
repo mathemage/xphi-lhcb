@@ -5,7 +5,7 @@
 
    * Creation Date : 12-08-2015
 
-   * Last Modified : Mon 31 Aug 2015 11:51:49 AM CEST
+   * Last Modified : Thu 03 Sep 2015 05:13:16 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -22,8 +22,8 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
   int mic_num = 0;
-  long long elements = 60000;
-  long long iterations = 100000;
+  long long elements = 10000;
+  long long iterations = 20000;
 
   while ((opt = getopt(argc, argv, "i:e:h")) != -1) {
     switch (opt) {
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     }
   }
   /* ------------------------------------------------------------------------ */
-  length_t *lengths = generate_random_lengths(elements, 0, 65534);
+  length_t *lengths = generate_random_lengths(elements, 80, 150);
 
   tbb::tick_count start, end;
   /* ------------------------------------------------------------------------ */

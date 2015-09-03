@@ -4,7 +4,7 @@ CXX=$(ICXX)
 INC_DIR=../../include
 INC=-I$(INC_DIR)
 CFLAGS = -lrt $(INC)
-CXXFILES=main.cpp ../utils.cpp prefix-sum.cpp
+CXXFILES=main.cpp ../utils.cpp ../prefix-sum.cpp
 
 # typing 'make' will invoke the first target entry in the file (in this case
 # the default target entry) you can name this target entry anything, but

@@ -39,8 +39,8 @@ main.cpp
 
 For other functions and variables, see `../prefix-offset/README.rst`.
 
-include/utils.cpp
-~~~~~~~~~~~~~~~~~
+../utils.cpp
+~~~~~~~~~~~~
 
 Following functions has been added:
 
@@ -48,3 +48,9 @@ Following functions has been added:
 - `fill_sources_with_random_lengths()` = fill all pre-allocated buffers with random integers in the range [`min_len`, `max_len`]
 - `deallocate_sources()` = deallocate memory allocated for buffers by `allocate_sources()`
 - `modify_lengths_randomly()` = modify arrays of lengths randomly instead of generating new random numbers every iteration (currently: the first length is changed to another random number, thus affecting all the next offsets)
+
+../prefix-sum.cpp
+~~~~~~~~~~~~~~~~~
+
+- `get_read_offsets_serial_vesion()` = compute offsets for reading from MEPs
+- `get_write_offsets_serial_vesion()` = compute offsets for writing into the buffer for sorted events

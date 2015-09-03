@@ -6,7 +6,7 @@ CFLAGS=-g -lrt -I$(INC_DIR)
 PREF_OFF_DIR=..
 CXXFILES=main.cpp $(PREF_OFF_DIR)/prefix-sum.cpp ../utils.cpp
 PROG_NAME=event-sort
-GXX_NAME=$(PROG_NAME)-gxx
+GXX_NAME=$(PROG_NAME).gxx
 
 # typing 'make' will invoke the first target entry in the file (in this case
 # the default target entry) you can name this target entry anything, but
@@ -20,8 +20,15 @@ $(PROG_NAME):
 $(GXX_NAME):
 	$(GCXX) $(CFLAGS) $(CXXFILES) -o $(GXX_NAME).exe
 
+mic:
+	$(CXX) $(CFLAGS) -mmic $(CXXFILES) -o $(PROG_NAME).mic.exe
+
+mic-gcc:
+	$(GCXX) $(CFLAGS) $(CXXFILES) -o $(GXX_NAME).mic.exe
+
 # To start over from scratch, type 'make clean'.  This removes the executable
 # file, as well as old .o object files and *~ backup files:
 #
 clean:
-	$(RM) $(PROG_NAME).exe $(GXX_NAME).exe *.o *~
+	$(RM) $(PROG_NAME).exe $(GXX_NAME).exe $(GXX_NAME).mic.exe \
+	$(PROG_NAME).mic.exe *.o *~

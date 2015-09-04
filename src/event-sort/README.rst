@@ -54,3 +54,76 @@ Following functions has been added:
 
 - `get_read_offsets_serial_vesion()` = compute offsets for reading from MEPs
 - `get_write_offsets_serial_vesion()` = compute offsets for writing into the buffer for sorted events
+
+Output
+------
+
+Upload to `MIC0` via::
+
+  [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh
+  Using MIC0...
+  icpc -g -lrt -I../../include -mmic main.cpp ../prefix-sum.cpp ../utils.cpp -o event-sort.mic.exe
+  event-sort.mic.exe                                                                                 100%   40KB  40.2KB/s   00:00
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.91907 secs
+  Time for computing write_offsets: 13.9239 secs
+  Total time: 22.843 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 8.75543e+06 elements per second
+  Throughput: 0.0175109 GBps
+  ---------------------------
+
+Compare results for various number of sources::
+
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -s 1 -m 10000000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.91228 secs
+  Time for computing write_offsets: 3.95514 secs
+  Total time: 12.8674 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.55431e+07 elements per second
+  Throughput: 0.0310863 GBps
+  ---------------------------
+
+
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -s 2 -m 5000000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.91137 secs
+  Time for computing write_offsets: 6.66393 secs
+  Total time: 15.5753 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.28408e+07 elements per second
+  Throughput: 0.0256817 GBps
+  ---------------------------
+
+
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -s 4 -m 2500000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.91306 secs
+  Time for computing write_offsets: 8.01962 secs
+  Total time: 16.9327 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.18115e+07 elements per second
+  Throughput: 0.023623 GBps
+  ---------------------------
+
+
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.91394 secs
+  Time for computing write_offsets: 13.4045 secs
+  Total time: 22.3184 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 8.96121e+06 elements per second
+  Throughput: 0.0179224 GBps
+  ---------------------------

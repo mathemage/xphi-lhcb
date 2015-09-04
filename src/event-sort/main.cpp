@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 02 Sep 2015 06:33:34 PM CEST
+ * Last Modified : Fri 04 Sep 2015 04:12:30 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
   void *sorted_events_buffer = malloc(total_sources * mep_factor * margin_factor * mep_element_size);
   
   tbb::tick_count start, end;
-  tbb::tick_count::interval_t total_time;
+  tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time;
 
   for (long long i = 0; i < iterations; i++) {
     modify_lengths_randomly(sources, total_sources, min_length, max_length);
@@ -92,32 +92,37 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-    start = tbb::tick_count::now();
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
+    start = tbb::tick_count::now();
     get_read_offsets_serial_vesion(sources, read_offsets, total_sources,
         mep_factor);
 #ifdef VERBOSE_MODE
     printf("\nAll read_offsets:\n");
     show_offsets(read_offsets, mep_factor * total_sources);
 #endif
+    end = tbb::tick_count::now();
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    total_time += (end - start);
+    read_offset_time += (end - start);
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* PREFIX OFFSETS FOR WRITING: EXCLUSIVE SCAN */
+    start = tbb::tick_count::now();
     get_write_offsets_serial_vesion(sources, write_offsets, total_sources, mep_factor);
 #ifdef VERBOSE_MODE
     printf("\nAll write_offsets:\n");
     show_offsets(write_offsets, mep_factor * total_sources);
 #endif
+    end = tbb::tick_count::now();
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    total_time += (end - start);
+    write_offset_time += (end - start);
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* MEPs' MEMCOPY */
     // TODO
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-    end = tbb::tick_count::now();
-    total_time += (end - start);
   }
 
   deallocate_sources(sources, total_sources);
@@ -130,6 +135,8 @@ int main(int argc, char *argv[]) {
   printf("\n----------SUMMARY----------\n");
   const double total_elements_prefix_summed = 2 * mep_factor * total_sources * iterations;
   printf("Total elements: %g\n", total_elements_prefix_summed);
+  printf("Time for computing read_offsets: %g secs\n", read_offset_time.seconds());
+  printf("Time for computing write_offsets: %g secs\n", write_offset_time.seconds());
   printf("Total time: %g secs\n", total_time.seconds());
   const unsigned long long bytes_in_gb = 1000000000;
   const double total_size = total_elements_prefix_summed * sizeof(length_t) /

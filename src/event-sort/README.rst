@@ -141,4 +141,29 @@ Compare results for various number of sources::
   Throughput: 0.0179224 GBps
   ---------------------------
 
-The conclusion: with greater number of sources, the computation time for write_offsets deteriorates.
+The conclusion: with greater number of sources, the computation time for write_offsets deteriorates. There is a cost to having sources in non-contiguous memory::
+
+  [xeonphi@lhcb-phi-mic2 ~]$ ./event-sort.mic.exe -s 1000 -m 1000 -i 100
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.90061 secs
+  Time for computing write_offsets: 13.1774 secs
+  Total time: 22.078 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 9.05879e+06 elements per second
+  Throughput: 0.0181176 GBps
+  ---------------------------
+
+
+  [xeonphi@lhcb-phi-mic2 ~]$ ./event-sort.mic.exe -s 10000 -m 10000 -i 1  
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 9.16011 secs
+  Time for computing write_offsets: 52.8355 secs
+  Total time: 61.9956 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 3.22604e+06 elements per second
+  Throughput: 0.00645207 GBps
+  ---------------------------

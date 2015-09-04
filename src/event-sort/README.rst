@@ -58,7 +58,7 @@ Following functions has been added:
 Output
 ------
 
-Upload to `MIC0` via::
+Upload to `mic0` via::
 
   [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh
   Using MIC0...
@@ -116,6 +116,19 @@ Compare results for various number of sources::
   ---------------------------
 
 
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -s 8 -m 1250000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.91786 secs
+  Time for computing write_offsets: 8.47783 secs
+  Total time: 17.3957 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.14971e+07 elements per second
+  Throughput: 0.0229942 GBps
+  ---------------------------
+
+
   [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe
 
   ----------SUMMARY----------
@@ -127,3 +140,5 @@ Compare results for various number of sources::
   Processed (prefix sum): 8.96121e+06 elements per second
   Throughput: 0.0179224 GBps
   ---------------------------
+
+The conclusion: with greater number of sources, the computation time for write_offsets deteriorates.

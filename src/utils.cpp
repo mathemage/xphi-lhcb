@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 31 Aug 2015 05:31:10 PM CEST
+   * Last Modified : Mon 07 Sep 2015 11:38:54 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -88,15 +88,6 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
 }
 
 
-length_t ** allocate_sources(long long total_sources, size_t mep_factor) {
-  length_t **sources = (length_t **) calloc(total_sources, sizeof(length_t *));
-  for (long long i = 0; i < total_sources; ++i) {
-    sources[i] = (length_t *) calloc(mep_factor, sizeof(length_t));
-  }
-  return sources;
-}
-
-
 void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float margin_factor, size_t element_size) {
   if (margin_factor < 1) {
     fprintf(stderr, "Invalid value of margin!\n");
@@ -120,14 +111,6 @@ void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float 
 }
 
 
-void deallocate_sources(length_t **sources, long long total_sources) {
-  for (long long i = 0; i < total_sources; ++i) {
-    free(sources[i]);
-  }
-  free(sources);
-}
-
-
 void deallocate_mep_contents(void **mep_contents, long long total_sources) {
   for (long long i = 0; i < total_sources; ++i) {
     free(mep_contents[i]);
@@ -136,30 +119,29 @@ void deallocate_mep_contents(void **mep_contents, long long total_sources) {
 }
 
 
-void fill_sources_with_random_lengths(length_t **sources, long long
+void fill_sources_with_random_lengths(length_t *sources, long long
     total_sources, size_t mep_factor, length_t min_len, length_t max_len) {
 
   length_t range_len = get_range(min_len, max_len);
   init_srand();
   for (long long si = 0; si < total_sources; si++) {
     for (long long mi = 0; mi < mep_factor; mi++) {
-      // Segmantation fault can occur here, let system handle such scenario...
-      sources[si][mi] = min_len + (rand() % range_len);
+      // Segmentation fault can occur here, let system handle such scenario...
+      sources[si * mep_factor + mi] = min_len + (rand() % range_len);
     }
   }
 }
 
 
-// modify_lengths_randomly() modifies only the 1st element with random number,
-// which will affect all the prefix sums
-void modify_lengths_randomly(length_t **sources, long long total_sources,
-    length_t min_len, length_t max_len) {
+// modify_lengths_randomly() modifies only the 1st elements of sources with
+// random number, which will affect all the prefix sums
+void modify_lengths_randomly(length_t *sources, long long total_sources, size_t
+    mep_factor, length_t min_len, length_t max_len) {
 
   length_t range_len = get_range(min_len, max_len);
-
   init_srand();
 
   for (long long si = 0; si < total_sources; si++) {
-    sources[si][0] = min_len + (rand() % range_len);
+    sources[si * mep_factor] = min_len + (rand() % range_len);
   }
 }

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 04 Sep 2015 04:12:30 PM CEST
+ * Last Modified : Mon 07 Sep 2015 01:47:18 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
   /* ------------------------------------------------------------------------ */
   /* TRANSPOSE OF MEPs */
-  length_t **sources = allocate_sources(total_sources, mep_factor);
+  length_t *sources = (length_t *) calloc(total_sources * mep_factor, sizeof(length_t));
   fill_sources_with_random_lengths(sources, total_sources, mep_factor, min_length, max_length);
 
   offset_t *read_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
@@ -80,14 +80,14 @@ int main(int argc, char *argv[]) {
   tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time;
 
   for (long long i = 0; i < iterations; i++) {
-    modify_lengths_randomly(sources, total_sources, min_length, max_length);
+    modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
 #ifdef VERBOSE_MODE
     printf("\n---------------------------\n");
     printf("Iteration #%d\n", i+1);
     printf("\nGenerated lengths of MEPs:\n");
     for (long long si = 0; si < total_sources; si++) {
       printf("Source #%lld:\n", si);
-      show_lengths(sources[si], mep_factor);
+      show_lengths(&sources[si * mep_factor], mep_factor);
       printf("\n");
     }
 #endif
@@ -95,8 +95,7 @@ int main(int argc, char *argv[]) {
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
     start = tbb::tick_count::now();
-    get_read_offsets_serial_vesion(sources, read_offsets, total_sources,
-        mep_factor);
+    get_read_offsets_serial_vesion(sources, read_offsets, total_sources, mep_factor);
 #ifdef VERBOSE_MODE
     printf("\nAll read_offsets:\n");
     show_offsets(read_offsets, mep_factor * total_sources);
@@ -125,7 +124,7 @@ int main(int argc, char *argv[]) {
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   }
 
-  deallocate_sources(sources, total_sources);
+  free(sources);
   free(read_offsets);
   free(write_offsets);
   deallocate_mep_contents(mep_contents, total_sources);

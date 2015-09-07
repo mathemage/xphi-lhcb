@@ -3,8 +3,10 @@
 mic_num=0           # default on MIC0
 gcc_compile=false
 prog_name="event-sort"
+benchmark_script="benchmarks.sh"
+run_benchmark=false
 
-while getopts ":gm:" opt; do
+while getopts ":gm::b" opt; do
   case $opt in
     m)
       mic_num=$OPTARG
@@ -12,6 +14,10 @@ while getopts ":gm:" opt; do
     g)
       echo "Compiling with gcc" >&2
       gcc_compile=true
+      ;;
+    b)
+      echo "Running $benchmark_script" >&2
+      run_benchmark=true
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -32,8 +38,14 @@ else
   executable="$prog_name".mic.exe
 fi
 
+if [ "$run_benchmark" = true ] ; then
+  run_command="sh $benchmark_script"
+else
+  run_command="$executable"
+fi
+
 echo "Using MIC$mic_num..."
 
 make "$make_what" \
-  && scp "$executable" ./benchmarks.sh xeonphi@mic$mic_num:~/ \
-  && ssh xeonphi@mic$mic_num "./$executable"
+  && scp "$executable" "$benchmark_script" xeonphi@mic$mic_num:~/ \
+  && ssh xeonphi@mic$mic_num "$run_command"

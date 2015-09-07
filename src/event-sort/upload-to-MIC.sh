@@ -35,5 +35,5 @@ fi
 echo "Using MIC$mic_num..."
 
 make "$make_what" \
-  && scp "$executable" xeonphi@mic$mic_num:~/ \
+  && scp "$executable" ./benchmarks.sh xeonphi@mic$mic_num:~/ \
   && ssh xeonphi@mic$mic_num "./$executable"

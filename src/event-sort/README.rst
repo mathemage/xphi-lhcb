@@ -75,6 +75,9 @@ Upload to `mic0` via::
   Throughput: 0.0175109 GBps
   ---------------------------
 
+Non-contiguous arrays of source lengths
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Compare results for various number of sources::
 
   [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -s 1 -m 10000000
@@ -167,3 +170,90 @@ The conclusion: with greater number of sources, the computation time for write_o
   Processed (prefix sum): 3.22604e+06 elements per second
   Throughput: 0.00645207 GBps
   ---------------------------
+
+Contiguous arrays of source lengths
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Compare results for various number of sources::
+    
+  [kha@lhcb-phi event-sort]$ ssh xeonphi@mic0
+  [xeonphi@lhcb-phi-mic0 ~]$ sh ./benchmarks.sh
+  ./event-sort.mic.exe -s 1 -m 10000000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.7282 secs
+  Time for computing write_offsets: 3.95466 secs
+  Total time: 12.6829 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.57693e+07 elements per second
+  Throughput: 0.0315386 GBps
+  ---------------------------
+
+  ./event-sort.mic.exe -s 2 -m 5000000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.72957 secs
+  Time for computing write_offsets: 6.61965 secs
+  Total time: 15.3492 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.303e+07 elements per second
+  Throughput: 0.02606 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 4 -m 2500000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.73222 secs
+  Time for computing write_offsets: 7.95306 secs
+  Total time: 16.6853 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.19866e+07 elements per second
+  Throughput: 0.0239732 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 8 -m 1250000
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.72969 secs
+  Time for computing write_offsets: 8.68211 secs
+  Total time: 17.4118 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 1.14865e+07 elements per second
+  Throughput: 0.0229729 GBps
+  ---------------------------
+  ./event-sort.mic.exe
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.72788 secs
+  Time for computing write_offsets: 11.5977 secs
+  Total time: 20.3256 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 9.83982e+06 elements per second
+  Throughput: 0.0196796 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 1000 -m 1000 -i 100
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.71245 secs
+  Time for computing write_offsets: 12.8127 secs
+  Total time: 21.5252 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 9.29144e+06 elements per second
+  Throughput: 0.0185829 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 10000 -m 10000 -i 1
+
+  ----------SUMMARY----------
+  Total elements: 2e+08
+  Time for computing read_offsets: 8.96645 secs
+  Time for computing write_offsets: 40.7559 secs
+  Total time: 49.7224 secs
+  Total size: 0.4 GB
+  Processed (prefix sum): 4.02233e+06 elements per second
+  Throughput: 0.00804467 GBps
+  ---------------------------
+

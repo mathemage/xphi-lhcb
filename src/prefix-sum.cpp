@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 07 Sep 2015 11:37:24 AM CEST
+   * Last Modified : Mon 07 Sep 2015 05:33:10 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -52,11 +52,11 @@ void get_write_offsets_serial_vesion(length_t *sources, offset_t *write_offsets,
     exit(EXIT_FAILURE);
   }
 
+  offset_t global_offset = 0;
   for (long long mi = 0; mi < mep_factor; mi++) {
-    write_offsets[mi * total_sources] = 0;
-    for (long long si = 1; si < total_sources; si++) {
-      write_offsets[mi*total_sources + si] = write_offsets[mi*total_sources + si - 1]
-                                              + sources[ (si-1) * mep_factor + mi];
+    for (long long si = 0; si < total_sources; si++) {
+      write_offsets[mi*total_sources + si] = global_offset;
+      global_offset += sources[ si * mep_factor + mi];
     }
   }
 }

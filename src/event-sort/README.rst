@@ -174,7 +174,7 @@ The conclusion: with greater number of sources, the computation time for write_o
 Contiguous arrays of source lengths
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Compare results for various number of sources::
+When contiguous block of memory is allocated for `sources`, the time for computing `write_offsets` decreases significantly for greater number of sources::
     
   [kha@lhcb-phi event-sort]$ ssh xeonphi@mic0
   [xeonphi@lhcb-phi-mic0 ~]$ sh ./benchmarks.sh
@@ -257,3 +257,4 @@ Compare results for various number of sources::
   Throughput: 0.00804467 GBps
   ---------------------------
 
+Thus, it's better to use one linear contiguous array `length_t *sources` with appropriate index computation.

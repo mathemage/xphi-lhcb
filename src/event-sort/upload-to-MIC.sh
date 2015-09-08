@@ -41,7 +41,7 @@ fi
 if [ "$run_benchmark" = true ] ; then
   run_command="sh $benchmark_script"
 else
-  run_command="$executable"
+  run_command="./$executable"
 fi
 
 echo "Using MIC$mic_num..."

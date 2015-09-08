@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 07 Sep 2015 11:38:54 AM CEST
+   * Last Modified : Tue 08 Sep 2015 12:35:13 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -54,7 +54,7 @@ void show_offsets(offset_t *offsets, size_t elems) {
 
 length_t get_range(length_t min_len, length_t max_len) {
   length_t range_len = max_len - min_len + 1;
-  if (range_len <= 0) {
+  if (min_len >= max_len || range_len <= 0) {
     fprintf(stderr, "Invalid range of lengths!\n");
     exit(EXIT_FAILURE);
   }
@@ -143,5 +143,15 @@ void modify_lengths_randomly(length_t *sources, long long total_sources, size_t
 
   for (long long si = 0; si < total_sources; si++) {
     sources[si * mep_factor] = min_len + (rand() % range_len);
+  }
+}
+
+void copy_MEPs_serial_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources) {
+  for (long long si = 0; si < total_sources; si++) {
+    for (size_t mi = 0; mi < mep_factor; mi++) {
+      memcpy(sorted_events + write_offsets[mi * total_sources + si],
+          mep_contents[si] + read_offsets[si * mep_factor + mi],
+          sources[si * mep_factor + mi]);
+    }
   }
 }

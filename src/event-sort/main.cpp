@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 07 Sep 2015 01:47:18 PM CEST
+ * Last Modified : Tue 08 Sep 2015 12:42:38 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -16,6 +16,7 @@
 #include "prefix-sum.h"
 
 // #define VERBOSE_MODE
+// #define TEST_COPY_MEP_FUNCTION
 
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
@@ -40,24 +41,24 @@ int main(int argc, char *argv[]) {
       case 's':
         total_sources = get_argument_long_value(optarg, "-s");
         break;
-      case 'x':
-        max_length = get_argument_long_value(optarg, "-x");
-        break;
       case 'n':
         min_length = get_argument_long_value(optarg, "-n");
+        break;
+      case 'x':
+        max_length = get_argument_long_value(optarg, "-x");
         break;
       case 'h':
         printf("Usage: %s", argv[0]);
         printf(" [-i number_of_iterations] [-m mep_factor]");
         printf(" [-s number_of_sources]");
-        printf(" [-x max_length] [-n min_length]");
+        printf(" [-n min_length] [-x max_length]");
         printf("\n");
         exit(EXIT_SUCCESS);
       default:
         fprintf(stderr, "Usage: %s", argv[0]);
         fprintf(stderr, " [-i number_of_iterations] [-m mep_factor]");
         fprintf(stderr, " [-s number_of_sources]");
-        fprintf(stderr, " [-x max_length] [-n min_length]");
+        fprintf(stderr, " [-n min_length] [-x max_length]");
         fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }
@@ -74,10 +75,10 @@ int main(int argc, char *argv[]) {
   float margin_factor = 1.5;
   size_t mep_element_size = (min_length+max_length) / 2;
   void **mep_contents = allocate_mep_contents(total_sources, mep_factor, margin_factor, mep_element_size);
-  void *sorted_events_buffer = malloc(total_sources * mep_factor * margin_factor * mep_element_size);
+  void *sorted_events = malloc(total_sources * mep_factor * margin_factor * mep_element_size);
   
   tbb::tick_count start, end;
-  tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time;
+  tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
 
   for (long long i = 0; i < iterations; i++) {
     modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
@@ -120,7 +121,58 @@ int main(int argc, char *argv[]) {
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* MEPs' MEMCOPY */
-    // TODO
+#ifdef TEST_COPY_MEP_FUNCTION
+    uint8_t **mep_contents_byte = (uint8_t **) mep_contents;
+    uint8_t label = 1;
+    offset_t local_offset;
+    for (long long si = 0; si < total_sources; si++) {
+      local_offset = 0;
+      for (size_t mi = 0; mi < mep_factor; mi++) {
+        for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
+          mep_contents_byte[si][local_offset] = label;
+          local_offset++;
+        }
+        label++;
+      }
+    }
+
+    printf("\n----------Input MEP contents----------\n");
+    for (long long si = 0; si < total_sources; si++) {
+      printf("[");
+      local_offset = 0;
+      for (size_t mi = 0; mi < mep_factor; mi++) {
+        for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
+          printf("%x", mep_contents_byte[si][local_offset]);
+          local_offset++;
+        }
+      }
+      printf("]\n");
+    }
+    printf("--------------------------------------\n");
+#endif
+
+    start = tbb::tick_count::now();
+    copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
+    end = tbb::tick_count::now();
+    total_time += (end - start);
+    copy_time += (end - start);
+
+#ifdef TEST_COPY_MEP_FUNCTION
+    printf("\n----------Output MEP contents----------\n");
+    local_offset = 0;
+    uint8_t *sorted_events_byte = (uint8_t *) sorted_events;
+    for (size_t mi = 0; mi < mep_factor; mi++) {
+      printf("[");
+      for (long long si = 0; si < total_sources; si++) {
+        for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
+          printf("%x", sorted_events_byte[local_offset]);
+          local_offset++;
+        }
+      }
+      printf("]\n");
+    }
+    printf("--------------------------------------\n");
+#endif
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   }
 
@@ -128,20 +180,20 @@ int main(int argc, char *argv[]) {
   free(read_offsets);
   free(write_offsets);
   deallocate_mep_contents(mep_contents, total_sources);
-  free(sorted_events_buffer);
+  free(sorted_events);
   /* ------------------------------------------------------------------------ */
 
   printf("\n----------SUMMARY----------\n");
-  const double total_elements_prefix_summed = 2 * mep_factor * total_sources * iterations;
-  printf("Total elements: %g\n", total_elements_prefix_summed);
+  const double total_elements = mep_factor * total_sources * iterations;
+  printf("Total elements: %g\n", total_elements);
   printf("Time for computing read_offsets: %g secs\n", read_offset_time.seconds());
   printf("Time for computing write_offsets: %g secs\n", write_offset_time.seconds());
+  printf("Time for copying: %g secs\n", copy_time.seconds());
   printf("Total time: %g secs\n", total_time.seconds());
   const unsigned long long bytes_in_gb = 1000000000;
-  const double total_size = total_elements_prefix_summed * sizeof(length_t) /
-    bytes_in_gb;
+  const double total_size = total_elements * sizeof(length_t) / bytes_in_gb;
   printf("Total size: %g GB\n", total_size);
-  printf("Processed (prefix sum): %g elements per second\n", total_elements_prefix_summed / total_time.seconds());
+  printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
   printf("Throughput: %g GBps\n", total_size / total_time.seconds());
   printf("---------------------------\n");
   return 0;

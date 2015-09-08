@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 07 Sep 2015 11:39:20 AM CEST
+   * Last Modified : Tue 08 Sep 2015 10:28:15 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -17,6 +17,7 @@
 #include "commons.h"
 #include <ctime>
 #include <string>
+#include <cstring>
 
 // #define VERBOSE_MODE
 
@@ -39,5 +40,7 @@ void fill_sources_with_random_lengths(length_t *sources, long long
     total_sources, size_t mep_factor, length_t min_len, length_t max_len);
 void modify_lengths_randomly(length_t *sources, long long total_sources, size_t
     mep_factor, length_t min_len, length_t max_len);
+
+void copy_MEPs_serial_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources);
 
 #endif

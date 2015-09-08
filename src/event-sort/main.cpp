@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 08 Sep 2015 12:42:38 PM CEST
+ * Last Modified : Tue 08 Sep 2015 03:58:25 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -14,6 +14,7 @@
 #include "commons.h"
 #include "utils.h"
 #include "prefix-sum.h"
+#include <cmath>
 
 // #define VERBOSE_MODE
 // #define TEST_COPY_MEP_FUNCTION
@@ -67,15 +68,15 @@ int main(int argc, char *argv[]) {
 
   /* ------------------------------------------------------------------------ */
   /* TRANSPOSE OF MEPs */
-  length_t *sources = (length_t *) calloc(total_sources * mep_factor, sizeof(length_t));
+  length_t *sources = (length_t *) try_calloc(total_sources * mep_factor, sizeof(length_t));
   fill_sources_with_random_lengths(sources, total_sources, mep_factor, min_length, max_length);
 
-  offset_t *read_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
-  offset_t *write_offsets = (offset_t *) calloc(total_sources * mep_factor, sizeof(offset_t));
+  offset_t *read_offsets = (offset_t *) try_calloc(total_sources * mep_factor, sizeof(offset_t));
+  offset_t *write_offsets = (offset_t *) try_calloc(total_sources * mep_factor, sizeof(offset_t));
   float margin_factor = 1.5;
   size_t mep_element_size = (min_length+max_length) / 2;
   void **mep_contents = allocate_mep_contents(total_sources, mep_factor, margin_factor, mep_element_size);
-  void *sorted_events = malloc(total_sources * mep_factor * margin_factor * mep_element_size);
+  void *sorted_events = try_malloc((size_t) ceil(total_sources * mep_factor * margin_factor * mep_element_size));
   
   tbb::tick_count start, end;
   tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
@@ -151,11 +152,17 @@ int main(int argc, char *argv[]) {
     printf("--------------------------------------\n");
 #endif
 
+#ifdef VERBOSE_MODE
+    printf("Copying MEP contents...\n");
+#endif
     start = tbb::tick_count::now();
     copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
     end = tbb::tick_count::now();
     total_time += (end - start);
     copy_time += (end - start);
+#ifdef VERBOSE_MODE
+    printf("MEP contents copied...\n");
+#endif
 
 #ifdef TEST_COPY_MEP_FUNCTION
     printf("\n----------Output MEP contents----------\n");

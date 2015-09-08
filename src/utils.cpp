@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 08 Sep 2015 12:35:13 PM CEST
+   * Last Modified : Tue 08 Sep 2015 03:57:36 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -71,6 +71,24 @@ void init_srand() {
 }
 
 
+void * try_malloc(size_t size) {
+  void *chunk = malloc(size);
+  if (chunk == NULL) {
+    printf("Exitting: malloc failed!\n");
+    exit(EXIT_FAILURE);
+  }
+}
+
+
+void * try_calloc(size_t num, size_t size) {
+  void *chunk = calloc(num, size);
+  if (chunk == NULL) {
+    printf("Exitting: calloc failed!\n");
+    exit(EXIT_FAILURE);
+  }
+}
+
+
 length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
   length_t *lengths = (length_t *) calloc(elems, sizeof(length_t));
 #ifdef VERBOSE_MODE
@@ -97,9 +115,9 @@ void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float 
 #ifdef VERBOSE_MODE
   unsigned long long total_alloc_mem = 0;
 #endif
-  void **sources = (void **) calloc(total_sources, sizeof(void *));
+  void **sources = (void **) try_calloc(total_sources, sizeof(void *));
   for (long long i = 0; i < total_sources; ++i) {
-    sources[i] = (void *) calloc(margin_factor * mep_factor, element_size);
+    sources[i] = (void *) try_calloc(margin_factor * mep_factor, element_size);
 #ifdef VERBOSE_MODE
     total_alloc_mem += margin_factor * mep_factor * element_size;
 #endif
@@ -145,6 +163,7 @@ void modify_lengths_randomly(length_t *sources, long long total_sources, size_t
     sources[si * mep_factor] = min_len + (rand() % range_len);
   }
 }
+
 
 void copy_MEPs_serial_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources) {
   for (long long si = 0; si < total_sources; si++) {

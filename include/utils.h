@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 08 Sep 2015 10:28:15 AM CEST
+   * Last Modified : Tue 08 Sep 2015 02:56:14 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -30,6 +30,9 @@ void show_lengths(length_t *lengths, size_t elems);
 void show_offsets(offset_t *offsets, size_t elems);
 
 length_t get_range(length_t min_len, length_t max_len);
+void init_srand();
+void * try_malloc(size_t size);
+void * try_calloc(size_t num, size_t size);
 void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float
     margin_factor, size_t element_size);
 void deallocate_mep_contents(void **mep_contents, long long total_sources);

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 09 Sep 2015 03:03:18 PM CEST
+ * Last Modified : Wed 09 Sep 2015 05:25:21 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -20,7 +20,7 @@
 // #define TEST_COPY_MEP_FUNCTION
 
 /* 0 = no parallelization
- * 1 = OpenMP parallel for*/
+ * 1 = OpenMP parallel for */
 #define COPY_PARALLEL_LEVEL 1
 
 int main(int argc, char *argv[]) {

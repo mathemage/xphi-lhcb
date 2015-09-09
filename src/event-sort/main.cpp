@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 08 Sep 2015 03:58:25 PM CEST
+ * Last Modified : Wed 09 Sep 2015 03:03:18 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -18,6 +18,10 @@
 
 // #define VERBOSE_MODE
 // #define TEST_COPY_MEP_FUNCTION
+
+/* 0 = no parallelization
+ * 1 = OpenMP parallel for*/
+#define COPY_PARALLEL_LEVEL 1
 
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
@@ -156,7 +160,11 @@ int main(int argc, char *argv[]) {
     printf("Copying MEP contents...\n");
 #endif
     start = tbb::tick_count::now();
+#if COPY_PARALLEL_LEVEL == 0
     copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
+#elif COPY_PARALLEL_LEVEL == 1
+    copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
+#endif
     end = tbb::tick_count::now();
     total_time += (end - start);
     copy_time += (end - start);

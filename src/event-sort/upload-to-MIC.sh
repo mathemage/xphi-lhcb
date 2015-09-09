@@ -5,6 +5,7 @@ gcc_compile=false
 prog_name="event-sort"
 benchmark_script="benchmarks.sh"
 run_benchmark=false
+libiomp_dir=/home/xeonphi
 
 while getopts ":gm::b" opt; do
   case $opt in
@@ -47,5 +48,5 @@ fi
 echo "Using MIC$mic_num..."
 
 make "$make_what" \
-  && scp "$executable" "$benchmark_script" xeonphi@mic$mic_num:~/ \
-  && ssh xeonphi@mic$mic_num "$run_command"
+  && scp "$executable" "$benchmark_script" $libs xeonphi@mic$mic_num:~/ \
+  && ssh xeonphi@mic$mic_num "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$libiomp_dir && $run_command"

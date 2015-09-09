@@ -1,5 +1,8 @@
 #! /bin/bash
 
+libiomp_dir=/home/xeonphi/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$libiomp_dir
+
 echo './event-sort.mic.exe -s 1 -m 10000000' ; ./event-sort.mic.exe -s 1 -m 10000000
 echo './event-sort.mic.exe -s 2 -m 5000000' ; ./event-sort.mic.exe -s 2 -m 5000000
 echo './event-sort.mic.exe -s 4 -m 2500000' ; ./event-sort.mic.exe -s 4 -m 2500000

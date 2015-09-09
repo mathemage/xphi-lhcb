@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 08 Sep 2015 03:57:36 PM CEST
+   * Last Modified : Wed 09 Sep 2015 01:52:41 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -167,6 +167,18 @@ void modify_lengths_randomly(length_t *sources, long long total_sources, size_t
 
 void copy_MEPs_serial_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources) {
   for (long long si = 0; si < total_sources; si++) {
+    for (size_t mi = 0; mi < mep_factor; mi++) {
+      memcpy(sorted_events + write_offsets[mi * total_sources + si],
+          mep_contents[si] + read_offsets[si * mep_factor + mi],
+          sources[si * mep_factor + mi]);
+    }
+  }
+}
+
+
+void copy_MEPs_OMP_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources) {
+  for (long long si = 0; si < total_sources; si++) {
+#pragma omp parallel for
     for (size_t mi = 0; mi < mep_factor; mi++) {
       memcpy(sorted_events + write_offsets[mi * total_sources + si],
           mep_contents[si] + read_offsets[si * mep_factor + mi],

@@ -35,25 +35,17 @@ main.cpp
 - `iterations` = number of iterations, each time prefix sum and MEP copy is simulated on Xeon Phi
 - `total_sources` = number of sources, i.e. 500 cards each with 2 inputs from the detector -> default:1000 sources
 - `min_length`, `max_length` = lower and upper for the size of 1 collision data from 1 source
-- `sources` = array of arrays of lengths, `sources[i]` = array of random data lengths for source #i
+- `sources` = arrays of lengths for concatenated lengths from the first source to the last source
+- `margin_factor` = how much larger should each `mep_contents[i]` be than calculated necessary size (due to statistical fluctuation)
+- `mep_element_size` = size of a single fragment of collision from a single source (set as average of `min_length` and `max_length`)
+- `mep_contents` = array of arrays (one per each source) containing "data-contents" from the LHCb detector
+- `sorted_events` = resulting array, in which "transposed" MEP data-contents are written
+- `read_offsets` = offsets from the beginning of `mep_contents[i]` for each source `i`
+- `write_offsets` = offsets from the beginning `sorted_events`
+- `total_time`, `read_offset_time`, `write_offset_time`, `copy_time` = durations of various parts
+- `TEST_COPY_MEP_FUNCTION` = if defined, very correctnes of `copy_MEPs_*` functions
 
-For other functions and variables, see `../prefix-offset/README.rst`.
-
-../utils.cpp
-~~~~~~~~~~~~
-
-Following functions has been added:
-
-- `allocate_sources()` = allocate buffers per each source: (`total_sources` x `mep_factor`) random lengths
-- `fill_sources_with_random_lengths()` = fill all pre-allocated buffers with random integers in the range [`min_len`, `max_len`]
-- `deallocate_sources()` = deallocate memory allocated for buffers by `allocate_sources()`
-- `modify_lengths_randomly()` = modify arrays of lengths randomly instead of generating new random numbers every iteration (currently: the first length is changed to another random number, thus affecting all the next offsets)
-
-../prefix-sum.cpp
-~~~~~~~~~~~~~~~~~
-
-- `get_read_offsets_serial_vesion()` = compute offsets for reading from MEPs
-- `get_write_offsets_serial_vesion()` = compute offsets for writing into the buffer for sorted events
+For other functions and variables, see `../prefix-offset/README.rst` and `../README.rst`.
 
 Output
 ------
@@ -368,7 +360,7 @@ The benchmark script::
 
 .. Note::
 
-  The final test with 10000 sources and 10000 collisons fails with segmentation faults due to insufficent memory for `malloc/calloc`.
+  The final test with 10000 sources and 10000 collisons fails with segmentation faults due to insufficent memory for `malloc/calloc`. This test was removed in later versions and commits.
 
 Copy process using OpenMP parallel for
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -455,3 +447,55 @@ The benchmarks tests with `copy_MEPs_OMP_version()`::
   Processed: 3.27942e+06 elements per second
   Throughput: 0.00655884 GBps
   ---------------------------
+
+Testing various number of iterations for the default values::
+
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 9.72712 secs
+  Time for computing write_offsets: 9.69974 secs
+  Time for copying: 2.11563 secs
+  Total time: 21.5425 secs
+  Total size: 0.2 GB
+  Processed: 4.64199e+06 elements per second
+  Throughput: 0.00928398 GBps
+  ---------------------------
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -i 1
+
+  ----------SUMMARY----------
+  Total elements: 1e+07
+  Time for computing read_offsets: 0.908041 secs
+  Time for computing write_offsets: 0.96124 secs
+  Time for copying: 1.18992 secs
+  Total time: 3.0592 secs
+  Total size: 0.02 GB
+  Processed: 3.26883e+06 elements per second
+  Throughput: 0.00653765 GBps
+  ---------------------------
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -i 100
+
+  ----------SUMMARY----------
+  Total elements: 1e+09
+  Time for computing read_offsets: 98.1442 secs
+  Time for computing write_offsets: 92.7814 secs
+  Time for copying: 17.6003 secs
+  Total time: 208.526 secs
+  Total size: 2 GB
+  Processed: 4.79557e+06 elements per second
+  Throughput: 0.00959113 GBps
+  ---------------------------
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -i 200
+
+  ----------SUMMARY----------
+  Total elements: 2e+09
+  Time for computing read_offsets: 196.598 secs
+  Time for computing write_offsets: 185.481 secs
+  Time for copying: 37.2487 secs
+  Total time: 419.328 secs
+  Total size: 4 GB
+  Processed: 4.76954e+06 elements per second
+  Throughput: 0.00953908 GBps
+  ---------------------------
+

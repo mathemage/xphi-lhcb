@@ -45,16 +45,6 @@ This file contain common includes, typedefs, defines...
 - `offset_t` = data type for the resulting offsets (uint32_t)
 - uncomment `#define VERBOSE_MODE` for "debug" messages
 
-prefix-sum.h and prefix-sum.cpp
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- `prefix_sum_sequential()` = sequential algorithm for prefix sum, templated function
-
-utils.cpp
-~~~~~~~~~
-
-- `show_array<>()`, `show_lengths()` and `show_offsets()` = procedures to display content of an array (up to given number of elements, otherwise it gives up)
-
 upload-to-MIC.sh
 ~~~~~~~~~~~~~~~~
 

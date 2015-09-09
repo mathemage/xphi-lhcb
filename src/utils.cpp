@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 09 Sep 2015 01:52:41 PM CEST
+   * Last Modified : Wed 09 Sep 2015 04:28:08 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -23,6 +23,7 @@ long long get_argument_long_value(char *optarg, char *optname) {
   };
   return value;
 }
+
 
 template<typename T>
 void show_array(T *arr, size_t elems, const int fixed_width, const size_t
@@ -43,9 +44,11 @@ void show_array(T *arr, size_t elems, const int fixed_width, const size_t
   printf("\n");
 }
 
+
 void show_lengths(length_t *lengths, size_t elems) {
   show_array<length_t>(lengths, elems, 5, 80, 16);
 }
+
 
 void show_offsets(offset_t *offsets, size_t elems) {
   show_array<offset_t>(offsets, elems, 10, 80, 8);

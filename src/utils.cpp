@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 09 Sep 2015 06:10:29 PM CEST
+   * Last Modified : Wed 09 Sep 2015 07:34:06 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -189,4 +189,3 @@ void copy_MEPs_OMP_version(void **mep_contents, offset_t *read_offsets, void *so
         sources[si * mep_factor + mi]);
   }
 }
-/

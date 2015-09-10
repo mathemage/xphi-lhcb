@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 09 Sep 2015 05:25:21 PM CEST
+ * Last Modified : Thu 10 Sep 2015 04:40:55 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -18,6 +18,10 @@
 
 // #define VERBOSE_MODE
 // #define TEST_COPY_MEP_FUNCTION
+
+/* 0 = no parallelization
+ * 1 = OpenMP parallel for */
+#define READ_OFFSETS_PARALLEL_LEVEL 1
 
 /* 0 = no parallelization
  * 1 = OpenMP parallel for */
@@ -101,7 +105,11 @@ int main(int argc, char *argv[]) {
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
     start = tbb::tick_count::now();
+#if READ_OFFSETS_PARALLEL_LEVEL == 0
     get_read_offsets_serial_vesion(sources, read_offsets, total_sources, mep_factor);
+#elif READ_OFFSETS_PARALLEL_LEVEL == 1
+    get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor);
+#endif
 #ifdef VERBOSE_MODE
     printf("\nAll read_offsets:\n");
     show_offsets(read_offsets, mep_factor * total_sources);

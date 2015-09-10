@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 07 Sep 2015 11:36:27 AM CEST
+   * Last Modified : Wed 09 Sep 2015 07:33:19 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -24,9 +24,8 @@ void prefix_sum_sequential(IN_T *in_arr, SUM_T *sum_arr, size_t elems, SUM_T ide
   }
 }
 
-void get_read_offsets_serial_vesion(length_t *sources, offset_t *read_offsets,
-    long long total_sources, size_t mep_factor);
-void get_write_offsets_serial_vesion(length_t *sources, offset_t
-    *read_offsets, long long total_sources, size_t mep_factor);
+void get_read_offsets_serial_vesion(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor);
+void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor);
+void get_write_offsets_serial_vesion(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor);
 
 #endif

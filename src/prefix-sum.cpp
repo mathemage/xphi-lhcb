@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 09 Sep 2015 07:33:45 PM CEST
+   * Last Modified : Fri 11 Sep 2015 01:50:10 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -37,12 +37,12 @@ void get_read_offsets_serial_vesion(length_t *sources, offset_t *read_offsets, l
 
 void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor) {
   if (total_sources < 0) {
-    fprintf(stderr, "get_read_offsets_serial_vesion: ");
+    fprintf(stderr, "get_read_offsets_OMP_version: ");
     fprintf(stderr, "Invalid value of total_sources!\n");
     exit(EXIT_FAILURE);
   }
   if (mep_factor <= 0) {
-    fprintf(stderr, "get_read_offsets_serial_vesion: ");
+    fprintf(stderr, "get_read_offsets_OMP_version: ");
     fprintf(stderr, "Invalid value of mep_factor!\n");
     exit(EXIT_FAILURE);
   }
@@ -75,6 +75,33 @@ void get_write_offsets_serial_vesion(length_t *sources, offset_t *write_offsets,
     for (long long si = 0; si < total_sources; si++) {
       write_offsets[mi*total_sources + si] = global_offset;
       global_offset += sources[ si * mep_factor + mi];
+    }
+  }
+}
+
+
+void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, long long total_sources, size_t mep_factor, offset_t *read_offsets) {
+  if (total_sources < 0) {
+    fprintf(stderr, "get_write_offsets_OMP_vesion: ");
+    fprintf(stderr, "Invalid value of total_sources!\n");
+    exit(EXIT_FAILURE);
+  }
+  if (mep_factor <= 0) {
+    fprintf(stderr, "get_write_offsets_OMP_vesion: ");
+    fprintf(stderr, "Invalid value of mep_factor!\n");
+    exit(EXIT_FAILURE);
+  }
+
+#pragma omp parallel for
+  for (long long mi = 0; mi < mep_factor; mi++) {
+    offset_t local_offset = 0;
+    for (long long si = 0; si < total_sources; si++) {
+      local_offset += read_offsets[si * mep_factor + mi];
+    }
+
+    for (long long si = 0; si < total_sources; si++) {
+      write_offsets[mi*total_sources + si] = local_offset;
+      local_offset += sources[ si * mep_factor + mi];
     }
   }
 }

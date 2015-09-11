@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Thu 10 Sep 2015 04:40:55 PM CEST
+ * Last Modified : Fri 11 Sep 2015 01:37:12 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -22,6 +22,10 @@
 /* 0 = no parallelization
  * 1 = OpenMP parallel for */
 #define READ_OFFSETS_PARALLEL_LEVEL 1
+
+/* 0 = no parallelization
+ * 1 = OpenMP parallel for */
+#define WRITE_OFFSETS_PARALLEL_LEVEL 1
 
 /* 0 = no parallelization
  * 1 = OpenMP parallel for */
@@ -122,7 +126,11 @@ int main(int argc, char *argv[]) {
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* PREFIX OFFSETS FOR WRITING: EXCLUSIVE SCAN */
     start = tbb::tick_count::now();
+#if WRITE_OFFSETS_PARALLEL_LEVEL == 0
     get_write_offsets_serial_vesion(sources, write_offsets, total_sources, mep_factor);
+#elif WRITE_OFFSETS_PARALLEL_LEVEL == 1
+    get_write_offsets_OMP_vesion(sources, write_offsets, total_sources, mep_factor, read_offsets);
+#endif
 #ifdef VERBOSE_MODE
     printf("\nAll write_offsets:\n");
     show_offsets(write_offsets, mep_factor * total_sources);

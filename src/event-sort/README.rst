@@ -633,3 +633,139 @@ The benchmarks tests with `get_read_offsets_OMP_version()`::
   Processed: 8.86215e+06 elements per second
   Throughput: 0.0177243 GBps
   ---------------------------
+
+Prefix-sum for write_offsets using OpenMP parallel for
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The benchmarks tests with `get_write_offsets_OMP_vesion()`::
+
+  [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh -b
+  Running benchmarks.sh
+  Using MIC0...
+  icpc -g -lrt -I../../include -openmp -qopt-report3 -qopt-report-phase=vec -mmic main.cpp ../prefix-sum.cpp ../utils.cpp -o event-sort.mic.exe
+  icpc: remark #10397: optimization reports are generated in *.optrpt files in the output location
+  event-sort.mic.exe                                                                                 100%   54KB  53.9KB/s   00:00
+  benchmarks.sh                                                                                      100%  898     0.9KB/s   00:00
+  Varying the number of sources and the MEP factor...
+  ./event-sort.mic.exe -s 1 -m 10000000
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 9.99205 secs
+  Time for computing write_offsets: 0.228972 secs
+  Time for copying: 0.772912 secs
+  Total time: 10.9939 secs
+  Total size: 0.2 GB
+  Processed: 9.09592e+06 elements per second
+  Throughput: 0.0181918 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 2 -m 5000000
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 5.78715 secs
+  Time for computing write_offsets: 0.222349 secs
+  Time for copying: 0.941591 secs
+  Total time: 6.95109 secs
+  Total size: 0.2 GB
+  Processed: 1.43862e+07 elements per second
+  Throughput: 0.0287725 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 4 -m 2500000
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 3.46175 secs
+  Time for computing write_offsets: 0.20651 secs
+  Time for copying: 0.953377 secs
+  Total time: 4.62164 secs
+  Total size: 0.2 GB
+  Processed: 2.16374e+07 elements per second
+  Throughput: 0.0432747 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 8 -m 1250000
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 1.88861 secs
+  Time for computing write_offsets: 0.196537 secs
+  Time for copying: 1.01361 secs
+  Total time: 3.09876 secs
+  Total size: 0.2 GB
+  Processed: 3.2271e+07 elements per second
+  Throughput: 0.064542 GBps
+  ---------------------------
+  ./event-sort.mic.exe
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 0.397247 secs
+  Time for computing write_offsets: 0.293296 secs
+  Time for copying: 1.22363 secs
+  Total time: 1.91418 secs
+  Total size: 0.2 GB
+  Processed: 5.22418e+07 elements per second
+  Throughput: 0.104484 GBps
+  ---------------------------
+  ./event-sort.mic.exe -s 1000 -m 1000 -i 100
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 0.38787 secs
+  Time for computing write_offsets: 0.347369 secs
+  Time for copying: 1.13767 secs
+  Total time: 1.87291 secs
+  Total size: 0.2 GB
+  Processed: 5.33929e+07 elements per second
+  Throughput: 0.106786 GBps
+  ---------------------------
+
+  Varying the number of iterations...
+  ./event-sort.mic.exe -i 1
+
+  ----------SUMMARY----------
+  Total elements: 1e+07
+  Time for computing read_offsets: 0.23832 secs
+  Time for computing write_offsets: 0.0367888 secs
+  Time for copying: 0.196166 secs
+  Total time: 0.471275 secs
+  Total size: 0.02 GB
+  Processed: 2.1219e+07 elements per second
+  Throughput: 0.042438 GBps
+  ---------------------------
+  ./event-sort.mic.exe -i 10
+
+  ----------SUMMARY----------
+  Total elements: 1e+08
+  Time for computing read_offsets: 0.402601 secs
+  Time for computing write_offsets: 0.296985 secs
+  Time for copying: 1.22022 secs
+  Total time: 1.9198 secs
+  Total size: 0.2 GB
+  Processed: 5.20887e+07 elements per second
+  Throughput: 0.104177 GBps
+  ---------------------------
+  ./event-sort.mic.exe -i 100
+
+  ----------SUMMARY----------
+  Total elements: 1e+09
+  Time for computing read_offsets: 1.86989 secs
+  Time for computing write_offsets: 2.8893 secs
+  Time for copying: 11.4858 secs
+  Total time: 16.245 secs
+  Total size: 2 GB
+  Processed: 6.15573e+07 elements per second
+  Throughput: 0.123115 GBps
+  ---------------------------
+  ./event-sort.mic.exe -i 200
+
+  ----------SUMMARY----------
+  Total elements: 2e+09
+  Time for computing read_offsets: 3.48713 secs
+  Time for computing write_offsets: 5.78911 secs
+  Time for copying: 22.9099 secs
+  Total time: 32.1862 secs
+  Total size: 4 GB
+  Processed: 6.21385e+07 elements per second
+  Throughput: 0.124277 GBps
+  ---------------------------

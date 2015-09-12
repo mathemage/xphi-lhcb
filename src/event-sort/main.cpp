@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 11 Sep 2015 01:37:12 PM CEST
+ * Last Modified : Sat 12 Sep 2015 05:20:11 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -92,6 +92,7 @@ int main(int argc, char *argv[]) {
   
   tbb::tick_count start, end;
   tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
+  double total_size = 0;
 
   for (long long i = 0; i < iterations; i++) {
     modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
@@ -205,6 +206,8 @@ int main(int argc, char *argv[]) {
     printf("--------------------------------------\n");
 #endif
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+    total_size += write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
   }
 
   free(sources);
@@ -222,7 +225,7 @@ int main(int argc, char *argv[]) {
   printf("Time for copying: %g secs\n", copy_time.seconds());
   printf("Total time: %g secs\n", total_time.seconds());
   const unsigned long long bytes_in_gb = 1000000000;
-  const double total_size = total_elements * sizeof(length_t) / bytes_in_gb;
+  total_size /= bytes_in_gb;
   printf("Total size: %g GB\n", total_size);
   printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
   printf("Throughput: %g GBps\n", total_size / total_time.seconds());

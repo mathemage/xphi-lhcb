@@ -6,6 +6,7 @@ prog_name="event-sort"
 benchmark_script="benchmarks.sh"
 run_benchmark=false
 libiomp_dir=/home/xeonphi
+libs=libiomp5.so
 
 while getopts ":gm::b" opt; do
   case $opt in

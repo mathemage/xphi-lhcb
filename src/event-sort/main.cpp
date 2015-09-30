@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sat 12 Sep 2015 05:20:11 PM CEST
+ * Last Modified : Wed 30 Sep 2015 02:35:30 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -18,6 +18,7 @@
 
 // #define VERBOSE_MODE
 // #define TEST_COPY_MEP_FUNCTION
+#define SHOW_HISTOGRAM
 
 /* 0 = no parallelization
  * 1 = OpenMP parallel for */
@@ -30,6 +31,7 @@
 /* 0 = no parallelization
  * 1 = OpenMP parallel for */
 #define COPY_PARALLEL_LEVEL 1
+
 
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
@@ -93,6 +95,7 @@ int main(int argc, char *argv[]) {
   tbb::tick_count start, end;
   tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
   double total_size = 0;
+  vector<double> iteration_times(iterations, 0);
 
   for (long long i = 0; i < iterations; i++) {
     modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
@@ -123,6 +126,7 @@ int main(int argc, char *argv[]) {
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     total_time += (end - start);
     read_offset_time += (end - start);
+    iteration_times[i] += (end - start).seconds();
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* PREFIX OFFSETS FOR WRITING: EXCLUSIVE SCAN */
@@ -140,6 +144,7 @@ int main(int argc, char *argv[]) {
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     total_time += (end - start);
     write_offset_time += (end - start);
+    iteration_times[i] += (end - start).seconds();
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* MEPs' MEMCOPY */
@@ -157,7 +162,6 @@ int main(int argc, char *argv[]) {
         label++;
       }
     }
-
     printf("\n----------Input MEP contents----------\n");
     for (long long si = 0; si < total_sources; si++) {
       printf("[");
@@ -173,9 +177,6 @@ int main(int argc, char *argv[]) {
     printf("--------------------------------------\n");
 #endif
 
-#ifdef VERBOSE_MODE
-    printf("Copying MEP contents...\n");
-#endif
     start = tbb::tick_count::now();
 #if COPY_PARALLEL_LEVEL == 0
     copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
@@ -185,9 +186,7 @@ int main(int argc, char *argv[]) {
     end = tbb::tick_count::now();
     total_time += (end - start);
     copy_time += (end - start);
-#ifdef VERBOSE_MODE
-    printf("MEP contents copied...\n");
-#endif
+    iteration_times[i] += (end - start).seconds();
 
 #ifdef TEST_COPY_MEP_FUNCTION
     printf("\n----------Output MEP contents----------\n");
@@ -216,6 +215,10 @@ int main(int argc, char *argv[]) {
   deallocate_mep_contents(mep_contents, total_sources);
   free(sorted_events);
   /* ------------------------------------------------------------------------ */
+
+#ifdef SHOW_HISTOGRAM
+  show_histogram_of_durations(iteration_times);
+#endif
 
   printf("\n----------SUMMARY----------\n");
   const double total_elements = mep_factor * total_sources * iterations;

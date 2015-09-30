@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 09 Sep 2015 01:12:36 PM CEST
+   * Last Modified : Wed 30 Sep 2015 12:37:17 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -19,6 +19,9 @@
 #include <string>
 #include <cstring>
 #include <omp.h>
+#include <numeric>
+#include <algorithm>
+#include <cmath>
 
 // #define VERBOSE_MODE
 
@@ -34,6 +37,8 @@ length_t get_range(length_t min_len, length_t max_len);
 void init_srand();
 void * try_malloc(size_t size);
 void * try_calloc(size_t num, size_t size);
+double get_mean_value(const std::vector<double> & values);
+void show_histogram_of_durations(const vector<double> & data_points);
 void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float
     margin_factor, size_t element_size);
 void deallocate_mep_contents(void **mep_contents, long long total_sources);

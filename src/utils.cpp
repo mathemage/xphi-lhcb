@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 09 Sep 2015 07:34:06 PM CEST
+   * Last Modified : Wed 30 Sep 2015 04:11:34 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -89,6 +89,38 @@ void * try_calloc(size_t num, size_t size) {
     printf("Exitting: calloc failed!\n");
     exit(EXIT_FAILURE);
   }
+}
+
+
+double get_mean_value(const vector<double> & values) {
+  return accumulate(values.begin(), values.end(), 0.0) / values.size();
+}
+
+
+void show_histogram_of_durations(const vector<double> & data_points) {
+  printf("\n--------STATISTICS OF TIME INTERVALS--------\n");
+  double bottom = *min_element(data_points.begin(), data_points.end());
+  double top = *max_element(data_points.begin(), data_points.end());
+  int total_bins = ceil(sqrt(data_points.size()));
+  vector<int> bins(total_bins, 0);
+  double bin_width = (top - bottom) / total_bins;
+
+  printf("min: %.5f secs\n", bottom);
+  printf("max: %.5f secs\n", top);
+  printf("mean: %.5f secs\n", get_mean_value(data_points));
+// TODO stddev
+  printf("Histogram:\n");
+  int bin_index;
+  for (auto & val : data_points) {
+    bin_index = (val - bottom) / bin_width;
+    bin_index = max(bin_index, 0);
+    bin_index = min(bin_index, total_bins - 1);
+    bins[bin_index]++;
+  }
+  for (int i = 0; i < total_bins; ++i) {
+    printf("[%.5f, %.5f): %d times\n", bottom + i * bin_width, bottom + (i+1) * bin_width, bins[i]);
+  }
+  printf("--------------------------------------------");
 }
 
 

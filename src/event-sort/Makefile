@@ -2,7 +2,7 @@ ICXX = icpc
 GCXX = /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-g++
 CXX=$(ICXX)
 INC_DIR=../../include
-CFLAGS=-g -lrt -I$(INC_DIR) -openmp
+CFLAGS=-g -lrt -I$(INC_DIR) -openmp -std=c++14
 ICFLAGS=$(CFLAGS) -qopt-report3 -qopt-report-phase=vec
 PREF_OFF_DIR=..
 CXXFILES=main.cpp $(PREF_OFF_DIR)/prefix-sum.cpp ../utils.cpp

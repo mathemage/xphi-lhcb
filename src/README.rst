@@ -18,6 +18,8 @@ Following functions has been added:
 - `get_range()` = calculate range from min and max, fail if invalid minmax values are given
 - `init_srand()` = initiate random seed (only once per program run)
 - `try_malloc()`, `try_calloc` = malloc and calloc with a check for success
+- `get_mean_value()` = mean value of vector of doubles
+- `time_statistics()` = show min, max, mean, and the histogram with :math:`\sqrt{\lceil n \rceil}` bins for :math:`n` data points
 - `allocate_sources()` = allocate buffers per each source: (`total_sources` x `mep_factor`) random lengths
 - `deallocate_sources()` = deallocate memory allocated for buffers by `allocate_sources()`
 - `generate_random_lengths()` = allocated & fill buffers with random integers in the range [`min_len`, `max_len`]

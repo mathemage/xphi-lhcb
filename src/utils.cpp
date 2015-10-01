@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 30 Sep 2015 04:11:34 PM CEST
+   * Last Modified : Thu 01 Oct 2015 02:58:36 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -97,8 +97,7 @@ double get_mean_value(const vector<double> & values) {
 }
 
 
-void show_histogram_of_durations(const vector<double> & data_points) {
-  printf("\n--------STATISTICS OF TIME INTERVALS--------\n");
+void time_statistics(const vector<double> & data_points) {
   double bottom = *min_element(data_points.begin(), data_points.end());
   double top = *max_element(data_points.begin(), data_points.end());
   int total_bins = ceil(sqrt(data_points.size()));
@@ -120,7 +119,6 @@ void show_histogram_of_durations(const vector<double> & data_points) {
   for (int i = 0; i < total_bins; ++i) {
     printf("[%.5f, %.5f): %d times\n", bottom + i * bin_width, bottom + (i+1) * bin_width, bins[i]);
   }
-  printf("--------------------------------------------");
 }
 
 

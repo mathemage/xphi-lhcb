@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Thu 01 Oct 2015 11:48:25 AM CEST
+ * Last Modified : Thu 01 Oct 2015 03:00:55 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -18,7 +18,7 @@
 
 // #define VERBOSE_MODE
 // #define TEST_COPY_MEP_FUNCTION
-#define SHOW_HISTOGRAM
+#define SHOW_STATISTICS
 
 /* 0 = no parallelization
  * 1 = OpenMP parallel for */
@@ -33,17 +33,147 @@
 #define COPY_PARALLEL_LEVEL 1
 
 
+// default values from configuration for LHCb Upgrade 2
+size_t mep_factor = 10000;
+long long iterations = 10;
+long long total_sources = 1000;
+length_t min_length = 80;
+length_t max_length = 150;
+float margin_factor = 1.5;
+tbb::tick_count tick, tock;
+tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
+double total_size = 0;
+
+#ifdef SHOW_STATISTICS
+vector<double> iteration_times;
+#endif
+
+
+double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_t *write_offsets, void **mep_contents, void *sorted_events, bool is_benchmarked) {
+  double iteration_time = 0;
+  modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
+#ifdef VERBOSE_MODE
+  printf("\n---------------------------\n");
+  printf("Iteration #%d\n", i+1);
+  printf("\nGenerated lengths of MEPs:\n");
+  for (long long si = 0; si < total_sources; si++) {
+    printf("Source #%lld:\n", si);
+    show_lengths(&sources[si * mep_factor], mep_factor);
+    printf("\n");
+  }
+#endif
+
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
+  tick = tbb::tick_count::now();
+#if READ_OFFSETS_PARALLEL_LEVEL == 0
+  get_read_offsets_serial_vesion(sources, read_offsets, total_sources, mep_factor);
+#elif READ_OFFSETS_PARALLEL_LEVEL == 1
+  get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor);
+#endif
+#ifdef VERBOSE_MODE
+  printf("\nAll read_offsets:\n");
+  show_offsets(read_offsets, mep_factor * total_sources);
+#endif
+  tock = tbb::tick_count::now();
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  total_time += (tock - tick);
+  read_offset_time += (tock - tick);
+#ifdef SHOW_STATISTICS
+  iteration_time += (tock - tick).seconds();
+#endif
+
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* PREFIX OFFSETS FOR WRITING: EXCLUSIVE SCAN */
+  tick = tbb::tick_count::now();
+#if WRITE_OFFSETS_PARALLEL_LEVEL == 0
+  get_write_offsets_serial_vesion(sources, write_offsets, total_sources, mep_factor);
+#elif WRITE_OFFSETS_PARALLEL_LEVEL == 1
+  get_write_offsets_OMP_vesion(sources, write_offsets, total_sources, mep_factor, read_offsets);
+#endif
+#ifdef VERBOSE_MODE
+  printf("\nAll write_offsets:\n");
+  show_offsets(write_offsets, mep_factor * total_sources);
+#endif
+  tock = tbb::tick_count::now();
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  total_time += (tock - tick);
+  write_offset_time += (tock - tick);
+#ifdef SHOW_STATISTICS
+  iteration_time += (tock - tick).seconds();
+#endif
+
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /* MEPs' MEMCOPY */
+#ifdef TEST_COPY_MEP_FUNCTION
+  uint8_t **mep_contents_byte = (uint8_t **) mep_contents;
+  uint8_t label = 1;
+  offset_t local_offset;
+  for (long long si = 0; si < total_sources; si++) {
+    local_offset = 0;
+    for (size_t mi = 0; mi < mep_factor; mi++) {
+      for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
+        mep_contents_byte[si][local_offset] = label;
+        local_offset++;
+      }
+      label++;
+    }
+  }
+  printf("\n----------Input MEP contents----------\n");
+  for (long long si = 0; si < total_sources; si++) {
+    printf("[");
+    local_offset = 0;
+    for (size_t mi = 0; mi < mep_factor; mi++) {
+      for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
+        printf("%x", mep_contents_byte[si][local_offset]);
+        local_offset++;
+      }
+    }
+    printf("]\n");
+  }
+  printf("--------------------------------------\n");
+#endif
+
+  tick = tbb::tick_count::now();
+#if COPY_PARALLEL_LEVEL == 0
+  copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
+#elif COPY_PARALLEL_LEVEL == 1
+  copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
+#endif
+  tock = tbb::tick_count::now();
+  total_time += (tock - tick);
+  copy_time += (tock - tick);
+#ifdef SHOW_STATISTICS
+  iteration_time += (tock - tick).seconds();
+#endif
+
+#ifdef TEST_COPY_MEP_FUNCTION
+  printf("\n----------Output MEP contents----------\n");
+  local_offset = 0;
+  uint8_t *sorted_events_byte = (uint8_t *) sorted_events;
+  for (size_t mi = 0; mi < mep_factor; mi++) {
+    printf("[");
+    for (long long si = 0; si < total_sources; si++) {
+      for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
+        printf("%x", sorted_events_byte[local_offset]);
+        local_offset++;
+      }
+    }
+    printf("]\n");
+  }
+  printf("--------------------------------------\n");
+#endif
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  total_size += write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
+
+  return iteration_time;
+}
+
+
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
   /* PARSING ARGUMENTS */
   int opt;
-
-  // default values from configuration for LHCb Upgrade 2
-  size_t mep_factor = 10000;
-  long long iterations = 10;
-  long long total_sources = 1000;
-  length_t min_length = 80;
-  length_t max_length = 150;
 
   while ((opt = getopt(argc, argv, "i:m:s:x:n:h")) != -1) {
     switch (opt) {
@@ -91,126 +221,17 @@ int main(int argc, char *argv[]) {
 
   offset_t *read_offsets = (offset_t *) try_calloc(total_sources * mep_factor, sizeof(offset_t));
   offset_t *write_offsets = (offset_t *) try_calloc(total_sources * mep_factor, sizeof(offset_t));
-  float margin_factor = 1.5;
   size_t mep_element_size = (min_length+max_length) / 2;
   void **mep_contents = allocate_mep_contents(total_sources, mep_factor, margin_factor, mep_element_size);
   void *sorted_events = try_malloc((size_t) ceil(total_sources * mep_factor * margin_factor * mep_element_size));
-  
-  tbb::tick_count start, end;
-  tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
-  double total_size = 0;
-  vector<double> iteration_times(iterations, 0);
+#ifdef SHOW_STATISTICS
+  iteration_times.assign(iterations, 0);
+#endif
 
+  // initial iteration won't be included in the benchmarks
+  double initial_time = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, false);
   for (long long i = 0; i < iterations; i++) {
-    modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
-#ifdef VERBOSE_MODE
-    printf("\n---------------------------\n");
-    printf("Iteration #%d\n", i+1);
-    printf("\nGenerated lengths of MEPs:\n");
-    for (long long si = 0; si < total_sources; si++) {
-      printf("Source #%lld:\n", si);
-      show_lengths(&sources[si * mep_factor], mep_factor);
-      printf("\n");
-    }
-#endif
-
-    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-    /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
-    start = tbb::tick_count::now();
-#if READ_OFFSETS_PARALLEL_LEVEL == 0
-    get_read_offsets_serial_vesion(sources, read_offsets, total_sources, mep_factor);
-#elif READ_OFFSETS_PARALLEL_LEVEL == 1
-    get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor);
-#endif
-#ifdef VERBOSE_MODE
-    printf("\nAll read_offsets:\n");
-    show_offsets(read_offsets, mep_factor * total_sources);
-#endif
-    end = tbb::tick_count::now();
-    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-    total_time += (end - start);
-    read_offset_time += (end - start);
-    iteration_times[i] += (end - start).seconds();
-
-    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-    /* PREFIX OFFSETS FOR WRITING: EXCLUSIVE SCAN */
-    start = tbb::tick_count::now();
-#if WRITE_OFFSETS_PARALLEL_LEVEL == 0
-    get_write_offsets_serial_vesion(sources, write_offsets, total_sources, mep_factor);
-#elif WRITE_OFFSETS_PARALLEL_LEVEL == 1
-    get_write_offsets_OMP_vesion(sources, write_offsets, total_sources, mep_factor, read_offsets);
-#endif
-#ifdef VERBOSE_MODE
-    printf("\nAll write_offsets:\n");
-    show_offsets(write_offsets, mep_factor * total_sources);
-#endif
-    end = tbb::tick_count::now();
-    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-    total_time += (end - start);
-    write_offset_time += (end - start);
-    iteration_times[i] += (end - start).seconds();
-
-    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-    /* MEPs' MEMCOPY */
-#ifdef TEST_COPY_MEP_FUNCTION
-    uint8_t **mep_contents_byte = (uint8_t **) mep_contents;
-    uint8_t label = 1;
-    offset_t local_offset;
-    for (long long si = 0; si < total_sources; si++) {
-      local_offset = 0;
-      for (size_t mi = 0; mi < mep_factor; mi++) {
-        for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
-          mep_contents_byte[si][local_offset] = label;
-          local_offset++;
-        }
-        label++;
-      }
-    }
-    printf("\n----------Input MEP contents----------\n");
-    for (long long si = 0; si < total_sources; si++) {
-      printf("[");
-      local_offset = 0;
-      for (size_t mi = 0; mi < mep_factor; mi++) {
-        for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
-          printf("%x", mep_contents_byte[si][local_offset]);
-          local_offset++;
-        }
-      }
-      printf("]\n");
-    }
-    printf("--------------------------------------\n");
-#endif
-
-    start = tbb::tick_count::now();
-#if COPY_PARALLEL_LEVEL == 0
-    copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
-#elif COPY_PARALLEL_LEVEL == 1
-    copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
-#endif
-    end = tbb::tick_count::now();
-    total_time += (end - start);
-    copy_time += (end - start);
-    iteration_times[i] += (end - start).seconds();
-
-#ifdef TEST_COPY_MEP_FUNCTION
-    printf("\n----------Output MEP contents----------\n");
-    local_offset = 0;
-    uint8_t *sorted_events_byte = (uint8_t *) sorted_events;
-    for (size_t mi = 0; mi < mep_factor; mi++) {
-      printf("[");
-      for (long long si = 0; si < total_sources; si++) {
-        for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
-          printf("%x", sorted_events_byte[local_offset]);
-          local_offset++;
-        }
-      }
-      printf("]\n");
-    }
-    printf("--------------------------------------\n");
-#endif
-    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-    total_size += write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
+    iteration_times[i] = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, true);
   }
 
   free(sources);
@@ -220,8 +241,11 @@ int main(int argc, char *argv[]) {
   free(sorted_events);
   /* ------------------------------------------------------------------------ */
 
-#ifdef SHOW_HISTOGRAM
-  show_histogram_of_durations(iteration_times);
+#ifdef SHOW_STATISTICS
+  printf("\n--------STATISTICS OF TIME INTERVALS--------\n");
+  printf("The initial iteration: %.5f secs\n", initial_time);
+  time_statistics(iteration_times);
+  printf("--------------------------------------------");
 #endif
 
   printf("\n----------SUMMARY----------\n");

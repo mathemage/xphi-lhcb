@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 30 Sep 2015 02:35:30 PM CEST
+ * Last Modified : Thu 01 Oct 2015 11:48:25 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -49,6 +49,10 @@ int main(int argc, char *argv[]) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
+        if (iterations < 1) {
+          fprintf(stderr, "Invalid number of iterations: enter positive integer!\n");
+          exit(EXIT_FAILURE);
+        }
         break;
       case 'm':
         mep_factor = get_argument_long_value(optarg, "-m");

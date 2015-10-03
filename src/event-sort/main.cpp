@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Thu 01 Oct 2015 03:00:55 PM CEST
+ * Last Modified : Sat 03 Oct 2015 04:40:18 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -77,8 +77,10 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #endif
   tock = tbb::tick_count::now();
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  total_time += (tock - tick);
-  read_offset_time += (tock - tick);
+  if (is_benchmarked) {
+    total_time += (tock - tick);
+    read_offset_time += (tock - tick);
+  }
 #ifdef SHOW_STATISTICS
   iteration_time += (tock - tick).seconds();
 #endif
@@ -97,8 +99,10 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #endif
   tock = tbb::tick_count::now();
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  total_time += (tock - tick);
-  write_offset_time += (tock - tick);
+  if (is_benchmarked) {
+    total_time += (tock - tick);
+    write_offset_time += (tock - tick);
+  }
 #ifdef SHOW_STATISTICS
   iteration_time += (tock - tick).seconds();
 #endif
@@ -141,8 +145,10 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
 #endif
   tock = tbb::tick_count::now();
-  total_time += (tock - tick);
-  copy_time += (tock - tick);
+  if (is_benchmarked) {
+    total_time += (tock - tick);
+    copy_time += (tock - tick);
+  }
 #ifdef SHOW_STATISTICS
   iteration_time += (tock - tick).seconds();
 #endif

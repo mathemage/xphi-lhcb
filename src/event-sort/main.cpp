@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sat 03 Oct 2015 04:40:18 PM CEST
+ * Last Modified : Sun 04 Oct 2015 04:07:31 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -170,7 +170,9 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   printf("--------------------------------------\n");
 #endif
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  total_size += write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
+  if (is_benchmarked) {
+    total_size += write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
+  }
 
   return iteration_time;
 }

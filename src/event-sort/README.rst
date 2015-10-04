@@ -1174,259 +1174,259 @@ The benchmarks tests which does not include the first iteration into the statist
   Using MIC0...
   icpc -g -lrt -I../../include -openmp -std=c++14 -qopt-report3 -qopt-report-phase=vec -mmic main.cpp ../prefix-sum.cpp ../utils.cpp -o event-sort.mic.exe
   icpc: remark #10397: optimization reports are generated in *.optrpt files in the output location
-  event-sort.mic.exe                                                                                 100%  142KB 142.2KB/s   00:00
+  event-sort.mic.exe                                                                                 100%  143KB 142.6KB/s   00:00
   benchmarks.sh                                                                                      100%  898     0.9KB/s   00:00
   libiomp5.so                                                                                        100% 1268KB   1.2MB/s   00:00
   Varying the number of sources and the MEP factor...
   ./event-sort.mic.exe -s 1 -m 10000000
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 1.32880 secs
-  min: 1.05432 secs
-  max: 1.10737 secs
-  mean: 1.07207 secs
+  The initial iteration: 1.32541 secs
+  min: 1.06163 secs
+  max: 1.10071 secs
+  mean: 1.07143 secs
   Histogram:
-  [1.05432, 1.06758): 5 times
-  [1.06758, 1.08084): 2 times
-  [1.08084, 1.09410): 2 times
-  [1.09410, 1.10737): 1 times
+  [1.06163, 1.07140): 7 times
+  [1.07140, 1.08117): 1 times
+  [1.08117, 1.09094): 1 times
+  [1.09094, 1.10071): 1 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+08
-  Time for computing read_offsets: 9.7346 secs
-  Time for computing write_offsets: 0.223285 secs
-  Time for copying: 0.762838 secs
-  Total time: 10.7207 secs
-  Total size: 12.6506 GB
-  Processed: 9.32773e+06 elements per second
-  Throughput: 1.18001 GBps
+  Time for computing read_offsets: 9.76519 secs
+  Time for computing write_offsets: 0.221946 secs
+  Time for copying: 0.727193 secs
+  Total time: 10.7143 secs
+  Total size: 11.5 GB
+  Processed: 9.3333e+06 elements per second
+  Throughput: 1.07333 GBps
   ---------------------------
   ./event-sort.mic.exe -s 2 -m 5000000
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.90013 secs
-  min: 0.64134 secs
-  max: 0.70137 secs
-  mean: 0.67096 secs
+  The initial iteration: 0.90188 secs
+  min: 0.62922 secs
+  max: 0.69683 secs
+  mean: 0.66163 secs
   Histogram:
-  [0.64134, 0.65635): 1 times
-  [0.65635, 0.67135): 4 times
-  [0.67135, 0.68636): 4 times
-  [0.68636, 0.70137): 1 times
+  [0.62922, 0.64613): 4 times
+  [0.64613, 0.66303): 1 times
+  [0.66303, 0.67993): 2 times
+  [0.67993, 0.69683): 3 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+08
-  Time for computing read_offsets: 5.57015 secs
-  Time for computing write_offsets: 0.213571 secs
-  Time for copying: 0.925902 secs
-  Total time: 6.70963 secs
-  Total size: 12.6507 GB
-  Processed: 1.4904e+07 elements per second
-  Throughput: 1.88545 GBps
+  Time for computing read_offsets: 5.47646 secs
+  Time for computing write_offsets: 0.213602 secs
+  Time for copying: 0.926254 secs
+  Total time: 6.61631 secs
+  Total size: 11.5 GB
+  Processed: 1.51142e+07 elements per second
+  Throughput: 1.73814 GBps
   ---------------------------
   ./event-sort.mic.exe -s 4 -m 2500000
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.68752 secs
-  min: 0.42487 secs
-  max: 0.44246 secs
-  mean: 0.43564 secs
+  The initial iteration: 0.74336 secs
+  min: 0.42776 secs
+  max: 0.44565 secs
+  mean: 0.43536 secs
   Histogram:
-  [0.42487, 0.42927): 3 times
-  [0.42927, 0.43367): 1 times
-  [0.43367, 0.43807): 0 times
-  [0.43807, 0.44246): 6 times
+  [0.42776, 0.43223): 3 times
+  [0.43223, 0.43671): 3 times
+  [0.43671, 0.44118): 3 times
+  [0.44118, 0.44565): 1 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+08
-  Time for computing read_offsets: 3.24945 secs
-  Time for computing write_offsets: 0.199336 secs
-  Time for copying: 0.90765 secs
-  Total time: 4.35643 secs
-  Total size: 12.6496 GB
-  Processed: 2.29546e+07 elements per second
-  Throughput: 2.90367 GBps
+  Time for computing read_offsets: 3.23586 secs
+  Time for computing write_offsets: 0.200783 secs
+  Time for copying: 0.917004 secs
+  Total time: 4.35365 secs
+  Total size: 11.5007 GB
+  Processed: 2.29693e+07 elements per second
+  Throughput: 2.64163 GBps
   ---------------------------
   ./event-sort.mic.exe -s 8 -m 1250000
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.58814 secs
-  min: 0.27774 secs
-  max: 0.28011 secs
-  mean: 0.27936 secs
+  The initial iteration: 0.58039 secs
+  min: 0.27776 secs
+  max: 0.27956 secs
+  mean: 0.27912 secs
   Histogram:
-  [0.27774, 0.27833): 1 times
-  [0.27833, 0.27892): 1 times
-  [0.27892, 0.27951): 2 times
-  [0.27951, 0.28011): 6 times
+  [0.27776, 0.27821): 1 times
+  [0.27821, 0.27866): 1 times
+  [0.27866, 0.27911): 1 times
+  [0.27911, 0.27956): 7 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+08
-  Time for computing read_offsets: 1.66061 secs
-  Time for computing write_offsets: 0.187562 secs
-  Time for copying: 0.945477 secs
-  Total time: 2.79365 secs
-  Total size: 12.6495 GB
-  Processed: 3.57955e+07 elements per second
-  Throughput: 4.52795 GBps
+  Time for computing read_offsets: 1.65574 secs
+  Time for computing write_offsets: 0.187871 secs
+  Time for copying: 0.947603 secs
+  Total time: 2.79121 secs
+  Total size: 11.5002 GB
+  Processed: 3.58267e+07 elements per second
+  Throughput: 4.12013 GBps
   ---------------------------
   ./event-sort.mic.exe
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.48634 secs
-  min: 0.15922 secs
-  max: 0.16015 secs
-  mean: 0.15969 secs
+  The initial iteration: 0.47676 secs
+  min: 0.15856 secs
+  max: 0.15935 secs
+  mean: 0.15896 secs
   Histogram:
-  [0.15922, 0.15945): 3 times
-  [0.15945, 0.15969): 2 times
-  [0.15969, 0.15992): 2 times
-  [0.15992, 0.16015): 3 times
+  [0.15856, 0.15876): 1 times
+  [0.15876, 0.15896): 4 times
+  [0.15896, 0.15915): 3 times
+  [0.15915, 0.15935): 2 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+08
-  Time for computing read_offsets: 0.169603 secs
-  Time for computing write_offsets: 0.284383 secs
-  Time for copying: 1.14295 secs
-  Total time: 1.59694 secs
-  Total size: 12.6511 GB
-  Processed: 6.26197e+07 elements per second
-  Throughput: 7.92206 GBps
+  Time for computing read_offsets: 0.164303 secs
+  Time for computing write_offsets: 0.288554 secs
+  Time for copying: 1.13675 secs
+  Total time: 1.58961 secs
+  Total size: 11.4998 GB
+  Processed: 6.29086e+07 elements per second
+  Throughput: 7.23434 GBps
   ---------------------------
   ./event-sort.mic.exe -s 1000 -m 1000 -i 100
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.25855 secs
-  min: 0.01563 secs
-  max: 0.01678 secs
-  mean: 0.01610 secs
+  The initial iteration: 0.26013 secs
+  min: 0.01560 secs
+  max: 0.01681 secs
+  mean: 0.01604 secs
   Histogram:
-  [0.01563, 0.01574): 26 times
-  [0.01574, 0.01586): 5 times
-  [0.01586, 0.01597): 8 times
-  [0.01597, 0.01609): 1 times
-  [0.01609, 0.01620): 15 times
-  [0.01620, 0.01632): 15 times
-  [0.01632, 0.01644): 15 times
-  [0.01644, 0.01655): 10 times
-  [0.01655, 0.01667): 4 times
-  [0.01667, 0.01678): 1 times
+  [0.01560, 0.01572): 29 times
+  [0.01572, 0.01584): 1 times
+  [0.01584, 0.01596): 3 times
+  [0.01596, 0.01609): 1 times
+  [0.01609, 0.01621): 43 times
+  [0.01621, 0.01633): 10 times
+  [0.01633, 0.01645): 9 times
+  [0.01645, 0.01657): 2 times
+  [0.01657, 0.01669): 1 times
+  [0.01669, 0.01681): 1 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+08
-  Time for computing read_offsets: 0.161907 secs
-  Time for computing write_offsets: 0.319677 secs
-  Time for copying: 1.12825 secs
-  Total time: 1.60984 secs
-  Total size: 11.6181 GB
-  Processed: 6.2118e+07 elements per second
-  Throughput: 7.21691 GBps
+  Time for computing read_offsets: 0.171142 secs
+  Time for computing write_offsets: 0.315524 secs
+  Time for copying: 1.1176 secs
+  Total time: 1.60426 secs
+  Total size: 11.5006 GB
+  Processed: 6.2334e+07 elements per second
+  Throughput: 7.1688 GBps
   ---------------------------
 
   Varying the number of iterations...
   ./event-sort.mic.exe -i 1
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.47644 secs
-  min: 0.15878 secs
-  max: 0.15878 secs
-  mean: 0.15878 secs
+  The initial iteration: 0.47896 secs
+  min: 0.15926 secs
+  max: 0.15926 secs
+  mean: 0.15926 secs
   Histogram:
-  [0.15878, 0.15878): 1 times
+  [0.15926, 0.15926): 1 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+07
-  Time for computing read_offsets: 0.0158988 secs
-  Time for computing write_offsets: 0.0291924 secs
-  Time for copying: 0.113692 secs
-  Total time: 0.158783 secs
-  Total size: 2.29996 GB
-  Processed: 6.29792e+07 elements per second
-  Throughput: 14.485 GBps
+  Time for computing read_offsets: 0.0160031 secs
+  Time for computing write_offsets: 0.0288499 secs
+  Time for copying: 0.114403 secs
+  Total time: 0.159256 secs
+  Total size: 1.14992 GB
+  Processed: 6.27919e+07 elements per second
+  Throughput: 7.22059 GBps
   ---------------------------
   ./event-sort.mic.exe -i 10
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.47431 secs
-  min: 0.15906 secs
-  max: 0.16028 secs
-  mean: 0.15955 secs
+  The initial iteration: 0.48201 secs
+  min: 0.15918 secs
+  max: 0.16195 secs
+  mean: 0.15974 secs
   Histogram:
-  [0.15906, 0.15936): 3 times
-  [0.15936, 0.15967): 4 times
-  [0.15967, 0.15997): 1 times
-  [0.15997, 0.16028): 2 times
+  [0.15918, 0.15987): 8 times
+  [0.15987, 0.16057): 1 times
+  [0.16057, 0.16126): 0 times
+  [0.16126, 0.16195): 1 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+08
-  Time for computing read_offsets: 0.164564 secs
-  Time for computing write_offsets: 0.287919 secs
-  Time for copying: 1.14306 secs
-  Total time: 1.59554 secs
-  Total size: 12.6506 GB
-  Processed: 6.26747e+07 elements per second
-  Throughput: 7.9287 GBps
+  Time for computing read_offsets: 0.160308 secs
+  Time for computing write_offsets: 0.288843 secs
+  Time for copying: 1.1483 secs
+  Total time: 1.59745 secs
+  Total size: 11.5002 GB
+  Processed: 6.25999e+07 elements per second
+  Throughput: 7.19909 GBps
   ---------------------------
   ./event-sort.mic.exe -i 100
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.47962 secs
-  min: 0.15905 secs
-  max: 0.16043 secs
-  mean: 0.15970 secs
+  The initial iteration: 0.48753 secs
+  min: 0.15807 secs
+  max: 0.15999 secs
+  mean: 0.15926 secs
   Histogram:
-  [0.15905, 0.15919): 6 times
-  [0.15919, 0.15933): 9 times
-  [0.15933, 0.15946): 6 times
-  [0.15946, 0.15960): 17 times
-  [0.15960, 0.15974): 16 times
-  [0.15974, 0.15988): 15 times
-  [0.15988, 0.16002): 15 times
-  [0.16002, 0.16015): 13 times
-  [0.16015, 0.16029): 1 times
-  [0.16029, 0.16043): 2 times
+  [0.15807, 0.15826): 1 times
+  [0.15826, 0.15845): 1 times
+  [0.15845, 0.15865): 1 times
+  [0.15865, 0.15884): 9 times
+  [0.15884, 0.15903): 12 times
+  [0.15903, 0.15922): 22 times
+  [0.15922, 0.15941): 18 times
+  [0.15941, 0.15961): 24 times
+  [0.15961, 0.15980): 8 times
+  [0.15980, 0.15999): 4 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 1e+09
-  Time for computing read_offsets: 1.61501 secs
-  Time for computing write_offsets: 2.89245 secs
-  Time for copying: 11.4624 secs
-  Total time: 15.9698 secs
-  Total size: 116.166 GB
-  Processed: 6.26181e+07 elements per second
-  Throughput: 7.27412 GBps
+  Time for computing read_offsets: 1.63671 secs
+  Time for computing write_offsets: 2.85695 secs
+  Time for copying: 11.432 secs
+  Total time: 15.9257 secs
+  Total size: 114.998 GB
+  Processed: 6.27917e+07 elements per second
+  Throughput: 7.22094 GBps
   ---------------------------
   ./event-sort.mic.exe -i 200
 
   --------STATISTICS OF TIME INTERVALS--------
-  The initial iteration: 0.47812 secs
-  min: 0.15795 secs
-  max: 0.16134 secs
-  mean: 0.15879 secs
+  The initial iteration: 0.47607 secs
+  min: 0.15833 secs
+  max: 0.15999 secs
+  mean: 0.15933 secs
   Histogram:
-  [0.15795, 0.15817): 10 times
-  [0.15817, 0.15840): 11 times
-  [0.15840, 0.15863): 28 times
-  [0.15863, 0.15885): 64 times
-  [0.15885, 0.15908): 60 times
-  [0.15908, 0.15930): 20 times
-  [0.15930, 0.15953): 4 times
-  [0.15953, 0.15976): 1 times
-  [0.15976, 0.15998): 1 times
-  [0.15998, 0.16021): 0 times
-  [0.16021, 0.16043): 0 times
-  [0.16043, 0.16066): 0 times
-  [0.16066, 0.16089): 0 times
-  [0.16089, 0.16111): 0 times
-  [0.16111, 0.16134): 1 times
+  [0.15833, 0.15844): 1 times
+  [0.15844, 0.15855): 1 times
+  [0.15855, 0.15866): 4 times
+  [0.15866, 0.15877): 2 times
+  [0.15877, 0.15888): 4 times
+  [0.15888, 0.15899): 13 times
+  [0.15899, 0.15910): 14 times
+  [0.15910, 0.15922): 24 times
+  [0.15922, 0.15933): 37 times
+  [0.15933, 0.15944): 28 times
+  [0.15944, 0.15955): 27 times
+  [0.15955, 0.15966): 21 times
+  [0.15966, 0.15977): 17 times
+  [0.15977, 0.15988): 5 times
+  [0.15988, 0.15999): 2 times
   --------------------------------------------
   ----------SUMMARY----------
   Total elements: 2e+09
-  Time for computing read_offsets: 3.23314 secs
-  Time for computing write_offsets: 5.80579 secs
-  Time for copying: 22.7194 secs
-  Total time: 31.7583 secs
-  Total size: 231.14 GB
-  Processed: 6.29756e+07 elements per second
-  Throughput: 7.2781 GBps
+  Time for computing read_offsets: 3.29147 secs
+  Time for computing write_offsets: 5.79865 secs
+  Time for copying: 22.775 secs
+  Total time: 31.8651 secs
+  Total size: 230.017 GB
+  Processed: 6.27646e+07 elements per second
+  Throughput: 7.21846 GBps
   ---------------------------

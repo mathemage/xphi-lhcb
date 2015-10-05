@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sun 04 Oct 2015 04:07:31 PM CEST
+ * Last Modified : Sun 04 Oct 2015 04:37:16 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -17,7 +17,7 @@
 #include <cmath>
 
 // #define VERBOSE_MODE
-// #define TEST_COPY_MEP_FUNCTION
+#define TEST_COPY_MEP_FUNCTION
 #define SHOW_STATISTICS
 
 /* 0 = no parallelization
@@ -53,8 +53,6 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   double iteration_time = 0;
   modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
 #ifdef VERBOSE_MODE
-  printf("\n---------------------------\n");
-  printf("Iteration #%d\n", i+1);
   printf("\nGenerated lengths of MEPs:\n");
   for (long long si = 0; si < total_sources; si++) {
     printf("Source #%lld:\n", si);
@@ -123,19 +121,6 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
       label++;
     }
   }
-  printf("\n----------Input MEP contents----------\n");
-  for (long long si = 0; si < total_sources; si++) {
-    printf("[");
-    local_offset = 0;
-    for (size_t mi = 0; mi < mep_factor; mi++) {
-      for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
-        printf("%x", mep_contents_byte[si][local_offset]);
-        local_offset++;
-      }
-    }
-    printf("]\n");
-  }
-  printf("--------------------------------------\n");
 #endif
 
   tick = tbb::tick_count::now();
@@ -154,18 +139,31 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #endif
 
 #ifdef TEST_COPY_MEP_FUNCTION
-  printf("\n----------Output MEP contents----------\n");
+  printf("\n----------Input MEP contents----------\n");
+  for (long long si = 0; si < total_sources; si++) {
+    printf("Source #%lld\t", si);
+    local_offset = 0;
+    for (size_t mi = 0; mi < mep_factor; mi++) {
+      for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
+        printf("%x", mep_contents_byte[si][local_offset]);
+        local_offset++;
+      }
+    }
+    printf("\n");
+  }
+  printf("--------------------------------------\n");
+  printf("----------Output MEP contents---------\n");
   local_offset = 0;
   uint8_t *sorted_events_byte = (uint8_t *) sorted_events;
   for (size_t mi = 0; mi < mep_factor; mi++) {
-    printf("[");
+    printf("Collision #%d\t", mi);
     for (long long si = 0; si < total_sources; si++) {
       for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
         printf("%x", sorted_events_byte[local_offset]);
         local_offset++;
       }
     }
-    printf("]\n");
+    printf("\n");
   }
   printf("--------------------------------------\n");
 #endif
@@ -239,6 +237,10 @@ int main(int argc, char *argv[]) {
   // initial iteration won't be included in the benchmarks
   double initial_time = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, false);
   for (long long i = 0; i < iterations; i++) {
+#ifdef VERBOSE_MODE
+    printf("\n---------------------------\n");
+    printf("Iteration #%d\n", i+1);
+#endif
     iteration_times[i] = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, true);
   }
 

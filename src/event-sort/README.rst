@@ -1430,3 +1430,57 @@ The benchmarks tests which does not include the first iteration into the statist
   Processed: 6.27646e+07 elements per second
   Throughput: 7.21846 GBps
   ---------------------------
+
+And statistics for 1000 iterations::
+
+  [xeonphi@lhcb-phi-mic0 ~]$ ./event-sort.mic.exe -i 1000
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.48388 secs
+  min: 0.15863 secs
+  max: 0.16078 secs
+  mean: 0.15952 secs
+  Histogram:
+  [0.15863, 0.15870): 3 times
+  [0.15870, 0.15877): 1 times
+  [0.15877, 0.15884): 3 times
+  [0.15884, 0.15890): 0 times
+  [0.15890, 0.15897): 5 times
+  [0.15897, 0.15904): 10 times
+  [0.15904, 0.15910): 9 times
+  [0.15910, 0.15917): 16 times
+  [0.15917, 0.15924): 30 times
+  [0.15924, 0.15931): 60 times
+  [0.15931, 0.15937): 91 times
+  [0.15937, 0.15944): 133 times
+  [0.15944, 0.15951): 136 times
+  [0.15951, 0.15958): 124 times
+  [0.15958, 0.15964): 114 times
+  [0.15964, 0.15971): 91 times
+  [0.15971, 0.15978): 75 times
+  [0.15978, 0.15984): 46 times
+  [0.15984, 0.15991): 24 times
+  [0.15991, 0.15998): 15 times
+  [0.15998, 0.16005): 3 times
+  [0.16005, 0.16011): 6 times
+  [0.16011, 0.16018): 1 times
+  [0.16018, 0.16025): 1 times
+  [0.16025, 0.16031): 0 times
+  [0.16031, 0.16038): 0 times
+  [0.16038, 0.16045): 0 times
+  [0.16045, 0.16052): 0 times
+  [0.16052, 0.16058): 0 times
+  [0.16058, 0.16065): 1 times
+  [0.16065, 0.16072): 0 times
+  [0.16072, 0.16078): 2 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total elements: 1e+10
+  Time for computing read_offsets: 16.3822 secs
+  Time for computing write_offsets: 29.0063 secs
+  Time for copying: 114.128 secs
+  Total time: 159.516 secs
+  Total size: 1149.98 GB
+  Processed: 6.26895e+07 elements per second
+  Throughput: 7.20919 GBps
+  ---------------------------

@@ -3,7 +3,7 @@ GCXX = /usr/linux-k1om-4.7/bin/x86_64-k1om-linux-gcc
 CXX=$(ICXX)
 INC_DIR=../../include
 INC=-I$(INC_DIR)
-CFLAGS = -lrt $(INC)
+CFLAGS = -lrt $(INC) -openmp -std=c++14
 CXXFILES=main.cpp ../utils.cpp ../prefix-sum.cpp
 
 # typing 'make' will invoke the first target entry in the file (in this case

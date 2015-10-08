@@ -2,6 +2,8 @@
 
 mic_num=0           # default on MIC0
 gcc_compile=false
+libiomp_dir=/home/xeonphi
+libs=../../lib/libiomp5.so
 
 while getopts ":gm:" opt; do
   case $opt in
@@ -33,5 +35,5 @@ else
 fi
 
 make "$make_what" \
-  && scp "$executable" xeonphi@mic$mic_num:~/ \
-  && ssh xeonphi@mic$mic_num "./$executable"
+  && scp "$executable" $libs xeonphi@mic$mic_num:~/ \
+  && ssh xeonphi@mic$mic_num "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$libiomp_dir && ./$executable"

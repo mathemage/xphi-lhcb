@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sun 04 Oct 2015 04:37:16 PM CEST
+ * Last Modified : Wed 07 Oct 2015 05:51:22 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -17,7 +17,7 @@
 #include <cmath>
 
 // #define VERBOSE_MODE
-#define TEST_COPY_MEP_FUNCTION
+// #define TEST_COPY_MEP_FUNCTION
 #define SHOW_STATISTICS
 
 /* 0 = no parallelization

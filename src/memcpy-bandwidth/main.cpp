@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sat 10 Oct 2015 06:22:36 PM CEST
+ * Last Modified : Sun 11 Oct 2015 06:44:09 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -13,6 +13,9 @@
 
 #include "commons.h"
 #include "utils.h"
+#include <cassert>
+
+#define VERBOSE_MODE
 
 // default values from configuration for LHCb Upgrade 2
 long long number_of_iterations = 2000;
@@ -40,7 +43,7 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  while ((opt = getopt(argc, argv, "i:s:n:h")) != -1) {
+  while ((opt = getopt(argc, argv, "i:c:n:h")) != -1) {
     switch (opt) {
       case 'i':
         number_of_iterations = get_argument_long_value(optarg, "-i");
@@ -49,20 +52,20 @@ int main(int argc, char *argv[]) {
           exit(EXIT_FAILURE);
         }
         break;
-      case 's':
-        chunk_size = get_argument_long_value(optarg, "-s");
+      case 'c':
+        chunk_size = get_argument_long_value(optarg, "-c");
         break;
       case 'n':
         number_of_chunks = get_argument_long_value(optarg, "-n");
         break;
       case 'h':
         printf("Usage: %s", argv[0]);
-        printf(" [-i number_of_iterations] [-s chunk_size in bytes] [-n number_of_chunks]");
+        printf(" [-i number_of_iterations] [-c chunk_size in bytes] [-n number_of_chunks]");
         printf("\n");
         exit(EXIT_SUCCESS);
       default:
         fprintf(stderr, "Usage: %s", argv[0]);
-        fprintf(stderr, " [-i number_of_iterations] [-s chunk_size in bytes] [-n number_of_chunks]");
+        fprintf(stderr, " [-i number_of_iterations] [-c chunk_size in bytes] [-n number_of_chunks]");
         fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }
@@ -71,6 +74,7 @@ int main(int argc, char *argv[]) {
 
   source = calloc(number_of_chunks, chunk_size);
   destination = calloc(number_of_chunks, chunk_size);
+  bool checkable = number_of_iterations * number_of_chunks * chunk_size < 1000000000;
 
   iteration_times.assign(number_of_iterations, 0);
   double total_time = 0;
@@ -78,8 +82,13 @@ int main(int argc, char *argv[]) {
   // initial iteration won't be included in the benchmarks
   double initial_time = stopwatch_an_iteration();
   for (long long i = 0; i < number_of_iterations; i++) {
-    printf("Iteration #%d...\n", i+1);
     total_time += (iteration_times[i] = stopwatch_an_iteration());
+#ifdef VERBOSE_MODE
+    if (checkable) {
+      assert(0 == memcmp(source, destination, number_of_chunks * chunk_size));
+      printf("Iteration #%d has been verified successfully...\n", i+1);
+    }
+#endif
   }
 
   free(source);

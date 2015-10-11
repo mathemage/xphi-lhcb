@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 29 Sep 2015 12:17:48 PM CEST
+   * Last Modified : Sun 11 Oct 2015 06:11:42 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -23,6 +23,7 @@
 
 typedef uint16_t length_t;
 typedef uint32_t offset_t;
+typedef char byte_t;
 
 using namespace std;
 

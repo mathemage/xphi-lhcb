@@ -5,8 +5,11 @@ gcc_compile=false
 prog_name="memcpy-bandwidth"
 libiomp_dir=/home/xeonphi
 libs=../../lib/libiomp5.so
+number_of_iterations=0
+chunk_size=0
+number_of_chunks=0
 
-while getopts ":gm::b" opt; do
+while getopts ":gm:i:c:n:" opt; do
   case $opt in
     m)
       mic_num=$OPTARG
@@ -14,6 +17,15 @@ while getopts ":gm::b" opt; do
     g)
       echo "Compiling with gcc" >&2
       gcc_compile=true
+      ;;
+    i)
+      number_of_iterations=$OPTARG
+      ;;
+    c)
+      chunk_size=$OPTARG
+      ;;
+    n)
+      number_of_chunks=$OPTARG
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -36,7 +48,19 @@ fi
 
 run_command="./$executable"
 
-echo "Using MIC$mic_num..."
+if [ "$number_of_iterations" -gt 0 ] ; then
+  run_command="$run_command -i $number_of_iterations"
+fi
+
+if [ "$chunk_size" -gt 0 ] ; then
+  run_command="$run_command -c $chunk_size"
+fi
+
+if [ "$number_of_chunks" -gt 0 ] ; then
+  run_command="$run_command -n $number_of_chunks"
+fi
+
+echo "Running $run_command using MIC$mic_num..."
 
 make "$make_what" \
   && scp "$executable" $libs xeonphi@mic$mic_num:~/ \

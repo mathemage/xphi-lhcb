@@ -48,6 +48,9 @@ For other functions and variables, see `../README.rst`.
 Output
 ------
 
+Same allocated for all iterations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Upload to `mic0` via::
 
   [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh
@@ -115,4 +118,74 @@ Upload to `mic0` via::
   Throughput: 65.4479 GBps
   ---------------------------
 
-The first iteration is 40 times slower, needs to be investigated...
+The first iteration is 40 times slower, which needs to be investigated. Cache lines might be the reasons, since the same block of memory is always copied. Therefore, we will also test what happens if we re-allocate memory for each iteration...
+
+Re-allocated memory on each iteration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Upload to `mic0` via::
+
+  [kha@lhcb-phi memcpy-bandwidth]$ ./upload-to-MIC.sh -i 2000
+  Running ./memcpy-bandwidth.mic.exe -i 2000 using MIC0...
+  icpc -g -O2 -lrt -I../../include -openmp -std=c++14 -qopt-report3 -qopt-report-phase=vec -mmic main.cpp ../utils.cpp -o memcpy-bandwidth.mic.exe
+  icpc: remark #10397: optimization reports are generated in *.optrpt files in the output location
+  memcpy-bandwidth.mic.exe                                                                           100%  140KB 139.8KB/s   00:00
+  libiomp5.so                                                                                        100% 1268KB   1.2MB/s   00:00
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.24374 secs
+  min: 0.02050 secs
+  max: 0.11904 secs
+  mean: 0.03538 secs
+  Histogram:
+  [0.02050, 0.02269): 944 times
+  [0.02269, 0.02488): 494 times
+  [0.02488, 0.02707): 100 times
+  [0.02707, 0.02926): 36 times
+  [0.02926, 0.03145): 47 times
+  [0.03145, 0.03364): 53 times
+  [0.03364, 0.03583): 34 times
+  [0.03583, 0.03802): 7 times
+  [0.03802, 0.04021): 0 times
+  [0.04021, 0.04240): 0 times
+  [0.04240, 0.04459): 0 times
+  [0.04459, 0.04678): 0 times
+  [0.04678, 0.04896): 0 times
+  [0.04896, 0.05115): 0 times
+  [0.05115, 0.05334): 0 times
+  [0.05334, 0.05553): 0 times
+  [0.05553, 0.05772): 0 times
+  [0.05772, 0.05991): 0 times
+  [0.05991, 0.06210): 0 times
+  [0.06210, 0.06429): 0 times
+  [0.06429, 0.06648): 0 times
+  [0.06648, 0.06867): 0 times
+  [0.06867, 0.07086): 0 times
+  [0.07086, 0.07305): 0 times
+  [0.07305, 0.07524): 0 times
+  [0.07524, 0.07743): 0 times
+  [0.07743, 0.07962): 0 times
+  [0.07962, 0.08181): 0 times
+  [0.08181, 0.08400): 0 times
+  [0.08400, 0.08619): 0 times
+  [0.08619, 0.08838): 0 times
+  [0.08838, 0.09057): 0 times
+  [0.09057, 0.09276): 0 times
+  [0.09276, 0.09495): 3 times
+  [0.09495, 0.09714): 4 times
+  [0.09714, 0.09933): 9 times
+  [0.09933, 0.10152): 31 times
+  [0.10152, 0.10371): 35 times
+  [0.10371, 0.10590): 39 times
+  [0.10590, 0.10809): 43 times
+  [0.10809, 0.11028): 54 times
+  [0.11028, 0.11247): 36 times
+  [0.11247, 0.11466): 18 times
+  [0.11466, 0.11685): 7 times
+  [0.11685, 0.11904): 6 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 70.759 secs
+  Total size: 800 GB
+  Throughput: 11.306 GBps
+  ---------------------------

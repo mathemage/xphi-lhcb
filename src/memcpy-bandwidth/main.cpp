@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sun 11 Oct 2015 06:44:09 PM CEST
+ * Last Modified : Mon 12 Oct 2015 10:47:19 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -72,16 +72,21 @@ int main(int argc, char *argv[]) {
   }
   /* ------------------------------------------------------------------------ */
 
-  source = calloc(number_of_chunks, chunk_size);
-  destination = calloc(number_of_chunks, chunk_size);
   bool checkable = number_of_iterations * number_of_chunks * chunk_size < 1000000000;
 
   iteration_times.assign(number_of_iterations, 0);
   double total_time = 0;
 
   // initial iteration won't be included in the benchmarks
+  source = try_calloc(number_of_chunks, chunk_size);
+  destination = try_calloc(number_of_chunks, chunk_size);
   double initial_time = stopwatch_an_iteration();
+  free(source);
+  free(destination);
+
   for (long long i = 0; i < number_of_iterations; i++) {
+    source = try_calloc(number_of_chunks, chunk_size);
+    destination = try_calloc(number_of_chunks, chunk_size);
     total_time += (iteration_times[i] = stopwatch_an_iteration());
 #ifdef VERBOSE_MODE
     if (checkable) {
@@ -89,10 +94,9 @@ int main(int argc, char *argv[]) {
       printf("Iteration #%d has been verified successfully...\n", i+1);
     }
 #endif
+    free(source);
+    free(destination);
   }
-
-  free(source);
-  free(destination);
 
   printf("\n--------STATISTICS OF TIME INTERVALS--------\n");
   printf("The initial iteration: %.5f secs\n", initial_time);

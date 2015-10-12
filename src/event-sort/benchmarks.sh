@@ -15,3 +15,4 @@ echo './event-sort.mic.exe -i 10' ; ./event-sort.mic.exe -i 10
 # careful: these might take some time!!
 echo './event-sort.mic.exe -i 100' ; ./event-sort.mic.exe -i 100
 echo './event-sort.mic.exe -i 200' ; ./event-sort.mic.exe -i 200
+echo './event-sort.mic.exe -i 1000' ; ./event-sort.mic.exe -i 1000

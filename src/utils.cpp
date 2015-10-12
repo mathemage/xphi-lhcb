@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 01 Oct 2015 02:58:36 PM CEST
+   * Last Modified : Mon 12 Oct 2015 01:09:18 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -80,6 +80,7 @@ void * try_malloc(size_t size) {
     printf("Exitting: malloc failed!\n");
     exit(EXIT_FAILURE);
   }
+  return chunk;
 }
 
 
@@ -89,6 +90,7 @@ void * try_calloc(size_t num, size_t size) {
     printf("Exitting: calloc failed!\n");
     exit(EXIT_FAILURE);
   }
+  return chunk;
 }
 
 
@@ -107,7 +109,6 @@ void time_statistics(const vector<double> & data_points) {
   printf("min: %.5f secs\n", bottom);
   printf("max: %.5f secs\n", top);
   printf("mean: %.5f secs\n", get_mean_value(data_points));
-// TODO stddev
   printf("Histogram:\n");
   int bin_index;
   for (auto & val : data_points) {

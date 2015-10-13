@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 12 Oct 2015 10:47:19 AM CEST
+ * Last Modified : Mon 12 Oct 2015 07:57:08 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -18,9 +18,9 @@
 #define VERBOSE_MODE
 
 // default values from configuration for LHCb Upgrade 2
-long long number_of_iterations = 2000;
+long long number_of_iterations = 1000;
 long long chunk_size = 2000000;
-long long number_of_chunks = 200;
+long long number_of_chunks = 500;
 tbb::tick_count tick, tock;
 void *source, *destination;
 
@@ -28,6 +28,14 @@ vector<double> iteration_times;
 
 // returns the duration of one iteration (in seconds)
 double stopwatch_an_iteration() {
+#pragma omp parallel
+
+#ifdef VERBOSE_MODE
+#pragma omp master
+  printf("Starting iteration with %d threads\r\n", omp_get_num_threads());
+#endif
+
+#pragma omp master
   tick = tbb::tick_count::now();
 #pragma omp parallel for
   for (long long ni = 0; ni < number_of_chunks; ni++) {
@@ -77,16 +85,15 @@ int main(int argc, char *argv[]) {
   iteration_times.assign(number_of_iterations, 0);
   double total_time = 0;
 
-  // initial iteration won't be included in the benchmarks
   source = try_calloc(number_of_chunks, chunk_size);
   destination = try_calloc(number_of_chunks, chunk_size);
-  double initial_time = stopwatch_an_iteration();
-  free(source);
-  free(destination);
 
+  // initial iteration won't be included in the benchmarks
+  double initial_time = stopwatch_an_iteration();
   for (long long i = 0; i < number_of_iterations; i++) {
-    source = try_calloc(number_of_chunks, chunk_size);
-    destination = try_calloc(number_of_chunks, chunk_size);
+#ifdef VERBOSE_MODE
+    printf("Iteration #%d: ", i+1);
+#endif
     total_time += (iteration_times[i] = stopwatch_an_iteration());
 #ifdef VERBOSE_MODE
     if (checkable) {
@@ -94,8 +101,6 @@ int main(int argc, char *argv[]) {
       printf("Iteration #%d has been verified successfully...\n", i+1);
     }
 #endif
-    free(source);
-    free(destination);
   }
 
   printf("\n--------STATISTICS OF TIME INTERVALS--------\n");

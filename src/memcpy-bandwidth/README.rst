@@ -48,10 +48,10 @@ For other functions and variables, see `../README.rst`.
 Output
 ------
 
-Same allocated for all iterations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Same allocated memory for all iterations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Upload to `mic0` via::
+2000 iterations, 200 chunks of 2 MB. Upload to `mic0` via::
 
   [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh
   Running ./memcpy-bandwidth.mic.exe using MIC0...
@@ -188,4 +188,69 @@ Upload to `mic0` via::
   Total time: 70.759 secs
   Total size: 800 GB
   Throughput: 11.306 GBps
+  ---------------------------
+
+After a discussion with my supervisor, we decided to switch back to the previou
+model: same allocated memory for all iterations.
+
+Same allocated memory for all iterations (with number of threads)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1000 iterations, 500 chunks of 2 MB. To show number of threads, we use `omp_get_num_threads()`::
+
+  [kha@lhcb-phi memcpy-bandwidth]$ ./upload-to-MIC.sh
+  Running ./memcpy-bandwidth.mic.exe using MIC0...
+  icpc -g -O2 -lrt -I../../include -openmp -std=c++14 -qopt-report3 -qopt-report-phase=vec -mmic main.cpp ../utils.cpp -o memcpy-bandwidth.mic.exe
+  icpc: remark #10397: optimization reports are generated in *.optrpt files in the output location
+  memcpy-bandwidth.mic.exe                                                                           100%  142KB 142.2KB/s   00:00
+  libiomp5.so                                                                                        100% 1268KB   1.2MB/s   00:00
+  Starting iteration with 228 threads
+  Iteration #1: Starting iteration with 228 threads
+  Iteration #2: Starting iteration with 228 threads
+  ...
+  Iteration #1000: Starting iteration with 228 threads
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.04463 secs
+  min: 0.01418 secs
+  max: 0.01536 secs
+  mean: 0.01464 secs
+  Histogram:
+  [0.01418, 0.01422): 9 times
+  [0.01422, 0.01426): 14 times
+  [0.01426, 0.01429): 43 times
+  [0.01429, 0.01433): 60 times
+  [0.01433, 0.01437): 66 times
+  [0.01437, 0.01440): 101 times
+  [0.01440, 0.01444): 77 times
+  [0.01444, 0.01448): 57 times
+  [0.01448, 0.01451): 44 times
+  [0.01451, 0.01455): 36 times
+  [0.01455, 0.01459): 14 times
+  [0.01459, 0.01462): 6 times
+  [0.01462, 0.01466): 8 times
+  [0.01466, 0.01470): 7 times
+  [0.01470, 0.01473): 8 times
+  [0.01473, 0.01477): 13 times
+  [0.01477, 0.01481): 36 times
+  [0.01481, 0.01484): 51 times
+  [0.01484, 0.01488): 60 times
+  [0.01488, 0.01492): 72 times
+  [0.01492, 0.01495): 47 times
+  [0.01495, 0.01499): 50 times
+  [0.01499, 0.01503): 37 times
+  [0.01503, 0.01506): 37 times
+  [0.01506, 0.01510): 18 times
+  [0.01510, 0.01514): 14 times
+  [0.01514, 0.01517): 8 times
+  [0.01517, 0.01521): 5 times
+  [0.01521, 0.01525): 1 times
+  [0.01525, 0.01528): 0 times
+  [0.01528, 0.01532): 0 times
+  [0.01532, 0.01536): 1 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 14.643 secs
+  Total size: 1000 GB
+  Throughput: 68.2922 GBps
   ---------------------------

@@ -254,3 +254,260 @@ Same allocated memory for all iterations (with number of threads)
   Total size: 1000 GB
   Throughput: 68.2922 GBps
   ---------------------------
+
+Varying number of threads
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Run benchmark with flag::
+
+  [kha@lhcb-phi memcpy-bandwidth]$ ./upload-to-MIC.sh -b
+  Running ./benchmarks.sh
+  Running \'sh ./benchmarks.sh\' using MIC2...
+  icpc -g -O2 -lrt -I../../include -openmp -std=c++14 -qopt-report3 -qopt-report-phase=vec -mmic main.cpp ../utils.cpp -o memcpy-bandwidth.mic.exe
+  icpc: remark #10397: optimization reports are generated in *.optrpt files in the output location
+  memcpy-bandwidth.mic.exe                                                                           100%  143KB 142.8KB/s   00:00
+  benchmarks.sh                                                                                      100% 1012     1.0KB/s   00:00
+  libiomp5.so                                                                                        100% 1268KB   1.2MB/s   00:00
+  Varying the number of threads...
+  ./memcpy-bandwidth.mic.exe -i 50 -t 1
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 1.74109 secs
+  min: 0.36746 secs
+  max: 0.37222 secs
+  mean: 0.37069 secs
+  Histogram:
+  [0.36746, 0.36806): 3 times
+  [0.36806, 0.36865): 1 times
+  [0.36865, 0.36925): 3 times
+  [0.36925, 0.36984): 5 times
+  [0.36984, 0.37043): 8 times
+  [0.37043, 0.37103): 6 times
+  [0.37103, 0.37162): 6 times
+  [0.37162, 0.37222): 18 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 18.5343 secs
+  Total size: 50 GB
+  Throughput: 2.6977 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 2
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.89692 secs
+  min: 0.18654 secs
+  max: 0.18807 secs
+  mean: 0.18708 secs
+  Histogram:
+  [0.18654, 0.18673): 4 times
+  [0.18673, 0.18692): 12 times
+  [0.18692, 0.18711): 14 times
+  [0.18711, 0.18730): 7 times
+  [0.18730, 0.18749): 9 times
+  [0.18749, 0.18768): 2 times
+  [0.18768, 0.18788): 1 times
+  [0.18788, 0.18807): 1 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 9.35416 secs
+  Total size: 50 GB
+  Throughput: 5.34522 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 4
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.46543 secs
+  min: 0.09364 secs
+  max: 0.09494 secs
+  mean: 0.09397 secs
+  Histogram:
+  [0.09364, 0.09381): 9 times
+  [0.09381, 0.09397): 18 times
+  [0.09397, 0.09413): 17 times
+  [0.09413, 0.09429): 3 times
+  [0.09429, 0.09445): 1 times
+  [0.09445, 0.09462): 1 times
+  [0.09462, 0.09478): 0 times
+  [0.09478, 0.09494): 1 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 4.69872 secs
+  Total size: 50 GB
+  Throughput: 10.6412 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 8
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.25385 secs
+  min: 0.04846 secs
+  max: 0.05004 secs
+  mean: 0.04899 secs
+  Histogram:
+  [0.04846, 0.04866): 5 times
+  [0.04866, 0.04886): 12 times
+  [0.04886, 0.04905): 18 times
+  [0.04905, 0.04925): 7 times
+  [0.04925, 0.04945): 4 times
+  [0.04945, 0.04964): 2 times
+  [0.04964, 0.04984): 1 times
+  [0.04984, 0.05004): 1 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 2.44951 secs
+  Total size: 50 GB
+  Throughput: 20.4123 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 16
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.13358 secs
+  min: 0.02842 secs
+  max: 0.03074 secs
+  mean: 0.02930 secs
+  Histogram:
+  [0.02842, 0.02871): 4 times
+  [0.02871, 0.02900): 1 times
+  [0.02900, 0.02929): 24 times
+  [0.02929, 0.02958): 17 times
+  [0.02958, 0.02987): 0 times
+  [0.02987, 0.03016): 1 times
+  [0.03016, 0.03045): 0 times
+  [0.03045, 0.03074): 3 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 1.46499 secs
+  Total size: 50 GB
+  Throughput: 34.13 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 32
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.07908 secs
+  min: 0.01854 secs
+  max: 0.02020 secs
+  mean: 0.01895 secs
+  Histogram:
+  [0.01854, 0.01874): 28 times
+  [0.01874, 0.01895): 8 times
+  [0.01895, 0.01916): 2 times
+  [0.01916, 0.01937): 2 times
+  [0.01937, 0.01958): 1 times
+  [0.01958, 0.01978): 1 times
+  [0.01978, 0.01999): 6 times
+  [0.01999, 0.02020): 2 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 0.947421 secs
+  Total size: 50 GB
+  Throughput: 52.7749 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 64
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.05850 secs
+  min: 0.01569 secs
+  max: 0.01754 secs
+  mean: 0.01621 secs
+  Histogram:
+  [0.01569, 0.01592): 14 times
+  [0.01592, 0.01615): 21 times
+  [0.01615, 0.01639): 3 times
+  [0.01639, 0.01662): 3 times
+  [0.01662, 0.01685): 2 times
+  [0.01685, 0.01708): 1 times
+  [0.01708, 0.01731): 5 times
+  [0.01731, 0.01754): 1 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 0.81029 secs
+  Total size: 50 GB
+  Throughput: 61.7063 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 128
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.04721 secs
+  min: 0.01496 secs
+  max: 0.01633 secs
+  mean: 0.01547 secs
+  Histogram:
+  [0.01496, 0.01513): 7 times
+  [0.01513, 0.01530): 13 times
+  [0.01530, 0.01547): 13 times
+  [0.01547, 0.01564): 5 times
+  [0.01564, 0.01581): 3 times
+  [0.01581, 0.01599): 1 times
+  [0.01599, 0.01616): 3 times
+  [0.01616, 0.01633): 5 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 0.7735 secs
+  Total size: 50 GB
+  Throughput: 64.6413 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 228
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.04471 secs
+  min: 0.01417 secs
+  max: 0.01519 secs
+  mean: 0.01460 secs
+  Histogram:
+  [0.01417, 0.01430): 6 times
+  [0.01430, 0.01442): 15 times
+  [0.01442, 0.01455): 6 times
+  [0.01455, 0.01468): 0 times
+  [0.01468, 0.01481): 5 times
+  [0.01481, 0.01493): 12 times
+  [0.01493, 0.01506): 4 times
+  [0.01506, 0.01519): 2 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 0.729879 secs
+  Total size: 50 GB
+  Throughput: 68.5045 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 256
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.10833 secs
+  min: 0.01585 secs
+  max: 0.01712 secs
+  mean: 0.01634 secs
+  Histogram:
+  [0.01585, 0.01601): 4 times
+  [0.01601, 0.01617): 13 times
+  [0.01617, 0.01633): 9 times
+  [0.01633, 0.01648): 7 times
+  [0.01648, 0.01664): 10 times
+  [0.01664, 0.01680): 4 times
+  [0.01680, 0.01696): 2 times
+  [0.01696, 0.01712): 1 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 0.816905 secs
+  Total size: 50 GB
+  Throughput: 61.2066 GBps
+  ---------------------------
+  ./memcpy-bandwidth.mic.exe -i 50 -t 512
+
+  --------STATISTICS OF TIME INTERVALS--------
+  The initial iteration: 0.55628 secs
+  min: 0.01576 secs
+  max: 0.01830 secs
+  mean: 0.01706 secs
+  Histogram:
+  [0.01576, 0.01607): 2 times
+  [0.01607, 0.01639): 7 times
+  [0.01639, 0.01671): 9 times
+  [0.01671, 0.01703): 5 times
+  [0.01703, 0.01734): 7 times
+  [0.01734, 0.01766): 12 times
+  [0.01766, 0.01798): 5 times
+  [0.01798, 0.01830): 3 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total time: 0.852908 secs
+  Total size: 50 GB
+  Throughput: 58.623 GBps
+  ---------------------------

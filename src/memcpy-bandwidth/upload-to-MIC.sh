@@ -9,8 +9,11 @@ number_of_iterations=0
 chunk_size=0
 number_of_chunks=0
 verbose_enabled=false
+nthreads=0
+run_benchmark=false
+benchmark_script="./benchmarks.sh"
 
-while getopts ":gm:i:c:n::v" opt; do
+while getopts ":g:bm:i:c:n:t::v" opt; do
   case $opt in
     m)
       mic_num=$OPTARG
@@ -28,8 +31,15 @@ while getopts ":gm:i:c:n::v" opt; do
     n)
       number_of_chunks=$OPTARG
       ;;
+    t)
+      nthreads=$OPTARG
+      ;;
     v)
       verbose_enabled=true
+      ;;
+    b)
+      echo "Running $benchmark_script" >&2
+      run_benchmark=true
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -50,7 +60,7 @@ else
   executable="$prog_name".mic.exe
 fi
 
-run_command="./$executable"
+run_command="./$executable" >&2
 
 if [ "$number_of_iterations" -gt 0 ] ; then
   run_command="$run_command -i $number_of_iterations"
@@ -68,8 +78,18 @@ if [ "$verbose_enabled" = true ] ; then
   run_command="$run_command -v"
 fi
 
-echo "Running $run_command using MIC$mic_num..."
+if [ "$nthreads" -gt 0 ] ; then
+  run_command="$run_command -t $nthreads"
+fi
+
+
+
+if [ "$run_benchmark" = true ] ; then
+  run_command="sh $benchmark_script"
+fi
+
+echo "Running '$run_command' using MIC$mic_num..."
 
 make "$make_what" \
-  && scp "$executable" $libs xeonphi@mic$mic_num:~/ \
+  && scp "$executable" "$benchmark_script" $libs xeonphi@mic$mic_num:~/ \
   && ssh xeonphi@mic$mic_num "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$libiomp_dir && $run_command"

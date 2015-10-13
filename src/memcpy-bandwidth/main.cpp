@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 13 Oct 2015 11:40:39 AM CEST
+ * Last Modified : Tue 13 Oct 2015 04:01:20 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -22,24 +22,32 @@ long long number_of_chunks = 500;
 tbb::tick_count tick, tock;
 void *source, *destination;
 bool verbose_enabled = false;
+int nthreads = 0;
 
 vector<double> iteration_times;
 
 // returns the duration of one iteration (in seconds)
 double stopwatch_an_iteration() {
-#pragma omp parallel
-
-#pragma omp master
-  if (verbose_enabled) {
-    printf("Starting iteration with %d threads\r\n", omp_get_num_threads());
-  }
-
-#pragma omp master
   tick = tbb::tick_count::now();
+
+  if (nthreads > 0) {
+    if (verbose_enabled) {
+      printf("Starting an iteration with %d threads...\n", nthreads);
+    }
+#pragma omp parallel for num_threads(nthreads)
+    for (long long ni = 0; ni < number_of_chunks; ni++) {
+      memcpy(destination + ni * chunk_size, source + ni * chunk_size, chunk_size);
+    }
+  } else {
+    if (verbose_enabled) {
+      printf("Starting an iteration using dynamic team...\n");
+    }
 #pragma omp parallel for
-  for (long long ni = 0; ni < number_of_chunks; ni++) {
-    memcpy(destination + ni * chunk_size, source + ni * chunk_size, chunk_size);
+    for (long long ni = 0; ni < number_of_chunks; ni++) {
+      memcpy(destination + ni * chunk_size, source + ni * chunk_size, chunk_size);
+    }
   }
+
   tock = tbb::tick_count::now();
   return (tock-tick).seconds();
 }
@@ -50,7 +58,7 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  while ((opt = getopt(argc, argv, ":vi:c:n::h")) != -1) {
+  while ((opt = getopt(argc, argv, ":vi:c:n::ht:")) != -1) {
     switch (opt) {
       case 'i':
         number_of_iterations = get_argument_long_value(optarg, "-i");
@@ -66,8 +74,11 @@ int main(int argc, char *argv[]) {
         number_of_chunks = get_argument_long_value(optarg, "-n");
         break;
       case 'v':
-        printf("Verbose mode enabled!");
+        printf("Verbose mode enabled!\n");
         verbose_enabled = true;
+        break;
+      case 't':
+        nthreads = get_argument_long_value(optarg, "-t");
         break;
       case 'h':
         printf("Usage: %s", argv[0]);
@@ -90,6 +101,14 @@ int main(int argc, char *argv[]) {
 
   source = try_calloc(number_of_chunks, chunk_size);
   destination = try_calloc(number_of_chunks, chunk_size);
+
+#pragma omp parallel
+  {
+#pragma omp master
+    if (verbose_enabled) {
+      printf("Max. %d threads available\n", omp_get_num_threads());
+    }
+  }
 
   // initial iteration won't be included in the benchmarks
   double initial_time = stopwatch_an_iteration();

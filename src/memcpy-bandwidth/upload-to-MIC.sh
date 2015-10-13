@@ -8,8 +8,9 @@ libs=../../lib/libiomp5.so
 number_of_iterations=0
 chunk_size=0
 number_of_chunks=0
+verbose_enabled=false
 
-while getopts ":gm:i:c:n:" opt; do
+while getopts ":gm:i:c:n::v" opt; do
   case $opt in
     m)
       mic_num=$OPTARG
@@ -26,6 +27,9 @@ while getopts ":gm:i:c:n:" opt; do
       ;;
     n)
       number_of_chunks=$OPTARG
+      ;;
+    v)
+      verbose_enabled=true
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -58,6 +62,10 @@ fi
 
 if [ "$number_of_chunks" -gt 0 ] ; then
   run_command="$run_command -n $number_of_chunks"
+fi
+
+if [ "$verbose_enabled" = true ] ; then
+  run_command="$run_command -v"
 fi
 
 echo "Running $run_command using MIC$mic_num..."

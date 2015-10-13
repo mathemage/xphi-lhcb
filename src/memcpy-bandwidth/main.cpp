@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 12 Oct 2015 07:57:08 PM CEST
+ * Last Modified : Tue 13 Oct 2015 11:40:39 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -15,14 +15,13 @@
 #include "utils.h"
 #include <cassert>
 
-#define VERBOSE_MODE
-
 // default values from configuration for LHCb Upgrade 2
 long long number_of_iterations = 1000;
 long long chunk_size = 2000000;
 long long number_of_chunks = 500;
 tbb::tick_count tick, tock;
 void *source, *destination;
+bool verbose_enabled = false;
 
 vector<double> iteration_times;
 
@@ -30,10 +29,10 @@ vector<double> iteration_times;
 double stopwatch_an_iteration() {
 #pragma omp parallel
 
-#ifdef VERBOSE_MODE
 #pragma omp master
-  printf("Starting iteration with %d threads\r\n", omp_get_num_threads());
-#endif
+  if (verbose_enabled) {
+    printf("Starting iteration with %d threads\r\n", omp_get_num_threads());
+  }
 
 #pragma omp master
   tick = tbb::tick_count::now();
@@ -51,7 +50,7 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  while ((opt = getopt(argc, argv, "i:c:n:h")) != -1) {
+  while ((opt = getopt(argc, argv, ":vi:c:n::h")) != -1) {
     switch (opt) {
       case 'i':
         number_of_iterations = get_argument_long_value(optarg, "-i");
@@ -66,14 +65,18 @@ int main(int argc, char *argv[]) {
       case 'n':
         number_of_chunks = get_argument_long_value(optarg, "-n");
         break;
+      case 'v':
+        printf("Verbose mode enabled!");
+        verbose_enabled = true;
+        break;
       case 'h':
         printf("Usage: %s", argv[0]);
-        printf(" [-i number_of_iterations] [-c chunk_size in bytes] [-n number_of_chunks]");
+        printf(" [-i number_of_iterations] [-c chunk_size in bytes] [-n number_of_chunks] [-v enable_verbose_mode]");
         printf("\n");
         exit(EXIT_SUCCESS);
       default:
         fprintf(stderr, "Usage: %s", argv[0]);
-        fprintf(stderr, " [-i number_of_iterations] [-c chunk_size in bytes] [-n number_of_chunks]");
+        fprintf(stderr, " [-i number_of_iterations] [-c chunk_size in bytes] [-n number_of_chunks] [-v enable_verbose_mode]");
         fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }
@@ -91,16 +94,14 @@ int main(int argc, char *argv[]) {
   // initial iteration won't be included in the benchmarks
   double initial_time = stopwatch_an_iteration();
   for (long long i = 0; i < number_of_iterations; i++) {
-#ifdef VERBOSE_MODE
-    printf("Iteration #%d: ", i+1);
-#endif
+    if (verbose_enabled) {
+      printf("Iteration #%d: ", i+1);
+    }
     total_time += (iteration_times[i] = stopwatch_an_iteration());
-#ifdef VERBOSE_MODE
-    if (checkable) {
+    if (verbose_enabled && checkable) {
       assert(0 == memcmp(source, destination, number_of_chunks * chunk_size));
       printf("Iteration #%d has been verified successfully...\n", i+1);
     }
-#endif
   }
 
   printf("\n--------STATISTICS OF TIME INTERVALS--------\n");

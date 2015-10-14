@@ -1803,3 +1803,106 @@ The benchmarks tests with enabled compiler flag `-O2`::
   Processed: 9.83053e+07 elements per second
   Throughput: 11.3056 GBps
   ---------------------------
+
+Statistics of throughputs
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1000 iterations showing statistics and histogram of throughputs of each iteration::
+
+  [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh -b
+  Running benchmarks.sh
+  Using MIC0...
+  icpc -g -O2 -lrt -I../../include -openmp -std=c++14 -qopt-report3 -qopt-report-phase=vec -mmic main.cpp ../prefix-sum.cpp ../utils.cpp -o event-sort.mic.exe
+  icpc: remark #10397: optimization reports are generated in *.optrpt files in the output location
+  event-sort.mic.exe                                                                                 100%  160KB 159.7KB/s   00:00
+  benchmarks.sh                                                                                      100%  980     1.0KB/s   00:00
+  libiomp5.so                                                                                        100% 1268KB   1.2MB/s   00:00
+  ./event-sort.mic.exe -i 1000
+
+  --------STATISTICS OF TIME INTERVALS (in secs)------------
+  The initial iteration: 0.43580
+  min: 0.10127
+  max: 0.10283
+  mean: 0.10184
+  Histogram:
+  [0.10127, 0.10132): 2 times
+  [0.10132, 0.10137): 4 times
+  [0.10137, 0.10142): 11 times
+  [0.10142, 0.10147): 21 times
+  [0.10147, 0.10152): 20 times
+  [0.10152, 0.10157): 50 times
+  [0.10157, 0.10161): 68 times
+  [0.10161, 0.10166): 72 times
+  [0.10166, 0.10171): 111 times
+  [0.10171, 0.10176): 100 times
+  [0.10176, 0.10181): 107 times
+  [0.10181, 0.10186): 77 times
+  [0.10186, 0.10190): 65 times
+  [0.10190, 0.10195): 42 times
+  [0.10195, 0.10200): 30 times
+  [0.10200, 0.10205): 23 times
+  [0.10205, 0.10210): 24 times
+  [0.10210, 0.10215): 22 times
+  [0.10215, 0.10220): 26 times
+  [0.10220, 0.10224): 19 times
+  [0.10224, 0.10229): 18 times
+  [0.10229, 0.10234): 20 times
+  [0.10234, 0.10239): 16 times
+  [0.10239, 0.10244): 18 times
+  [0.10244, 0.10249): 13 times
+  [0.10249, 0.10254): 7 times
+  [0.10254, 0.10258): 4 times
+  [0.10258, 0.10263): 8 times
+  [0.10263, 0.10268): 1 times
+  [0.10268, 0.10273): 0 times
+  [0.10273, 0.10278): 0 times
+  [0.10278, 0.10283): 1 times
+  --------------------------------------------
+  --------STATISTICS OF THROUGHPUTS (in GBps)---------------
+  min: 11.18319
+  max: 11.35458
+  mean: 11.29183
+  Histogram:
+  [11.18319, 11.18855): 1 times
+  [11.18855, 11.19391): 0 times
+  [11.19391, 11.19926): 0 times
+  [11.19926, 11.20462): 1 times
+  [11.20462, 11.20997): 9 times
+  [11.20997, 11.21533): 3 times
+  [11.21533, 11.22068): 8 times
+  [11.22068, 11.22604): 13 times
+  [11.22604, 11.23140): 19 times
+  [11.23140, 11.23675): 15 times
+  [11.23675, 11.24211): 24 times
+  [11.24211, 11.24746): 13 times
+  [11.24746, 11.25282): 23 times
+  [11.25282, 11.25818): 25 times
+  [11.25818, 11.26353): 23 times
+  [11.26353, 11.26889): 23 times
+  [11.26889, 11.27424): 26 times
+  [11.27424, 11.27960): 29 times
+  [11.27960, 11.28496): 46 times
+  [11.28496, 11.29031): 63 times
+  [11.29031, 11.29567): 81 times
+  [11.29567, 11.30102): 103 times
+  [11.30102, 11.30638): 101 times
+  [11.30638, 11.31174): 108 times
+  [11.31174, 11.31709): 72 times
+  [11.31709, 11.32245): 68 times
+  [11.32245, 11.32780): 47 times
+  [11.32780, 11.33316): 19 times
+  [11.33316, 11.33851): 21 times
+  [11.33851, 11.34387): 10 times
+  [11.34387, 11.34923): 4 times
+  [11.34923, 11.35458): 2 times
+  --------------------------------------------
+  ----------SUMMARY----------
+  Total elements: 1e+10
+  Time for computing read_offsets: 2.72268 secs
+  Time for computing write_offsets: 12.639 secs
+  Time for copying: 86.4759 secs
+  Total time: 101.838 secs
+  Total size: 1149.93 GB
+  Processed: 9.81956e+07 elements per second
+  Throughput: 11.2918 GBps
+  ---------------------------

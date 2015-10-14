@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 07 Oct 2015 05:51:22 PM CEST
+ * Last Modified : Wed 14 Oct 2015 10:45:24 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -44,8 +44,11 @@ tbb::tick_count tick, tock;
 tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
 double total_size = 0;
 
+const unsigned long long bytes_in_gb = 1000000000;
+
 #ifdef SHOW_STATISTICS
 vector<double> iteration_times;
+vector<double> iteration_throughputs;
 #endif
 
 
@@ -169,7 +172,9 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #endif
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   if (is_benchmarked) {
-    total_size += write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
+    double iteration_size = write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
+    total_size += iteration_size;
+    iteration_throughputs.emplace_back(iteration_size / iteration_time / bytes_in_gb);
   }
 
   return iteration_time;
@@ -232,6 +237,7 @@ int main(int argc, char *argv[]) {
   void *sorted_events = try_malloc((size_t) ceil(total_sources * mep_factor * margin_factor * mep_element_size));
 #ifdef SHOW_STATISTICS
   iteration_times.assign(iterations, 0);
+  iteration_throughputs.clear();
 #endif
 
   // initial iteration won't be included in the benchmarks
@@ -252,9 +258,13 @@ int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
 
 #ifdef SHOW_STATISTICS
-  printf("\n--------STATISTICS OF TIME INTERVALS--------\n");
-  printf("The initial iteration: %.5f secs\n", initial_time);
-  time_statistics(iteration_times);
+  printf("\n--------STATISTICS OF TIME INTERVALS (in secs)------------\n");
+  printf("The initial iteration: %.5f\n", initial_time);
+  create_histogram(iteration_times);
+  printf("--------------------------------------------");
+
+  printf("\n--------STATISTICS OF THROUGHPUTS (in GBps)---------------\n");
+  create_histogram(iteration_throughputs);
   printf("--------------------------------------------");
 #endif
 
@@ -265,7 +275,6 @@ int main(int argc, char *argv[]) {
   printf("Time for computing write_offsets: %g secs\n", write_offset_time.seconds());
   printf("Time for copying: %g secs\n", copy_time.seconds());
   printf("Total time: %g secs\n", total_time.seconds());
-  const unsigned long long bytes_in_gb = 1000000000;
   total_size /= bytes_in_gb;
   printf("Total size: %g GB\n", total_size);
   printf("Processed: %g elements per second\n", total_elements / total_time.seconds());

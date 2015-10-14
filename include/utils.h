@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 01 Oct 2015 02:57:44 PM CEST
+   * Last Modified : Wed 14 Oct 2015 10:33:41 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -38,7 +38,7 @@ void init_srand();
 void * try_malloc(size_t size);
 void * try_calloc(size_t num, size_t size);
 double get_mean_value(const std::vector<double> & values);
-void time_statistics(const vector<double> & data_points);
+void create_histogram(const vector<double> & data_points);
 void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float
     margin_factor, size_t element_size);
 void deallocate_mep_contents(void **mep_contents, long long total_sources);

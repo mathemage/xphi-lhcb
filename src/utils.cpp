@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 12 Oct 2015 01:09:18 PM CEST
+   * Last Modified : Wed 14 Oct 2015 10:42:49 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -99,16 +99,21 @@ double get_mean_value(const vector<double> & values) {
 }
 
 
-void time_statistics(const vector<double> & data_points) {
+void create_histogram(const vector<double> & data_points) {
+  if (data_points.empty()) {
+    printf("No data points provided!\n");
+    return;
+  }
+
   double bottom = *min_element(data_points.begin(), data_points.end());
   double top = *max_element(data_points.begin(), data_points.end());
   int total_bins = ceil(sqrt(data_points.size()));
   vector<int> bins(total_bins, 0);
   double bin_width = (top - bottom) / total_bins;
 
-  printf("min: %.5f secs\n", bottom);
-  printf("max: %.5f secs\n", top);
-  printf("mean: %.5f secs\n", get_mean_value(data_points));
+  printf("min: %.5f\n", bottom);
+  printf("max: %.5f\n", top);
+  printf("mean: %.5f\n", get_mean_value(data_points));
   printf("Histogram:\n");
   int bin_index;
   for (auto & val : data_points) {

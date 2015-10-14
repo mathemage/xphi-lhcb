@@ -258,7 +258,7 @@ Same allocated memory for all iterations (with number of threads)
 Varying number of threads
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Run benchmark with flag::
+Run benchmark with flag `-b`::
 
   [kha@lhcb-phi memcpy-bandwidth]$ ./upload-to-MIC.sh -b
   Running ./benchmarks.sh

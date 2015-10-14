@@ -23,6 +23,9 @@ Instructions
 
 Rainer instructed to simulate event sorting on Xeon Phi.
 
+.. image:: transpose.png
+
+
 Comments on the source code
 ---------------------------
 

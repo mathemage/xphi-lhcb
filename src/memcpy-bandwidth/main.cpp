@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 
   printf("\n--------STATISTICS OF TIME INTERVALS--------\n");
   printf("The initial iteration: %.5f secs\n", initial_time);
-  time_statistics(iteration_times);
+  create_histogram(iteration_times);
   printf("--------------------------------------------");
 
   printf("\n----------SUMMARY----------\n");

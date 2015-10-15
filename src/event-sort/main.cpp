@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 14 Oct 2015 10:45:24 AM CEST
+ * Last Modified : Thu 15 Oct 2015 11:22:59 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -43,6 +43,7 @@ float margin_factor = 1.5;
 tbb::tick_count tick, tock;
 tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
 double total_size = 0;
+int nthreads = 0;
 
 const unsigned long long bytes_in_gb = 1000000000;
 
@@ -186,7 +187,7 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  while ((opt = getopt(argc, argv, "i:m:s:x:n:h")) != -1) {
+  while ((opt = getopt(argc, argv, "t:i:m:s:x:n:h")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
@@ -207,18 +208,22 @@ int main(int argc, char *argv[]) {
       case 'x':
         max_length = get_argument_long_value(optarg, "-x");
         break;
+      case 't':
+        nthreads = get_argument_int_value(optarg, "-t");
+        printf("The program will use %d threads...", nthreads);
+        break;
       case 'h':
         printf("Usage: %s", argv[0]);
         printf(" [-i number_of_iterations] [-m mep_factor]");
         printf(" [-s number_of_sources]");
-        printf(" [-n min_length] [-x max_length]");
+        printf(" [-n min_length] [-x max_length] [-t nthreads]");
         printf("\n");
         exit(EXIT_SUCCESS);
       default:
         fprintf(stderr, "Usage: %s", argv[0]);
         fprintf(stderr, " [-i number_of_iterations] [-m mep_factor]");
         fprintf(stderr, " [-s number_of_sources]");
-        fprintf(stderr, " [-n min_length] [-x max_length]");
+        fprintf(stderr, " [-n min_length] [-x max_length] [-t nthreads]");
         fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }

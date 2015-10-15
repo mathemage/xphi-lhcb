@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 14 Oct 2015 10:33:41 AM CEST
+   * Last Modified : Thu 15 Oct 2015 11:17:32 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -26,6 +26,7 @@
 // #define VERBOSE_MODE
 
 long long get_argument_long_value(char *optarg, char *optname);
+int get_argument_int_value(char *optarg, char *optname);
 
 template<typename T>
 void show_array(T *arr, size_t elems, const int fixed_width, const size_t

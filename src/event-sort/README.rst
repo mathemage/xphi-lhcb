@@ -1909,3 +1909,10 @@ Statistics of throughputs
   Processed: 9.81956e+07 elements per second
   Throughput: 11.2918 GBps
   ---------------------------
+
+Comparison between througput of event-sort and memcpy-bandwidth
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Relation between the number of threads and the corresponding throughput:
+
+.. image:: nthreads-vs-throughput.png

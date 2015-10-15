@@ -48,7 +48,7 @@ main.cpp
 - `total_time`, `read_offset_time`, `write_offset_time`, `copy_time` = durations of various parts
 - `TEST_COPY_MEP_FUNCTION` = if defined, very correctnes of `copy_MEPs_*` functions
 - `stopwatch_an_iteration()` = perform one iteration (modify lenghts, offset calculation, copy data...) and return total time it took
-- `iteration_times` = vector of durations of each iteration
+- `iteration_times`, `iteration_throughputs` = vector of durations resp. throughputs of each iteration
 
 For other functions and variables, see `../prefix-offset/README.rst` and `../README.rst`.
 

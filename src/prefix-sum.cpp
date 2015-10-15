@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 15 Oct 2015 11:39:32 AM CEST
+   * Last Modified : Thu 15 Oct 2015 01:02:14 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -91,7 +91,7 @@ void get_write_offsets_serial_vesion(length_t *sources, offset_t *write_offsets,
 }
 
 
-void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, long long total_sources, size_t mep_factor, offset_t *read_offsets) {
+void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, long long total_sources, size_t mep_factor, offset_t *read_offsets, int nthreads) {
   if (total_sources < 0) {
     fprintf(stderr, "get_write_offsets_OMP_vesion: ");
     fprintf(stderr, "Invalid value of total_sources!\n");
@@ -103,16 +103,31 @@ void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, lo
     exit(EXIT_FAILURE);
   }
 
-#pragma omp parallel for
-  for (long long mi = 0; mi < mep_factor; mi++) {
-    offset_t local_offset = 0;
-    for (long long si = 0; si < total_sources; si++) {
-      local_offset += read_offsets[si * mep_factor + mi];
-    }
+  if (nthreads > 0) {
+#pragma omp parallel for num_threads(nthreads)
+    for (long long mi = 0; mi < mep_factor; mi++) {
+      offset_t local_offset = 0;
+      for (long long si = 0; si < total_sources; si++) {
+        local_offset += read_offsets[si * mep_factor + mi];
+      }
 
-    for (long long si = 0; si < total_sources; si++) {
-      write_offsets[mi*total_sources + si] = local_offset;
-      local_offset += sources[si * mep_factor + mi];
+      for (long long si = 0; si < total_sources; si++) {
+        write_offsets[mi*total_sources + si] = local_offset;
+        local_offset += sources[si * mep_factor + mi];
+      }
+    }
+  } else {
+#pragma omp parallel for
+    for (long long mi = 0; mi < mep_factor; mi++) {
+      offset_t local_offset = 0;
+      for (long long si = 0; si < total_sources; si++) {
+        local_offset += read_offsets[si * mep_factor + mi];
+      }
+
+      for (long long si = 0; si < total_sources; si++) {
+        write_offsets[mi*total_sources + si] = local_offset;
+        local_offset += sources[si * mep_factor + mi];
+      }
     }
   }
 }

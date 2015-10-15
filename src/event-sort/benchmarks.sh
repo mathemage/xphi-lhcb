@@ -16,3 +16,16 @@ echo './event-sort.mic.exe -i 10' ; ./event-sort.mic.exe -i 10
 echo './event-sort.mic.exe -i 100' ; ./event-sort.mic.exe -i 100
 echo './event-sort.mic.exe -i 200' ; ./event-sort.mic.exe -i 200
 echo './event-sort.mic.exe -i 1000' ; ./event-sort.mic.exe -i 1000
+
+echo "Varying the number of threads..."
+echo './event-sort.mic.exe -t 1 ' ; ./event-sort.mic.exe -t 1 
+echo './event-sort.mic.exe -t 2 ' ; ./event-sort.mic.exe -t 2 
+echo './event-sort.mic.exe -t 4 ' ; ./event-sort.mic.exe -t 4 
+echo './event-sort.mic.exe -t 8 ' ; ./event-sort.mic.exe -t 8 
+echo './event-sort.mic.exe -t 16' ; ./event-sort.mic.exe -t 16
+echo './event-sort.mic.exe -t 32' ; ./event-sort.mic.exe -t 32
+echo './event-sort.mic.exe -t 64' ; ./event-sort.mic.exe -t 64
+echo './event-sort.mic.exe -t 128' ; ./event-sort.mic.exe -t 128
+echo './event-sort.mic.exe -t 228' ; ./event-sort.mic.exe -t 228
+echo './event-sort.mic.exe -t 256' ; ./event-sort.mic.exe -t 256
+echo './event-sort.mic.exe -t 512' ; ./event-sort.mic.exe -t 512

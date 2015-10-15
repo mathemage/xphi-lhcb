@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Thu 15 Oct 2015 01:02:32 PM CEST
+ * Last Modified : Thu 15 Oct 2015 01:57:03 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -131,7 +131,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #if COPY_PARALLEL_LEVEL == 0
   copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
 #elif COPY_PARALLEL_LEVEL == 1
-  copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
+  copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, nthreads);
 #endif
   tock = tbb::tick_count::now();
   if (is_benchmarked) {

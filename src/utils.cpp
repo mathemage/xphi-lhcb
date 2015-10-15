@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 15 Oct 2015 11:16:57 AM CEST
+   * Last Modified : Thu 15 Oct 2015 02:02:04 PM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -227,13 +227,24 @@ void copy_MEPs_serial_version(void **mep_contents, offset_t *read_offsets, void 
 }
 
 
-void copy_MEPs_OMP_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources) {
+void copy_MEPs_OMP_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources, int nthreads) {
+  if (nthreads > 0) {
+#pragma omp parallel for num_threads(nthreads)
+    for (long long i = 0; i < total_sources * mep_factor; i++) {
+      long long si = i / mep_factor;
+      long long mi = i % mep_factor;
+      memcpy(sorted_events + write_offsets[mi * total_sources + si],
+          mep_contents[si] + read_offsets[si * mep_factor + mi],
+          sources[si * mep_factor + mi]);
+    }
+  } else {
 #pragma omp parallel for
-  for (long long i = 0; i < total_sources * mep_factor; i++) {
-    long long si = i / mep_factor;
-    long long mi = i % mep_factor;
-    memcpy(sorted_events + write_offsets[mi * total_sources + si],
-        mep_contents[si] + read_offsets[si * mep_factor + mi],
-        sources[si * mep_factor + mi]);
+    for (long long i = 0; i < total_sources * mep_factor; i++) {
+      long long si = i / mep_factor;
+      long long mi = i % mep_factor;
+      memcpy(sorted_events + write_offsets[mi * total_sources + si],
+          mep_contents[si] + read_offsets[si * mep_factor + mi],
+          sources[si * mep_factor + mi]);
+    }
   }
 }

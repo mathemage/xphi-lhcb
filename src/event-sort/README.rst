@@ -1910,6 +1910,10 @@ Statistics of throughputs
   Throughput: 11.2918 GBps
   ---------------------------
 
+Histogram of the throughputs:
+
+.. image:: ./histogram-throughput-1000-iterations.png
+
 Comparison between througput of event-sort and memcpy-bandwidth
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

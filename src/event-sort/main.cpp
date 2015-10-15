@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Thu 15 Oct 2015 11:22:59 AM CEST
+ * Last Modified : Thu 15 Oct 2015 11:32:28 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -71,7 +71,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #if READ_OFFSETS_PARALLEL_LEVEL == 0
   get_read_offsets_serial_vesion(sources, read_offsets, total_sources, mep_factor);
 #elif READ_OFFSETS_PARALLEL_LEVEL == 1
-  get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor);
+  get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor, nthreads);
 #endif
 #ifdef VERBOSE_MODE
   printf("\nAll read_offsets:\n");

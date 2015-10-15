@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Sat 12 Sep 2015 05:15:01 PM CEST
+   * Last Modified : Thu 15 Oct 2015 11:39:32 AM CEST
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -35,7 +35,7 @@ void get_read_offsets_serial_vesion(length_t *sources, offset_t *read_offsets, l
   }
 }
 
-void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor) {
+void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor, int nthreads) {
   if (total_sources < 0) {
     fprintf(stderr, "get_read_offsets_OMP_version: ");
     fprintf(stderr, "Invalid value of total_sources!\n");
@@ -47,12 +47,23 @@ void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, lon
     exit(EXIT_FAILURE);
   }
 
+  if (nthreads > 0) {
+#pragma omp parallel for num_threads(nthreads)
+    for (long long si = 0; si < total_sources; si++) {
+      read_offsets[si * mep_factor] = 0;
+      for (long long mi = 1; mi < mep_factor; mi++) {
+        read_offsets[si*mep_factor + mi] = read_offsets[si*mep_factor + mi - 1]
+          + sources[si * mep_factor + mi-1];
+      }
+    }
+  } else {
 #pragma omp parallel for
-  for (long long si = 0; si < total_sources; si++) {
-    read_offsets[si * mep_factor] = 0;
-    for (long long mi = 1; mi < mep_factor; mi++) {
-      read_offsets[si*mep_factor + mi] = read_offsets[si*mep_factor + mi - 1]
-                                          + sources[si * mep_factor + mi-1];
+    for (long long si = 0; si < total_sources; si++) {
+      read_offsets[si * mep_factor] = 0;
+      for (long long mi = 1; mi < mep_factor; mi++) {
+        read_offsets[si*mep_factor + mi] = read_offsets[si*mep_factor + mi - 1]
+          + sources[si * mep_factor + mi-1];
+      }
     }
   }
 }

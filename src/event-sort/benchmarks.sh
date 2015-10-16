@@ -29,3 +29,16 @@ echo './event-sort.mic.exe -t 128' ; ./event-sort.mic.exe -t 128
 echo './event-sort.mic.exe -t 228' ; ./event-sort.mic.exe -t 228
 echo './event-sort.mic.exe -t 256' ; ./event-sort.mic.exe -t 256
 echo './event-sort.mic.exe -t 512' ; ./event-sort.mic.exe -t 512
+
+echo "Varying the dimensions of memcpy blocks..."
+range="1 2 4 8 16 32 64 80 96 128"
+echo -e "\t\t1\t2\t4\t8\t16\t32\t64\t80\t96\t128"
+echo -e "\t_______________________________________________________________________________________"
+for x in $range; do
+  echo -ne "$x\t|\t"
+  for y in $range; do
+    #echo -ne "$x&$y\t"
+    ./event-sort.mic.exe -q -1 $x -2 $y
+  done
+  echo
+done

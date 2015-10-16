@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 16 Oct 2015 11:13:53 AM CEST
+ * Last Modified : Fri 16 Oct 2015 11:56:50 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -135,9 +135,6 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #elif COPY_PARALLEL_LEVEL == 1
   copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, nthreads);
 #elif COPY_PARALLEL_LEVEL == 2
-  // TODO set this through command-line args
-  s_block_size = 64;
-  m_block_size = 80;
   copy_MEPs_block_scheme(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, s_block_size, m_block_size);
 #endif
   tock = tbb::tick_count::now();
@@ -194,7 +191,7 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  while ((opt = getopt(argc, argv, "t:i:m:s:x:n:h")) != -1) {
+  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:h")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
@@ -219,11 +216,18 @@ int main(int argc, char *argv[]) {
         nthreads = get_argument_int_value(optarg, "-t");
         printf("The program will use %d threads...", nthreads);
         break;
+      case '1':
+        s_block_size = get_argument_int_value(optarg, "-1");
+        break;
+      case '2':
+        m_block_size = get_argument_int_value(optarg, "-2");
+        break;
       case 'h':
         printf("Usage: %s", argv[0]);
         printf(" [-i number_of_iterations] [-m mep_factor]");
         printf(" [-s number_of_sources]");
         printf(" [-n min_length] [-x max_length] [-t nthreads]");
+        printf(" [-1 s_block_size] [-2 m_block_size]");
         printf("\n");
         exit(EXIT_SUCCESS);
       default:
@@ -231,6 +235,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, " [-i number_of_iterations] [-m mep_factor]");
         fprintf(stderr, " [-s number_of_sources]");
         fprintf(stderr, " [-n min_length] [-x max_length] [-t nthreads]");
+        fprintf(stderr, " [-1 s_block_size] [-2 m_block_size]");
         fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }

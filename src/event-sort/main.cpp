@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Thu 15 Oct 2015 01:57:03 PM CEST
+ * Last Modified : Fri 16 Oct 2015 11:13:53 AM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -29,8 +29,9 @@
 #define WRITE_OFFSETS_PARALLEL_LEVEL 1
 
 /* 0 = no parallelization
- * 1 = OpenMP parallel for */
-#define COPY_PARALLEL_LEVEL 1
+ * 1 = OpenMP parallel for
+ * 2 = OpenMP parallel for + block scheme */
+#define COPY_PARALLEL_LEVEL 2
 
 
 // default values from configuration for LHCb Upgrade 2
@@ -44,6 +45,7 @@ tbb::tick_count tick, tock;
 tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
 double total_size = 0;
 int nthreads = 0;
+int s_block_size = 1, m_block_size = 1;
 
 const unsigned long long bytes_in_gb = 1000000000;
 
@@ -132,6 +134,11 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
 #elif COPY_PARALLEL_LEVEL == 1
   copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, nthreads);
+#elif COPY_PARALLEL_LEVEL == 2
+  // TODO set this through command-line args
+  s_block_size = 64;
+  m_block_size = 80;
+  copy_MEPs_block_scheme(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, s_block_size, m_block_size);
 #endif
   tock = tbb::tick_count::now();
   if (is_benchmarked) {

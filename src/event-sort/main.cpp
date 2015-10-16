@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 16 Oct 2015 11:56:50 AM CEST
+ * Last Modified : Fri 16 Oct 2015 03:26:04 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -46,6 +46,7 @@ tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, cop
 double total_size = 0;
 int nthreads = 0;
 int s_block_size = 1, m_block_size = 1;
+bool quiet_mode = false;
 
 const unsigned long long bytes_in_gb = 1000000000;
 
@@ -191,7 +192,7 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:h")) != -1) {
+  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:h:q")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
@@ -221,6 +222,9 @@ int main(int argc, char *argv[]) {
         break;
       case '2':
         m_block_size = get_argument_int_value(optarg, "-2");
+        break;
+      case 'q':
+        quiet_mode = true;
         break;
       case 'h':
         printf("Usage: %s", argv[0]);
@@ -274,6 +278,12 @@ int main(int argc, char *argv[]) {
   free(sorted_events);
   /* ------------------------------------------------------------------------ */
 
+  total_size /= bytes_in_gb;
+  if (quiet_mode) {
+    printf("%g\t", total_size / total_time.seconds());
+    exit(EXIT_SUCCESS);
+  }
+
 #ifdef SHOW_STATISTICS
   printf("\n--------STATISTICS OF TIME INTERVALS (in secs)------------\n");
   printf("The initial iteration: %.5f\n", initial_time);
@@ -292,7 +302,6 @@ int main(int argc, char *argv[]) {
   printf("Time for computing write_offsets: %g secs\n", write_offset_time.seconds());
   printf("Time for copying: %g secs\n", copy_time.seconds());
   printf("Total time: %g secs\n", total_time.seconds());
-  total_size /= bytes_in_gb;
   printf("Total size: %g GB\n", total_size);
   printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
   printf("Throughput: %g GBps\n", total_size / total_time.seconds());

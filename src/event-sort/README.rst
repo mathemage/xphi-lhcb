@@ -2310,5 +2310,5 @@ Run `benchmark.sh`::
 
 The numbers are throughputs given in GBps, where:
 
-  - Vertical dimension = blocksize for sources
-  - Horizontal dimension = blocksize for events/collisions/MEP fragments
+- Vertical dimension = blocksize for sources
+- Horizontal dimension = blocksize for events/collisions/MEP fragments

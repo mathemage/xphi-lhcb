@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 16 Oct 2015 03:26:04 PM CEST
+ * Last Modified : Sat 17 Oct 2015 12:12:58 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:h:q")) != -1) {
+  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hq")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");

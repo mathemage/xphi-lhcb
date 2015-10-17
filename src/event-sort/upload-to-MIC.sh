@@ -7,10 +7,11 @@ benchmark_script="benchmarks.sh"
 run_benchmark=false
 libiomp_dir=/home/xeonphi
 libs=../../lib/libiomp5.so
+flags=""
 
-while getopts ":gm::b" opt; do
+while getopts ":g0::bi:m:s:n:x:t:1:2:" opt; do
   case $opt in
-    m)
+    0)
       mic_num=$OPTARG
       ;;
     g)
@@ -20,6 +21,9 @@ while getopts ":gm::b" opt; do
     b)
       echo "Running $benchmark_script" >&2
       run_benchmark=true
+      ;;
+    [ismnxt12])
+      flags="$flags-$opt $OPTARG "
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -43,10 +47,10 @@ fi
 if [ "$run_benchmark" = true ] ; then
   run_command="sh $benchmark_script"
 else
-  run_command="./$executable"
+  run_command="./$executable $flags"
 fi
 
-echo "Using MIC$mic_num..."
+echo "Running '$run_command' using MIC$mic_num..."
 
 make "$make_what" \
   && scp "$executable" "$benchmark_script" $libs xeonphi@mic$mic_num:~/ \

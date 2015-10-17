@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 13 Oct 2015 04:01:20 PM CEST
+ * Last Modified : Sat 17 Oct 2015 03:54:10 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -123,12 +123,12 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  printf("\n--------STATISTICS OF TIME INTERVALS--------\n");
+  printf("\n______________STATISTICS OF THROUGHPUTS (in GBps)______________\n");
   printf("The initial iteration: %.5f secs\n", initial_time);
   create_histogram(iteration_times);
-  printf("--------------------------------------------");
+  printf("_______________________________________________________________\n");
 
-  printf("\n----------SUMMARY----------\n");
+  printf("\n____________________________SUMMARY____________________________\n");
   printf("Total time: %g secs\n", total_time);
 
   const unsigned long long bytes_in_gb = 1000000000;
@@ -137,6 +137,6 @@ int main(int argc, char *argv[]) {
   printf("Total size: %g GB\n", total_size);
 
   printf("Throughput: %g GBps\n", total_size / total_time);
-  printf("---------------------------\n");
+  printf("_______________________________________________________________\n");
   return 0;
 }

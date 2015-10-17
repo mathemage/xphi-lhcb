@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sat 17 Oct 2015 12:12:58 PM CEST
+ * Last Modified : Sat 17 Oct 2015 03:54:58 PM CEST
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -265,7 +265,7 @@ int main(int argc, char *argv[]) {
   double initial_time = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, false);
   for (long long i = 0; i < iterations; i++) {
 #ifdef VERBOSE_MODE
-    printf("\n---------------------------\n");
+    printf("\n______________________________________________________________\n");
     printf("Iteration #%d\n", i+1);
 #endif
     iteration_times[i] = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, true);
@@ -285,17 +285,17 @@ int main(int argc, char *argv[]) {
   }
 
 #ifdef SHOW_STATISTICS
-  printf("\n--------STATISTICS OF TIME INTERVALS (in secs)------------\n");
+  printf("\n____________STATISTICS OF TIME INTERVALS (in secs)____________\n");
   printf("The initial iteration: %.5f\n", initial_time);
   create_histogram(iteration_times);
-  printf("--------------------------------------------");
+  printf("______________________________________________________________\n");
 
-  printf("\n--------STATISTICS OF THROUGHPUTS (in GBps)---------------\n");
+  printf("\n______________STATISTICS OF THROUGHPUTS (in GBps)______________\n");
   create_histogram(iteration_throughputs);
-  printf("--------------------------------------------");
+  printf("_______________________________________________________________\n");
 #endif
 
-  printf("\n----------SUMMARY----------\n");
+  printf("\n____________________________SUMMARY____________________________\n");
   const double total_elements = mep_factor * total_sources * iterations;
   printf("Total elements: %g\n", total_elements);
   printf("Time for computing read_offsets: %g secs\n", read_offset_time.seconds());
@@ -305,6 +305,6 @@ int main(int argc, char *argv[]) {
   printf("Total size: %g GB\n", total_size);
   printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
   printf("Throughput: %g GBps\n", total_size / total_time.seconds());
-  printf("---------------------------\n");
+  printf("_______________________________________________________________\n");
   return 0;
 }

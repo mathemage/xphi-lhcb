@@ -31,6 +31,7 @@ echo './event-sort.mic.exe -t 256' ; ./event-sort.mic.exe -t 256
 echo './event-sort.mic.exe -t 512' ; ./event-sort.mic.exe -t 512
 
 echo "Varying the dimensions of memcpy blocks..."
+echo -e "\t Exponential scale:"
 range="1 2 4 8 16 32 64 80 96 128"
 echo -e "\t\t1\t2\t4\t8\t16\t32\t64\t80\t96\t128"
 echo -e "\t_______________________________________________________________________________________"
@@ -42,3 +43,23 @@ for x in $range; do
   done
   echo
 done
+
+(
+echo -e "Linear scale (close to the optimum):"
+srange=`seq 2 32`
+mrange=`seq 4 32`
+
+echo -ne "\t\t"
+for m in $mrange; do
+  echo -ne "$m\t"
+done
+
+echo -ne "\n\t_______________________________________________________________________________________\n"
+for s in $srange; do
+  echo -ne "$s\t|\t"
+  for m in $mrange; do
+    ./event-sort.mic.exe -q -1 $s -2 $m
+  done
+  echo
+done
+) | tee block-scheme-linear-scale.dat

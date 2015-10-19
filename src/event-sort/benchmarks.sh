@@ -44,6 +44,7 @@ for x in $range; do
   echo
 done
 
+niters=10
 (
 echo -e "Linear scale (close to the optimum):"
 srange=`seq 2 32`
@@ -54,14 +55,12 @@ for m in $mrange; do
   echo -ne "$m\t"
 done
 
-echo -ne "\n\t_______________________________________________________________________________________\n"
+echo -ne "\n\t_____________________________________________________________________________________________________________________________\n"
 for s in $srange; do
   echo -ne "$s\t|\t"
   for m in $mrange; do
-    ./event-sort.mic.exe -q -1 $s -2 $m
-    #./event-sort.mic.exe -q -1 $s -2 $m -i 100
+    ./event-sort.mic.exe -q -1 $s -2 $m -i $niters
   done
   echo
 done
-) | tee block-scheme-linear-scale.dat
-#) | tee block-scheme-linear-scale-100-iterations.dat
+) | tee "block-scheme-linear-scale-$niters-iterations.dat"

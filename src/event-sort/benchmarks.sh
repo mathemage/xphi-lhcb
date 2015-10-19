@@ -59,7 +59,9 @@ for s in $srange; do
   echo -ne "$s\t|\t"
   for m in $mrange; do
     ./event-sort.mic.exe -q -1 $s -2 $m
+    #./event-sort.mic.exe -q -1 $s -2 $m -i 100
   done
   echo
 done
 ) | tee block-scheme-linear-scale.dat
+#) | tee block-scheme-linear-scale-100-iterations.dat

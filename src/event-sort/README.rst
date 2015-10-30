@@ -23,7 +23,7 @@ Instructions
 
 Rainer instructed to simulate event sorting on Xeon Phi.
 
-.. image:: transpose.png
+.. image:: results/transpose.png
 
 
 Comments on the source code
@@ -1912,7 +1912,7 @@ Statistics of throughputs
 
 Histogram of the throughputs:
 
-.. image:: ./histogram-throughput-1000-iterations.png
+.. image:: results/histogram-throughput-1000-iterations.png
 
 Comparison between througput of event-sort and memcpy-bandwidth
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2286,7 +2286,7 @@ Event-sort with varying number of threads::
 
 Relation between the number of threads and the corresponding throughput:
 
-.. image:: nthreads-vs-throughput.png
+.. image:: results/nthreads-vs-throughput.png
 
 Varying the dimensions of memcpy blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -2312,3 +2312,7 @@ The numbers are throughputs given in GBps, where:
 
 - Vertical dimension = blocksize for sources
 - Horizontal dimension = blocksize for events/collisions/MEP fragments
+
+The more detailed scan for 2 to 32 sources and 4 to 32 events produces following histogram / heatmap:
+
+.. image:: results/block-scheme-heatmap.png

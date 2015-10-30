@@ -23,7 +23,7 @@ Instructions
 
 Rainer instructed to simulate event sorting on Xeon Phi.
 
-.. image:: results/transpose.png
+.. image:: img/transpose.png
 
 
 Comments on the source code
@@ -1912,7 +1912,7 @@ Statistics of throughputs
 
 Histogram of the throughputs:
 
-.. image:: results/histogram-throughput-1000-iterations.png
+.. image:: img/histogram-throughput-1000-iterations.png
 
 Comparison between througput of event-sort and memcpy-bandwidth
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2286,7 +2286,24 @@ Event-sort with varying number of threads::
 
 Relation between the number of threads and the corresponding throughput:
 
-.. image:: results/nthreads-vs-throughput.png
+.. image:: img/nthreads-vs-throughput.png
+
+Block-schemes for memcpy
+------------------------
+
+The memory access patterns for event-sort can by optimized by splitting the workload into blocks or blockschemes of fragments. The serial version of event-sort would process fragments followingly (each circle represents one MEP fragment, indexed by its source and its event):
+
+.. image:: img/block-scheme-before.png
+
+The previously mentioned parallelized event-sort would assign each circle to a single worker-thread. Since the sizes of fragments are typically 80 – 120 B, the memcpy is ineffective because the cache-lines are much larger and thus not fully used.
+
+By assigning the whole block of workload to every worker-thread, cache-lines are better saturated. There are 4 blocks of 2x2 size in the picture below, which would be processed by 4 worker-threads in parallel.
+
+.. image:: img/block-scheme-after.png
+
+Moreover, the spatial locality of data can also play important role: fragments in the rows of the picture are stored in a continuous block of memory. Thus, the blocks load from and store into only continuous parts of memory.
+
+The algorithm is given the block dimensions (on the picture: 2 sources per each block, 2 events per each block). The blocks are then distributed among worker-thread (by OpenMP parallel for loop). Within every block, each assigned worker performs a memcpy using previously computed read_offsets[] and write_offsets[].
 
 Varying the dimensions of memcpy blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2315,4 +2332,20 @@ The numbers are throughputs given in GBps, where:
 
 The more detailed scan for 2 to 32 sources and 4 to 32 events produces following histogram / heatmap:
 
-.. image:: results/block-scheme-heatmap.png
+.. image:: img/block-scheme-heatmap.png
+
+The event-sort with optimal block dimensions (according to the right heatmap)::
+
+  [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh -i 100 -1 5 -2 28
+  ...
+  ____________________________SUMMARY____________________________ 
+  Total elements: 1e+09
+  Time for computing read_offsets: 0.28435 secs
+  Time for computing write_offsets: 1.13954 secs
+  Time for copying: 3.1574 secs
+  Total time: 4.58129 secs
+  Total size: 114.998 GB
+  Processed: 2.18279e+08 elements per second
+  Throughput: 25.1016 GBps
+  Comparing the times, about 69% of all the time is spent doing memcopies. The rest is the computation of offsets.
+  ________________________________________________________________

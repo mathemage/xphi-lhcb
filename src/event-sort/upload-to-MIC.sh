@@ -37,11 +37,11 @@ while getopts ":g0::bi:m:s:n:x:t:1:2:" opt; do
 done
 
 if [ "$gcc_compile" = true ] ; then
-  make_what=mic-gcc
-  executable="$prog_name".mic.gcc.exe
+  make_what=knc-gcc
+  executable="$prog_name".knc.gcc.exe
 else
-  make_what=mic
-  executable="$prog_name".mic.exe
+  make_what=knc
+  executable="$prog_name".knc.exe
 fi
 
 if [ "$run_benchmark" = true ] ; then

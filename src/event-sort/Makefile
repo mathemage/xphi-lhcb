@@ -28,11 +28,11 @@ knc-gcc:
 	$(GCXX) $(CFLAGS) $(CXXFILES) -o $(GXX_NAME).knc.exe
 
 knl:
-	$(CXX) $(ICFLAGS) -xMIC_AVX512 $(CXXFILES) -o $(PROG_NAME).knc.exe
+	$(CXX) $(ICFLAGS) -xMIC_AVX512 $(CXXFILES) -o $(PROG_NAME).knl.exe
 
 # To start over from scratch, type 'make clean'.  This removes the executable
 # file, as well as old .o object files and *~ backup files:
 #
 clean:
 	$(RM) $(PROG_NAME).exe $(GXX_NAME).exe $(GXX_NAME).knc.exe \
-	$(PROG_NAME).knc.exe *.o *.optrpt *~
+	$(PROG_NAME).knc.exe $(PROG_NAME).knl.exe *.o *.optrpt *~

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Sat 17 Oct 2015 03:54:58 PM CEST
+ * Last Modified : Wed 11 Nov 2015 06:07:54 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -232,6 +232,7 @@ int main(int argc, char *argv[]) {
         printf(" [-s number_of_sources]");
         printf(" [-n min_length] [-x max_length] [-t nthreads]");
         printf(" [-1 s_block_size] [-2 m_block_size]");
+        printf(" [-q quiet_mode]");
         printf("\n");
         exit(EXIT_SUCCESS);
       default:
@@ -240,6 +241,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, " [-s number_of_sources]");
         fprintf(stderr, " [-n min_length] [-x max_length] [-t nthreads]");
         fprintf(stderr, " [-1 s_block_size] [-2 m_block_size]");
+        fprintf(stderr, " [-q quiet_mode]");
         fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }
@@ -281,7 +283,7 @@ int main(int argc, char *argv[]) {
   total_size /= bytes_in_gb;
   if (quiet_mode) {
     printf("%g\t", total_size / total_time.seconds());
-    exit(EXIT_SUCCESS);
+    return 0;
   }
 
 #ifdef SHOW_STATISTICS

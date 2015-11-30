@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 11 Nov 2015 06:07:54 PM CET
+ * Last Modified : Mon 30 Nov 2015 03:42:32 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -192,6 +192,13 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
+  const string help_msg = "Usage: %s "
+                          "[-i number_of_iterations] [-m mep_factor] "
+                          "[-s number_of_sources] "
+                          "[-n min_length] [-x max_length] [-t nthreads] "
+                          "[-1 s_block_size] [-2 m_block_size] "
+                          "[-q quiet_mode] "
+                          "\n";
   while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hq")) != -1) {
     switch (opt) {
       case 'i':
@@ -227,22 +234,10 @@ int main(int argc, char *argv[]) {
         quiet_mode = true;
         break;
       case 'h':
-        printf("Usage: %s", argv[0]);
-        printf(" [-i number_of_iterations] [-m mep_factor]");
-        printf(" [-s number_of_sources]");
-        printf(" [-n min_length] [-x max_length] [-t nthreads]");
-        printf(" [-1 s_block_size] [-2 m_block_size]");
-        printf(" [-q quiet_mode]");
-        printf("\n");
+        printf(help_msg.c_str(), argv[0]);
         exit(EXIT_SUCCESS);
       default:
-        fprintf(stderr, "Usage: %s", argv[0]);
-        fprintf(stderr, " [-i number_of_iterations] [-m mep_factor]");
-        fprintf(stderr, " [-s number_of_sources]");
-        fprintf(stderr, " [-n min_length] [-x max_length] [-t nthreads]");
-        fprintf(stderr, " [-1 s_block_size] [-2 m_block_size]");
-        fprintf(stderr, " [-q quiet_mode]");
-        fprintf(stderr, "\n");
+        fprintf(stderr,help_msg.c_str(), argv[0]);
         exit(EXIT_FAILURE);
     }
   }

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 01 Dec 2015 02:07:41 PM CET
+ * Last Modified : Tue 01 Dec 2015 03:29:08 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -68,6 +68,7 @@ void log_msg(string msg) {
 double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_t *write_offsets, void **mep_contents, void *sorted_events, bool is_benchmarked) {
   double iteration_time = 0;
   modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
+  log_msg("Lengths randomly modified");
 #ifdef VERBOSE_MODE
   printf("\nGenerated lengths of MEPs:\n");
   for (long long si = 0; si < total_sources; si++) {
@@ -90,6 +91,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   show_offsets(read_offsets, mep_factor * total_sources);
 #endif
   tock = tbb::tick_count::now();
+  log_msg("Read offsets computed");
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   if (is_benchmarked) {
     total_time += (tock - tick);
@@ -112,6 +114,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   show_offsets(write_offsets, mep_factor * total_sources);
 #endif
   tock = tbb::tick_count::now();
+  log_msg("Write offsets computed");
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   if (is_benchmarked) {
     total_time += (tock - tick);
@@ -148,6 +151,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   copy_MEPs_block_scheme(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, s_block_size, m_block_size);
 #endif
   tock = tbb::tick_count::now();
+  log_msg("MEP fragments copied");
   if (is_benchmarked) {
     total_time += (tock - tick);
     copy_time += (tock - tick);
@@ -190,6 +194,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
     double iteration_size = write_offsets[total_sources * mep_factor - 1] + sources[total_sources * mep_factor - 1];
     total_size += iteration_size;
     iteration_throughputs.emplace_back(iteration_size / iteration_time / bytes_in_gb);
+    log_msg("New throughput calculated and stored");
   }
 
   return iteration_time;

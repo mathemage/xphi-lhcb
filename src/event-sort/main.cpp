@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 01 Dec 2015 03:29:08 PM CET
+ * Last Modified : Tue 01 Dec 2015 04:42:31 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -55,14 +55,6 @@ const unsigned long long bytes_in_gb = 1000000000;
 vector<double> iteration_times;
 vector<double> iteration_throughputs;
 #endif
-
-
-void log_msg(string msg) {
-  if (log_progress && !quiet_mode) {
-    msg = "Event-sort log: <" + msg + ">\n";
-    printf(msg.c_str());
-  }
-}
 
 
 double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_t *write_offsets, void **mep_contents, void *sorted_events, bool is_benchmarked) {

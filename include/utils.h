@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Fri 16 Oct 2015 10:20:02 AM CEST
+   * Last Modified : Tue 01 Dec 2015 04:43:08 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -24,6 +24,9 @@
 #include <cmath>
 
 // #define VERBOSE_MODE
+
+extern bool log_progress;
+void log_msg(string msg);
 
 long long get_argument_long_value(char *optarg, char *optname);
 int get_argument_int_value(char *optarg, char *optname);

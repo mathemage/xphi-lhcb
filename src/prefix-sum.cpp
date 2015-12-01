@@ -5,13 +5,14 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Thu 15 Oct 2015 01:02:14 PM CEST
+   * Last Modified : Tue 01 Dec 2015 05:09:55 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
    ==========================================*/
 
 #include "prefix-sum.h"
+#include "utils.h"
 
 
 void get_read_offsets_serial_vesion(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor) {
@@ -26,6 +27,8 @@ void get_read_offsets_serial_vesion(length_t *sources, offset_t *read_offsets, l
     exit(EXIT_FAILURE);
   }
 
+  log_msg("Computing read offsets for " + to_string(total_sources)
+      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source");
   for (long long si = 0; si < total_sources; si++) {
     read_offsets[si * mep_factor] = 0;
     for (long long mi = 1; mi < mep_factor; mi++) {
@@ -47,6 +50,8 @@ void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, lon
     exit(EXIT_FAILURE);
   }
 
+  log_msg("Computing read offsets for " + to_string(total_sources)
+      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
   if (nthreads > 0) {
 #pragma omp parallel for num_threads(nthreads)
     for (long long si = 0; si < total_sources; si++) {
@@ -81,6 +86,8 @@ void get_write_offsets_serial_vesion(length_t *sources, offset_t *write_offsets,
     exit(EXIT_FAILURE);
   }
 
+  log_msg("Computing write offsets for " + to_string(total_sources)
+      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source");
   offset_t global_offset = 0;
   for (long long mi = 0; mi < mep_factor; mi++) {
     for (long long si = 0; si < total_sources; si++) {
@@ -103,6 +110,8 @@ void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, lo
     exit(EXIT_FAILURE);
   }
 
+  log_msg("Computing write offsets for " + to_string(total_sources)
+      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
   if (nthreads > 0) {
 #pragma omp parallel for num_threads(nthreads)
     for (long long mi = 0; mi < mep_factor; mi++) {

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 30 Nov 2015 03:42:32 PM CET
+ * Last Modified : Tue 01 Dec 2015 11:57:49 AM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -192,12 +192,17 @@ int main(int argc, char *argv[]) {
   /* PARSING ARGUMENTS */
   int opt;
 
-  const string help_msg = "Usage: %s "
-                          "[-i number_of_iterations] [-m mep_factor] "
-                          "[-s number_of_sources] "
-                          "[-n min_length] [-x max_length] [-t nthreads] "
-                          "[-1 s_block_size] [-2 m_block_size] "
-                          "[-q quiet_mode] "
+  const string help_msg = "Usage: %s [args]\n"
+                          "\n"
+                          " -i \t number of iterations\n"
+                          " -m \t MEP factor\n"
+                          " -s \t number of sources\n"
+                          " -n \t minimum length\n"
+                          " -x \t maximum length\n"
+                          " -t \t number of threads\n"
+                          " -1 \t sources per_block (for blockscheme memcpy)\n"
+                          " -2 \t MEP fragments per_block (for blockscheme memcpy)\n"
+                          " -q \t quiet mode\n"
                           "\n";
   while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hq")) != -1) {
     switch (opt) {

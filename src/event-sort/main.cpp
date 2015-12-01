@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 01 Dec 2015 11:57:49 AM CET
+ * Last Modified : Tue 01 Dec 2015 02:07:41 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -46,6 +46,7 @@ tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, cop
 double total_size = 0;
 int nthreads = 0;
 int s_block_size = 1, m_block_size = 1;
+bool log_progress = false;
 bool quiet_mode = false;
 
 const unsigned long long bytes_in_gb = 1000000000;
@@ -54,6 +55,14 @@ const unsigned long long bytes_in_gb = 1000000000;
 vector<double> iteration_times;
 vector<double> iteration_throughputs;
 #endif
+
+
+void log_msg(string msg) {
+  if (log_progress && !quiet_mode) {
+    msg = "Event-sort log: <" + msg + ">\n";
+    printf(msg.c_str());
+  }
+}
 
 
 double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_t *write_offsets, void **mep_contents, void *sorted_events, bool is_benchmarked) {
@@ -202,9 +211,10 @@ int main(int argc, char *argv[]) {
                           " -t \t number of threads\n"
                           " -1 \t sources per_block (for blockscheme memcpy)\n"
                           " -2 \t MEP fragments per_block (for blockscheme memcpy)\n"
+                          " -p \t log progress\n"
                           " -q \t quiet mode\n"
                           "\n";
-  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hq")) != -1) {
+  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hqp")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
@@ -235,6 +245,9 @@ int main(int argc, char *argv[]) {
       case '2':
         m_block_size = get_argument_int_value(optarg, "-2");
         break;
+      case 'p':
+        log_progress = true;
+        break;
       case 'q':
         quiet_mode = true;
         break;
@@ -246,38 +259,55 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
   }
+  log_msg("Command-line arguments parsed");
   /* ------------------------------------------------------------------------ */
 
   /* ------------------------------------------------------------------------ */
   /* TRANSPOSE OF MEPs */
   length_t *sources = (length_t *) try_calloc(total_sources * mep_factor, sizeof(length_t));
   fill_sources_with_random_lengths(sources, total_sources, mep_factor, min_length, max_length);
+  log_msg("Lengths of MEP fragments generated");
 
   offset_t *read_offsets = (offset_t *) try_calloc(total_sources * mep_factor, sizeof(offset_t));
+  log_msg("Array of read offsets allocated");
   offset_t *write_offsets = (offset_t *) try_calloc(total_sources * mep_factor, sizeof(offset_t));
+  log_msg("Array of write offsets allocated");
+
   size_t mep_element_size = (min_length+max_length) / 2;
   void **mep_contents = allocate_mep_contents(total_sources, mep_factor, margin_factor, mep_element_size);
+  log_msg("MEP fragments allocated");
+
   void *sorted_events = try_malloc((size_t) ceil(total_sources * mep_factor * margin_factor * mep_element_size));
+  log_msg("Array for re-organized MEP fragments allocated");
 #ifdef SHOW_STATISTICS
   iteration_times.assign(iterations, 0);
   iteration_throughputs.clear();
 #endif
 
   // initial iteration won't be included in the benchmarks
+  log_msg("Initial iteration started");
   double initial_time = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, false);
+  log_msg("Initial iteration finished");
   for (long long i = 0; i < iterations; i++) {
 #ifdef VERBOSE_MODE
     printf("\n______________________________________________________________\n");
     printf("Iteration #%d\n", i+1);
 #endif
+    log_msg("Iteration #" + to_string(i) + " started");
     iteration_times[i] = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, true);
+    log_msg("Iteration #" + to_string(i) + " finished");
   }
 
   free(sources);
+  log_msg("Array of lengths deallocated");
   free(read_offsets);
+  log_msg("Array of read offsets deallocated");
   free(write_offsets);
+  log_msg("Array of write offsets deallocated");
   deallocate_mep_contents(mep_contents, total_sources);
+  log_msg("MEP fragments deallocated");
   free(sorted_events);
+  log_msg("Array for re-organized MEP fragments deallocated");
   /* ------------------------------------------------------------------------ */
 
   total_size /= bytes_in_gb;

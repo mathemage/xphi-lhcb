@@ -2347,5 +2347,6 @@ The event-sort with optimal block dimensions (according to the right heatmap)::
   Total size: 114.998 GB
   Processed: 2.18279e+08 elements per second
   Throughput: 25.1016 GBps
-  Comparing the times, about 69% of all the time is spent doing memcopies. The rest is the computation of offsets.
   ________________________________________________________________
+
+Comparing the times, about 69% of all the time is spent doing memcopies. The rest is the computation of offsets.

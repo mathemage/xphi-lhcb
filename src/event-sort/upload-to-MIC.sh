@@ -4,12 +4,14 @@ mic_num=0           # default on MIC0
 gcc_compile=false
 prog_name="event-sort"
 benchmark_script="benchmarks.sh"
+problem_sizes_benchmark_script="problem-sizes-benchmarks.sh"
 run_benchmark=false
+run_problem_sizes_benchmark=false
 libiomp_dir=/home/xeonphi
 libs=../../lib/libiomp5.so
 flags=""
 
-while getopts ":g0::bi:m:s:n:x:t:1:2:" opt; do
+while getopts ":g:p0::bi:m:s:n:x:t:1:2:" opt; do
   case $opt in
     0)
       mic_num=$OPTARG
@@ -21,6 +23,10 @@ while getopts ":g0::bi:m:s:n:x:t:1:2:" opt; do
     b)
       echo "Running $benchmark_script" >&2
       run_benchmark=true
+      ;;
+    p)
+      echo "Running $problem_sizes_benchmark_script" >&2
+      run_problem_sizes_benchmark=true
       ;;
     [ismnxt12])
       flags="$flags-$opt $OPTARG "
@@ -44,7 +50,9 @@ else
   executable="$prog_name".knc.exe
 fi
 
-if [ "$run_benchmark" = true ] ; then
+if [ "$run_problem_sizes_benchmark" = true ] ; then
+  run_command="sh $problem_sizes_benchmark_script"
+elif [ "$run_benchmark" = true ] ; then
   run_command="sh $benchmark_script"
 else
   run_command="./$executable $flags"
@@ -53,5 +61,5 @@ fi
 echo "Running '$run_command' using MIC$mic_num..."
 
 make "$make_what" \
-  && scp "$executable" "$benchmark_script" $libs xeonphi@mic$mic_num:~/ \
+  && scp "$executable" "$benchmark_script" "$problem_sizes_benchmark_script" "$libs" xeonphi@mic$mic_num:~/ \
   && ssh xeonphi@mic$mic_num "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$libiomp_dir && $run_command"

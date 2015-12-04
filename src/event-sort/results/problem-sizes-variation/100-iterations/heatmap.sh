@@ -1,4 +1,6 @@
 #! /bin/bash
+niters=100
+
 for i in `seq 10`; do
   sources=$((100*$i))
   events=$((1000*$i))
@@ -11,7 +13,7 @@ for i in `seq 10`; do
     set xrange [4:32]
     set yrange [2:32]
 
-    set title "Throughputs for various dimensions of blocks (in GB/s), $sources sources, MEP factor of $events"
+    set title "Throughputs for various dimensions of blocks (in GB/s), $sources sources, MEP factor of $events, $niters iterations"
     plot "./$sources-$events.dat" u (\$1+4):(\$2+2):3 matrix w image notitle
 EOF
 done

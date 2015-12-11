@@ -5,18 +5,19 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 01 Dec 2015 05:20:48 PM CET
+   * Last Modified : Fri 11 Dec 2015 07:12:51 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
    ==========================================*/
 
 #include "utils.h"
+#include "commons.h"
 
 void log_msg(string msg) {
   if (log_progress) {
     msg = "Event-sort log: <" + msg + ">\n";
-    printf(msg.c_str());
+    fprintf(outstream, msg.c_str());
   }
 }
 
@@ -49,19 +50,19 @@ template<typename T>
 void show_array(T *arr, size_t elems, const int fixed_width, const size_t
     show_limit, const size_t elems_on_line) {
   if (elems > show_limit) {
-    printf("Too many numbers to display!\n");
+    fprintf(outstream, "Too many numbers to display!\n");
     return;
   }
 
   for (size_t i = 0; i < elems; i++) {
-    printf("%*d", fixed_width, arr[i]);
+    fprintf(outstream, "%*d", fixed_width, arr[i]);
     if (i % elems_on_line == elems_on_line - 1) {
-      printf("\n");
+      fprintf(outstream, "\n");
     } else {
-      printf("\t");
+      fprintf(outstream, "\t");
     }
   }
-  printf("\n");
+  fprintf(outstream, "\n");
 }
 
 
@@ -97,7 +98,7 @@ void init_srand() {
 void * try_malloc(size_t size) {
   void *chunk = malloc(size);
   if (chunk == NULL) {
-    printf("Exitting: malloc failed!\n");
+    fprintf(outstream, "Exitting: malloc failed!\n");
     exit(EXIT_FAILURE);
   }
   return chunk;
@@ -107,7 +108,7 @@ void * try_malloc(size_t size) {
 void * try_calloc(size_t num, size_t size) {
   void *chunk = calloc(num, size);
   if (chunk == NULL) {
-    printf("Exitting: calloc failed!\n");
+    fprintf(outstream, "Exitting: calloc failed!\n");
     exit(EXIT_FAILURE);
   }
   return chunk;
@@ -121,7 +122,7 @@ double get_mean_value(const vector<double> & values) {
 
 void create_histogram(const vector<double> & data_points) {
   if (data_points.empty()) {
-    printf("No data points provided!\n");
+    fprintf(outstream, "No data points provided!\n");
     return;
   }
 
@@ -131,10 +132,10 @@ void create_histogram(const vector<double> & data_points) {
   vector<int> bins(total_bins, 0);
   double bin_width = (top - bottom) / total_bins;
 
-  printf("min: %.5f\n", bottom);
-  printf("max: %.5f\n", top);
-  printf("mean: %.5f\n", get_mean_value(data_points));
-  printf("Histogram:\n");
+  fprintf(outstream, "min: %.5f\n", bottom);
+  fprintf(outstream, "max: %.5f\n", top);
+  fprintf(outstream, "mean: %.5f\n", get_mean_value(data_points));
+  fprintf(outstream, "Histogram:\n");
   int bin_index;
   for (auto & val : data_points) {
     bin_index = (val - bottom) / bin_width;
@@ -143,7 +144,7 @@ void create_histogram(const vector<double> & data_points) {
     bins[bin_index]++;
   }
   for (int i = 0; i < total_bins; ++i) {
-    printf("[%.5f, %.5f): %d times\n", bottom + i * bin_width, bottom + (i+1) * bin_width, bins[i]);
+    fprintf(outstream, "[%.5f, %.5f): %d times\n", bottom + i * bin_width, bottom + (i+1) * bin_width, bins[i]);
   }
 }
 
@@ -151,7 +152,7 @@ void create_histogram(const vector<double> & data_points) {
 length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
   length_t *lengths = (length_t *) calloc(elems, sizeof(length_t));
 #ifdef VERBOSE_MODE
-  printf("%d-array allocated...\n", elems);
+  fprintf(outstream, "%d-array allocated...\n", elems);
 #endif
   length_t range_len = get_range(min_len, max_len);
   init_srand();
@@ -159,7 +160,7 @@ length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_
     lengths[i] = min_len + (rand() % range_len);
   }
 #ifdef VERBOSE_MODE
-  printf("%d random lengths generated...\n", elems);
+  fprintf(outstream, "%d random lengths generated...\n", elems);
 #endif
   return lengths;
 }
@@ -182,7 +183,7 @@ void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float 
 #endif
   }
 #ifdef VERBOSE_MODE
-  printf("Total allocated memory for MEP contents: %llu\n", total_alloc_mem);
+  fprintf(outstream, "Total allocated memory for MEP contents: %llu\n", total_alloc_mem);
 #endif
   return sources;
 }

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 11 Dec 2015 03:55:42 PM CET
+ * Last Modified : Fri 11 Dec 2015 07:16:03 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -48,6 +48,7 @@ int nthreads = 0;
 int s_block_size = 1, m_block_size = 1;
 bool log_progress = false;
 bool quiet_mode = false;
+FILE *outstream = stdout;
 
 const unsigned long long bytes_in_gb = 1000000000;
 
@@ -55,8 +56,6 @@ const unsigned long long bytes_in_gb = 1000000000;
 vector<double> iteration_times;
 vector<double> iteration_throughputs;
 #endif
-
-FILE *outstream = stdout;
 
 double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_t *write_offsets, void **mep_contents, void *sorted_events, bool is_benchmarked) {
   double iteration_time = 0;
@@ -213,7 +212,7 @@ int main(int argc, char *argv[]) {
                           " -q \t quiet mode\n"
                           " -e \t redirect output to stderr\n"
                           "\n";
-  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hqp")) != -1) {
+  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hqpe")) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");

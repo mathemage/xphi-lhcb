@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 01 Dec 2015 04:42:31 PM CET
+ * Last Modified : Fri 11 Dec 2015 12:08:46 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -252,7 +252,7 @@ int main(int argc, char *argv[]) {
         printf(help_msg.c_str(), argv[0]);
         exit(EXIT_SUCCESS);
       default:
-        fprintf(stderr,help_msg.c_str(), argv[0]);
+        fprintf(stderr, help_msg.c_str(), argv[0]);
         exit(EXIT_FAILURE);
     }
   }

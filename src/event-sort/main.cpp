@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 11 Dec 2015 12:08:46 PM CET
+ * Last Modified : Fri 11 Dec 2015 03:49:05 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -62,11 +62,11 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   modify_lengths_randomly(sources, total_sources, mep_factor, min_length, max_length);
   log_msg("Lengths randomly modified");
 #ifdef VERBOSE_MODE
-  printf("\nGenerated lengths of MEPs:\n");
+  fprintf(stdout, "\nGenerated lengths of MEPs:\n");
   for (long long si = 0; si < total_sources; si++) {
-    printf("Source #%lld:\n", si);
+    fprintf(stdout, "Source #%lld:\n", si);
     show_lengths(&sources[si * mep_factor], mep_factor);
-    printf("\n");
+    fprintf(stdout, "\n");
   }
 #endif
 
@@ -79,7 +79,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor, nthreads);
 #endif
 #ifdef VERBOSE_MODE
-  printf("\nAll read_offsets:\n");
+  fprintf(stdout, "\nAll read_offsets:\n");
   show_offsets(read_offsets, mep_factor * total_sources);
 #endif
   tock = tbb::tick_count::now();
@@ -102,7 +102,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   get_write_offsets_OMP_vesion(sources, write_offsets, total_sources, mep_factor, read_offsets, nthreads);
 #endif
 #ifdef VERBOSE_MODE
-  printf("\nAll write_offsets:\n");
+  fprintf(stdout, "\nAll write_offsets:\n");
   show_offsets(write_offsets, mep_factor * total_sources);
 #endif
   tock = tbb::tick_count::now();
@@ -153,33 +153,33 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #endif
 
 #ifdef TEST_COPY_MEP_FUNCTION
-  printf("\n----------Input MEP contents----------\n");
+  fprintf(stdout, "\n----------Input MEP contents----------\n");
   for (long long si = 0; si < total_sources; si++) {
-    printf("Source #%lld\t", si);
+    fprintf(stdout, "Source #%lld\t", si);
     local_offset = 0;
     for (size_t mi = 0; mi < mep_factor; mi++) {
       for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
-        printf("%x", mep_contents_byte[si][local_offset]);
+        fprintf(stdout, "%x", mep_contents_byte[si][local_offset]);
         local_offset++;
       }
     }
-    printf("\n");
+    fprintf(stdout, "\n");
   }
-  printf("--------------------------------------\n");
-  printf("----------Output MEP contents---------\n");
+  fprintf(stdout, "--------------------------------------\n");
+  fprintf(stdout, "----------Output MEP contents---------\n");
   local_offset = 0;
   uint8_t *sorted_events_byte = (uint8_t *) sorted_events;
   for (size_t mi = 0; mi < mep_factor; mi++) {
-    printf("Collision #%d\t", mi);
+    fprintf(stdout, "Collision #%d\t", mi);
     for (long long si = 0; si < total_sources; si++) {
       for (length_t li = 0; li < sources[si * mep_factor + mi]; li++) {
-        printf("%x", sorted_events_byte[local_offset]);
+        fprintf(stdout, "%x", sorted_events_byte[local_offset]);
         local_offset++;
       }
     }
-    printf("\n");
+    fprintf(stdout, "\n");
   }
-  printf("--------------------------------------\n");
+  fprintf(stdout, "--------------------------------------\n");
 #endif
   /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   if (is_benchmarked) {
@@ -210,6 +210,7 @@ int main(int argc, char *argv[]) {
                           " -2 \t MEP fragments per_block (for blockscheme memcpy)\n"
                           " -p \t log progress\n"
                           " -q \t quiet mode\n"
+                          //" -e \t redirect output to stderr\n"
                           "\n";
   while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hqp")) != -1) {
     switch (opt) {
@@ -234,7 +235,7 @@ int main(int argc, char *argv[]) {
         break;
       case 't':
         nthreads = get_argument_int_value(optarg, "-t");
-        printf("The program will use %d threads...", nthreads);
+        fprintf(stdout, "The program will use %d threads...", nthreads);
         break;
       case '1':
         s_block_size = get_argument_int_value(optarg, "-1");
@@ -249,7 +250,7 @@ int main(int argc, char *argv[]) {
         quiet_mode = true;
         break;
       case 'h':
-        printf(help_msg.c_str(), argv[0]);
+        fprintf(stdout, help_msg.c_str(), argv[0]);
         exit(EXIT_SUCCESS);
       default:
         fprintf(stderr, help_msg.c_str(), argv[0]);
@@ -287,8 +288,8 @@ int main(int argc, char *argv[]) {
   log_msg("Initial iteration finished");
   for (long long i = 0; i < iterations; i++) {
 #ifdef VERBOSE_MODE
-    printf("\n______________________________________________________________\n");
-    printf("Iteration #%d\n", i+1);
+    fprintf(stdout, "\n______________________________________________________________\n");
+    fprintf(stdout, "Iteration #%d\n", i+1);
 #endif
     log_msg("Iteration #" + to_string(i) + " started");
     iteration_times[i] = stopwatch_an_iteration(sources, read_offsets, write_offsets, mep_contents, sorted_events, true);
@@ -309,31 +310,31 @@ int main(int argc, char *argv[]) {
 
   total_size /= bytes_in_gb;
   if (quiet_mode) {
-    printf("%g\t", total_size / total_time.seconds());
+    fprintf(stdout, "%g\t", total_size / total_time.seconds());
     return 0;
   }
 
 #ifdef SHOW_STATISTICS
-  printf("\n____________STATISTICS OF TIME INTERVALS (in secs)____________\n");
-  printf("The initial iteration: %.5f\n", initial_time);
+  fprintf(stdout, "\n____________STATISTICS OF TIME INTERVALS (in secs)____________\n");
+  fprintf(stdout, "The initial iteration: %.5f\n", initial_time);
   create_histogram(iteration_times);
-  printf("______________________________________________________________\n");
+  fprintf(stdout, "______________________________________________________________\n");
 
-  printf("\n______________STATISTICS OF THROUGHPUTS (in GBps)______________\n");
+  fprintf(stdout, "\n______________STATISTICS OF THROUGHPUTS (in GBps)______________\n");
   create_histogram(iteration_throughputs);
-  printf("_______________________________________________________________\n");
+  fprintf(stdout, "_______________________________________________________________\n");
 #endif
 
-  printf("\n____________________________SUMMARY____________________________\n");
+  fprintf(stdout, "\n____________________________SUMMARY____________________________\n");
   const double total_elements = mep_factor * total_sources * iterations;
-  printf("Total elements: %g\n", total_elements);
-  printf("Time for computing read_offsets: %g secs\n", read_offset_time.seconds());
-  printf("Time for computing write_offsets: %g secs\n", write_offset_time.seconds());
-  printf("Time for copying: %g secs\n", copy_time.seconds());
-  printf("Total time: %g secs\n", total_time.seconds());
-  printf("Total size: %g GB\n", total_size);
-  printf("Processed: %g elements per second\n", total_elements / total_time.seconds());
-  printf("Throughput: %g GBps\n", total_size / total_time.seconds());
-  printf("_______________________________________________________________\n");
+  fprintf(stdout, "Total elements: %g\n", total_elements);
+  fprintf(stdout, "Time for computing read_offsets: %g secs\n", read_offset_time.seconds());
+  fprintf(stdout, "Time for computing write_offsets: %g secs\n", write_offset_time.seconds());
+  fprintf(stdout, "Time for copying: %g secs\n", copy_time.seconds());
+  fprintf(stdout, "Total time: %g secs\n", total_time.seconds());
+  fprintf(stdout, "Total size: %g GB\n", total_size);
+  fprintf(stdout, "Processed: %g elements per second\n", total_elements / total_time.seconds());
+  fprintf(stdout, "Throughput: %g GBps\n", total_size / total_time.seconds());
+  fprintf(stdout, "_______________________________________________________________\n");
   return 0;
 }

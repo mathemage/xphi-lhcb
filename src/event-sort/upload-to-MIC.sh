@@ -11,7 +11,7 @@ libiomp_dir=/home/xeonphi
 libs=../../lib/libiomp5.so
 flags=""
 
-while getopts ":g:p0::bi:m:s:n:x:t:1:2:" opt; do
+while getopts ": 0:gb3i:s:m:n:x:t:1:2:pqe" opt; do
   case $opt in
     0)
       mic_num=$OPTARG
@@ -24,11 +24,11 @@ while getopts ":g:p0::bi:m:s:n:x:t:1:2:" opt; do
       echo "Running $benchmark_script" >&2
       run_benchmark=true
       ;;
-    p)
+    3)
       echo "Running $problem_sizes_benchmark_script" >&2
       run_problem_sizes_benchmark=true
       ;;
-    [ismnxt12])
+    [ismnxt12pqe])
       flags="$flags-$opt $OPTARG "
       ;;
     \?)
@@ -59,6 +59,7 @@ else
 fi
 
 echo "Running '$run_command' using MIC$mic_num..."
+exit
 
 make "$make_what" \
   && scp "$executable" "$benchmark_script" "$problem_sizes_benchmark_script" "$libs" xeonphi@mic$mic_num:~/ \

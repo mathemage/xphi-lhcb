@@ -59,7 +59,6 @@ else
 fi
 
 echo "Running '$run_command' using MIC$mic_num..."
-exit
 
 make "$make_what" \
   && scp "$executable" "$benchmark_script" "$problem_sizes_benchmark_script" "$libs" xeonphi@mic$mic_num:~/ \

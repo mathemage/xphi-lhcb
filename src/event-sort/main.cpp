@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Fri 11 Dec 2015 07:16:03 PM CET
+ * Last Modified : Tue 16 Feb 2016 11:46:17 AM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -192,6 +192,9 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   return iteration_time;
 }
 
+#define no_argument 0
+#define required_argument 1 
+#define optional_argument 2
 
 int main(int argc, char *argv[]) {
   /* ------------------------------------------------------------------------ */
@@ -200,18 +203,34 @@ int main(int argc, char *argv[]) {
 
   const string help_msg = "Usage: %s [args]\n"
                           "\n"
-                          " -i \t number of iterations\n"
-                          " -m \t MEP factor\n"
-                          " -s \t number of sources\n"
-                          " -n \t minimum length\n"
-                          " -x \t maximum length\n"
-                          " -t \t number of threads\n"
-                          " -1 \t sources per_block (for blockscheme memcpy)\n"
-                          " -2 \t MEP fragments per_block (for blockscheme memcpy)\n"
-                          " -p \t log progress\n"
-                          " -q \t quiet mode\n"
-                          " -e \t redirect output to stderr\n"
+                          " -i, --iterations \t number of iterations\n"
+                          " -m, --mep-factor \t MEP factor\n"
+                          " -s, --sources \t number of sources\n"
+                          " -n, --min-length \t minimum length\n"
+                          " -x, --max-length \t maximum length\n"
+                          " -t, --threads \t number of threads\n"
+                          " -1, --s-block \t sources per_block (for blockscheme memcpy)\n"
+                          " -2, --m-block \t MEP fragments per_block (for blockscheme memcpy)\n"
+                          " -p, --log-progress \t log progress\n"
+                          " -q, --quiet \t quiet mode\n"
+                          " -e, --stderr \t redirect output to stderr\n"
                           "\n";
+
+  const struct option longopts[] = {
+    {"iterations", required_argument, 0, 'i'},
+    {"mep-factor", required_argument, 0, 'm'},
+    {"sources", required_argument, 0, 's'},
+    {"min-length", required_argument, 0, 'n'},
+    {"max-length", required_argument, 0, 'x'},
+    {"threads", required_argument, 0, 't'},
+    {"s-block", required_argument, 0, '1'},
+    {"m-block", required_argument, 0, '2'},
+    {"log-progress", no_argument, 0, 'p'},
+    {"quiet", no_argument, 0, 'q'},
+    {"stderr", no_argument, 0, 'e'},
+    {0, 0, 0, 0}
+  }
+
   while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hqpe")) != -1) {
     switch (opt) {
       case 'i':

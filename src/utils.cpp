@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 16 Feb 2016 02:32:21 PM CET
+   * Last Modified : Tue 16 Feb 2016 03:12:59 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -97,7 +97,11 @@ length_t get_range(length_t min_len, length_t max_len) {
 void init_srand() {
   static bool srand_for_first_time = true;
   if (srand_for_first_time) {
-    srand(time(NULL));
+    unsigned int seed = use_srand_seed ? srand_seed : time(NULL);
+    srand(seed);
+#ifdef VERBOSE_MODE
+    fprintf(outstream, "srand(%d) called...\n", seed);
+#endif
     srand_for_first_time = false;
   }
 }

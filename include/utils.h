@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 16 Feb 2016 02:34:17 PM CET
+   * Last Modified : Tue 16 Feb 2016 03:17:15 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -25,6 +25,8 @@
 
 // #define VERBOSE_MODE
 
+extern unsigned int srand_seed;
+extern bool use_srand_seed;
 extern bool log_progress;
 void log_msg(string msg);
 

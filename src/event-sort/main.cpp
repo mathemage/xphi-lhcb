@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 16 Feb 2016 12:29:21 PM CET
+ * Last Modified : Tue 16 Feb 2016 03:21:37 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -47,6 +47,8 @@ tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, cop
 double total_size = 0;
 int nthreads = 0;
 int s_block_size = 1, m_block_size = 1;
+unsigned int srand_seed;
+bool use_srand_seed = false;
 bool log_progress = false;
 bool quiet_mode = false;
 FILE *outstream = stdout;
@@ -212,6 +214,7 @@ int main(int argc, char *argv[]) {
                           " -t, --threads \t number of threads\n"
                           " -1, --s-block \t sources per_block (for blockscheme memcpy)\n"
                           " -2, --m-block \t MEP fragments per_block (for blockscheme memcpy)\n"
+                          " --srand-seed \t use custom srand() seed\n"
                           " -p, --log-progress \t log progress\n"
                           " -q, --quiet \t quiet mode\n"
                           " -e, --stderr \t redirect output to stderr\n"
@@ -230,6 +233,7 @@ int main(int argc, char *argv[]) {
     {"threads", required_argument, 0, 't'},
     {"s-block", required_argument, 0, '1'},
     {"m-block", required_argument, 0, '2'},
+    {"srand-seed", required_argument, 0, 0},
     {"log-progress", no_argument, 0, 'p'},
     {"quiet", no_argument, 0, 'q'},
     {"stderr", no_argument, 0, 'e'},
@@ -240,6 +244,15 @@ int main(int argc, char *argv[]) {
   int option_index = 0;
   while ((opt = getopt_long(argc, argv, "1:2:t:i:m:s:x:n:hqpe", longopts, &option_index)) != -1) {
     switch (opt) {
+      case 0:
+        if (longopts[option_index].flag == 0) {
+          if (strcmp(longopts[option_index].name, "srand-seed") == 0) {
+            srand_seed = get_argument_unsigned_int_value(optarg, "--srand-seed");
+            use_srand_seed = true;
+            init_srand();
+          }
+        }
+        break;
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
         if (iterations < 1) {
@@ -285,7 +298,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
   }
-  fprintf(outstream, "The program will use %d threads...\n", nthreads);
+  if (use_srand_seed) {
+    fprintf(outstream, "srand() was initialized with seed %d...\n", srand_seed);
+  }
+  if (nthreads > 0) {
+    fprintf(outstream, "The program will use %d threads...\n", nthreads);
+  }
   log_msg("Command-line arguments parsed");
   /* ------------------------------------------------------------------------ */
 

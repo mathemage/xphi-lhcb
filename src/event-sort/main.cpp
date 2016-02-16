@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 16 Feb 2016 11:46:17 AM CET
+ * Last Modified : Tue 16 Feb 2016 12:29:21 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -15,6 +15,7 @@
 #include "utils.h"
 #include "prefix-sum.h"
 #include <cmath>
+#include <getopt.h>
 
 // #define VERBOSE_MODE
 // #define TEST_COPY_MEP_FUNCTION
@@ -214,8 +215,12 @@ int main(int argc, char *argv[]) {
                           " -p, --log-progress \t log progress\n"
                           " -q, --quiet \t quiet mode\n"
                           " -e, --stderr \t redirect output to stderr\n"
+                          " -h, --help \t show list of command-line options\n"
                           "\n";
 
+  // test with:
+  //    ./event-sort.exe --iterations 1 --mep-factor 1 --sources 1 --min-length 4 --max-length 5 --threads 42 --s-block 5 --m-block 6 --log-progress --stderr >/dev/null
+  //    ./event-sort.exe --help
   const struct option longopts[] = {
     {"iterations", required_argument, 0, 'i'},
     {"mep-factor", required_argument, 0, 'm'},
@@ -228,10 +233,12 @@ int main(int argc, char *argv[]) {
     {"log-progress", no_argument, 0, 'p'},
     {"quiet", no_argument, 0, 'q'},
     {"stderr", no_argument, 0, 'e'},
+    {"help", no_argument, 0, 'h'},
     {0, 0, 0, 0}
-  }
+  };
 
-  while ((opt = getopt(argc, argv, "1:2:t:i:m:s:x:n:hqpe")) != -1) {
+  int option_index = 0;
+  while ((opt = getopt_long(argc, argv, "1:2:t:i:m:s:x:n:hqpe", longopts, &option_index)) != -1) {
     switch (opt) {
       case 'i':
         iterations = get_argument_long_value(optarg, "-i");
@@ -254,7 +261,6 @@ int main(int argc, char *argv[]) {
         break;
       case 't':
         nthreads = get_argument_int_value(optarg, "-t");
-        fprintf(outstream, "The program will use %d threads...\n", nthreads);
         break;
       case '1':
         s_block_size = get_argument_int_value(optarg, "-1");
@@ -279,6 +285,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
   }
+  fprintf(outstream, "The program will use %d threads...\n", nthreads);
   log_msg("Command-line arguments parsed");
   /* ------------------------------------------------------------------------ */
 

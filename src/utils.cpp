@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Fri 11 Dec 2015 07:12:51 PM CET
+   * Last Modified : Tue 16 Feb 2016 02:32:21 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -26,8 +26,7 @@ long long get_argument_long_value(char *optarg, char *optname) {
   char* endp = NULL;
   long value = -1;
   if (!optarg ||  ((value=strtol(optarg, &endp, 10)),(endp && *endp)) ) {
-    fprintf(stderr, "Invalid '%s' option: '%s' ... expecting a number\n", optname,
-        optarg ? optarg : "");
+    fprintf(stderr, "Invalid '%s' option: '%s' ... expecting a number\n", optname, optarg ? optarg : "");
     exit(EXIT_FAILURE);
   };
   return value;
@@ -38,10 +37,19 @@ int get_argument_int_value(char *optarg, char *optname) {
   char* endp = NULL;
   int value = -1;
   if (!optarg ||  ((value=strtol(optarg, &endp, 10)),(endp && *endp)) ) {
-    fprintf(stderr, "Invalid '%s' option: '%s' ... expecting a number\n", optname,
-        optarg ? optarg : "");
+    fprintf(stderr, "Invalid '%s' option: '%s' ... expecting a number\n", optname, optarg ? optarg : "");
     exit(EXIT_FAILURE);
   };
+  return value;
+}
+
+
+unsigned int get_argument_unsigned_int_value(char *optarg, char *optname) {
+  int value = get_argument_int_value(optarg, optname);
+  if (value < 0) {
+    fprintf(stderr, "Invalid '%s' option: '%s' ... expecting a non-negative number\n", optname, optarg ? optarg : "");
+    exit(EXIT_FAILURE);
+  }
   return value;
 }
 

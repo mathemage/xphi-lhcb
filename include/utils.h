@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 01 Dec 2015 04:43:08 PM CET
+   * Last Modified : Tue 16 Feb 2016 02:34:17 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -30,6 +30,7 @@ void log_msg(string msg);
 
 long long get_argument_long_value(char *optarg, char *optname);
 int get_argument_int_value(char *optarg, char *optname);
+unsigned int get_argument_unsigned_int_value(char *optarg, char *optname);
 
 template<typename T>
 void show_array(T *arr, size_t elems, const int fixed_width, const size_t

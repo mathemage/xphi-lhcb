@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Tue 16 Feb 2016 03:21:37 PM CET
+ * Last Modified : Wed 17 Feb 2016 06:20:05 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -299,10 +299,10 @@ int main(int argc, char *argv[]) {
     }
   }
   if (use_srand_seed) {
-    fprintf(outstream, "srand() was initialized with seed %d...\n", srand_seed);
+    log_msg("srand() was initialized with seed " + to_string((long long) srand_seed));
   }
   if (nthreads > 0) {
-    fprintf(outstream, "The program will use %d threads...\n", nthreads);
+    log_msg("The program will use " + to_string((long long) nthreads) + "threads");
   }
   log_msg("Command-line arguments parsed");
   /* ------------------------------------------------------------------------ */

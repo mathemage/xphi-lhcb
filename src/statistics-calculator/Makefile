@@ -1,5 +1,5 @@
 CXX=g++
-CFLAGS=
+CFLAGS=-std=c++0x
 PROG_NAME=statistics-calculator
 
 # typing 'make' will invoke the first target entry in the file (in this case

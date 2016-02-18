@@ -41,7 +41,7 @@ run_command="./$executable $flags -i $niter -q -1 $sblocksize -2 $mblocksize"
 
 function run_on_MIC {
   mic_num=$1
-  outfile="./results/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.out"
+  outfile="../../results/event-sort/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.out"
   >$outfile
   for i in $(seq $nruns)
   do

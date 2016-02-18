@@ -16,7 +16,7 @@ function scan_block_params {
   done
 }
 
-directory="./results/problem-sizes-variation/$niters-iterations"
+directory="../../results/event-sort/problem-sizes-variation/$niters-iterations"
 mkdir $directory -p
 
 #for i in `seq 10`; do

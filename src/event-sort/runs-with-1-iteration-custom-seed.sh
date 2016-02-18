@@ -43,9 +43,9 @@ executable="$prog_name".knc.exe
 
 function run_on_MIC {
   mic_num=$1
-  rawoutfile="./results/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.raw.out"
+  rawoutfile="../../results/event-sort/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.raw.out"
   >$rawoutfile
-  resultsoutfile="./results/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.results.out"
+  resultsoutfile="../../results/event-sort/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.results.out"
   >$resultsoutfile
 
   for seed in $(seq $nseeds)

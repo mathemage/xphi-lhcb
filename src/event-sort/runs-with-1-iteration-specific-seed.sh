@@ -11,6 +11,7 @@ mblocksize=30
 nruns=10
 calc="statistics-calculator-icpc"
 calcdir="../statistics-calculator/"
+seed=${1:-0}
 
 while getopts ": 0:s:m:n:x:t:1:2:pe" opt; do
   case $opt in
@@ -42,23 +43,21 @@ executable="$prog_name".knc.exe
 
 function run_on_MIC {
   mic_num=$1
-  rawoutfile="../../results/event-sort/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.raw.out"
+  prefix="../../results/event-sort/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.srand-seed-$seed"
+  rawoutfile="$prefix.raw.out"
   >$rawoutfile
-  resultsoutfile="../../results/event-sort/runs-with-1-iteration-MIC$mic_num-$sblocksize.$mblocksize.results.out"
+  resultsoutfile="$prefix.results.out"
   >$resultsoutfile
 
-  for seed in 0
+  run_command="./$executable $flags -i $niter -q -1 $sblocksize -2 $mblocksize --srand-seed $seed"
+  echo "Starting '$run_command' on MIC$mic_num..."
+  echo "srand-seed == $seed:" | tee -a $rawoutfile >>$resultsoutfile
+  for i in $(seq $nruns)
   do
-    run_command="./$executable $flags -i $niter -q -1 $sblocksize -2 $mblocksize --srand-seed $seed"
-    echo "Starting '$run_command' on MIC$mic_num..."
-    echo "srand-seed == $seed:" | tee -a $rawoutfile >>$resultsoutfile
-    for i in $(seq $nruns)
-    do
-      ssh xeonphi@mic$mic_num "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$libiomp_dir && $run_command"
-    done | tee -a $rawoutfile | $calcdir/$calc >>$resultsoutfile
-    echo | tee -a $rawoutfile >>$resultsoutfile
-    echo "Finished '$run_command' on MIC$mic_num..."
-  done
+    ssh xeonphi@mic$mic_num "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$libiomp_dir && $run_command"
+  done | tee -a $rawoutfile | $calcdir/$calc >>$resultsoutfile
+  echo | tee -a $rawoutfile >>$resultsoutfile
+  echo "Finished '$run_command' on MIC$mic_num..."
 }
 
 (

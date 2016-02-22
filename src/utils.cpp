@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 16 Feb 2016 03:12:59 PM CET
+   * Last Modified : Mon 22 Feb 2016 03:28:56 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -99,9 +99,7 @@ void init_srand() {
   if (srand_for_first_time) {
     unsigned int seed = use_srand_seed ? srand_seed : time(NULL);
     srand(seed);
-#ifdef VERBOSE_MODE
-    fprintf(outstream, "srand(%d) called...\n", seed);
-#endif
+    log_msg("srand(" + to_string((long long) seed) + ") called");
     srand_for_first_time = false;
   }
 }
@@ -163,17 +161,14 @@ void create_histogram(const vector<double> & data_points) {
 
 length_t * generate_random_lengths(size_t elems, length_t min_len, length_t max_len) {
   length_t *lengths = (length_t *) calloc(elems, sizeof(length_t));
-#ifdef VERBOSE_MODE
-  fprintf(outstream, "%d-array allocated...\n", elems);
-#endif
+  log_msg(to_string((long long) elems) + "-array allocated");
+
   length_t range_len = get_range(min_len, max_len);
   init_srand();
   for (size_t i = 0; i < elems; i++) {
     lengths[i] = min_len + (rand() % range_len);
   }
-#ifdef VERBOSE_MODE
-  fprintf(outstream, "%d random lengths generated...\n", elems);
-#endif
+  log_msg(to_string((long long) elems) + " random lengths generated");
   return lengths;
 }
 
@@ -195,7 +190,7 @@ void ** allocate_mep_contents(long long total_sources, size_t mep_factor, float 
 #endif
   }
 #ifdef VERBOSE_MODE
-  fprintf(outstream, "Total allocated memory for MEP contents: %llu\n", total_alloc_mem);
+  log_msg("Total allocated memory for MEP contents: " + to_string(total_alloc_mem));
 #endif
   return sources;
 }

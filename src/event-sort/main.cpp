@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 17 Feb 2016 06:20:05 PM CET
+ * Last Modified : Mon 22 Feb 2016 05:43:26 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -208,17 +208,17 @@ int main(int argc, char *argv[]) {
                           "\n"
                           " -i, --iterations \t number of iterations\n"
                           " -m, --mep-factor \t MEP factor\n"
-                          " -s, --sources \t number of sources\n"
+                          " -s, --sources \t\t number of sources\n"
                           " -n, --min-length \t minimum length\n"
                           " -x, --max-length \t maximum length\n"
-                          " -t, --threads \t number of threads\n"
-                          " -1, --s-block \t sources per_block (for blockscheme memcpy)\n"
-                          " -2, --m-block \t MEP fragments per_block (for blockscheme memcpy)\n"
-                          " --srand-seed \t use custom srand() seed\n"
+                          " -t, --threads \t\t number of threads\n"
+                          " -1, --s-block \t\t sources per_block (for blockscheme memcpy)\n"
+                          " -2, --m-block \t\t MEP fragments per_block (for blockscheme memcpy)\n"
+                          " --srand-seed \t\t use custom srand() seed\n"
                           " -p, --log-progress \t log progress\n"
-                          " -q, --quiet \t quiet mode\n"
-                          " -e, --stderr \t redirect output to stderr\n"
-                          " -h, --help \t show list of command-line options\n"
+                          " -q, --quiet \t\t quiet mode\n"
+                          " -e, --stderr \t\t redirect output to stderr\n"
+                          " -h, --help \t\t show list of command-line options\n"
                           "\n";
 
   // test with:

@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Mon 22 Feb 2016 03:28:56 PM CET
+   * Last Modified : Wed 24 Feb 2016 05:39:58 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -269,22 +269,41 @@ void copy_MEPs_OMP_version(void **mep_contents, offset_t *read_offsets, void *so
   }
 }
 
-void copy_MEPs_block_scheme(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources, int s_block_size, int m_block_size) {
+void copy_MEPs_block_scheme(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources, int s_block_size, int m_block_size, int nthreads) {
   long long s_blocks = (total_sources + s_block_size - 1) / s_block_size;
   long long m_blocks = (mep_factor + m_block_size - 1) / m_block_size;
 
-  log_msg("Copying MEP fragments for " + to_string(total_sources)
-      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using blocks of "
-      + to_string((long long) s_block_size) + "x" + to_string((long long) m_block_size) );
+  if (nthreads > 0) {
+    log_msg("Copying MEP fragments for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using blocks of "
+        + to_string((long long) s_block_size) + "x" + to_string((long long) m_block_size)
+        + ", and " + to_string((long long) nthreads) + " threads");
+#pragma omp parallel for num_threads(nthreads)
+    for (long long i = 0; i < s_blocks * m_blocks; i++) {
+      long long s_block_start = i / m_blocks;
+      long long m_block_start = i % m_blocks;
+      for (long long si = s_block_start; si < s_block_start + s_block_size && si < total_sources; si++) {
+        for (long long mi = m_block_start; mi < m_block_start + m_block_size && mi < mep_factor; mi++) {
+          memcpy(sorted_events + write_offsets[mi * total_sources + si],
+              mep_contents[si] + read_offsets[si * mep_factor + mi],
+              sources[si * mep_factor + mi]);
+        }
+      }
+    }
+  } else {
+    log_msg("Copying MEP fragments for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using blocks of "
+        + to_string((long long) s_block_size) + "x" + to_string((long long) m_block_size) );
 #pragma omp parallel for
-  for (long long i = 0; i < s_blocks * m_blocks; i++) {
-    long long s_block_start = i / m_blocks;
-    long long m_block_start = i % m_blocks;
-    for (long long si = s_block_start; si < s_block_start + s_block_size && si < total_sources; si++) {
-      for (long long mi = m_block_start; mi < m_block_start + m_block_size && mi < mep_factor; mi++) {
-        memcpy(sorted_events + write_offsets[mi * total_sources + si],
-            mep_contents[si] + read_offsets[si * mep_factor + mi],
-            sources[si * mep_factor + mi]);
+    for (long long i = 0; i < s_blocks * m_blocks; i++) {
+      long long s_block_start = i / m_blocks;
+      long long m_block_start = i % m_blocks;
+      for (long long si = s_block_start; si < s_block_start + s_block_size && si < total_sources; si++) {
+        for (long long mi = m_block_start; mi < m_block_start + m_block_size && mi < mep_factor; mi++) {
+          memcpy(sorted_events + write_offsets[mi * total_sources + si],
+              mep_contents[si] + read_offsets[si * mep_factor + mi],
+              sources[si * mep_factor + mi]);
+        }
       }
     }
   }

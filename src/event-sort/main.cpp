@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Mon 22 Feb 2016 05:43:26 PM CET
+ * Last Modified : Wed 24 Feb 2016 05:34:49 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -143,7 +143,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #elif COPY_PARALLEL_LEVEL == 1
   copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, nthreads);
 #elif COPY_PARALLEL_LEVEL == 2
-  copy_MEPs_block_scheme(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, s_block_size, m_block_size);
+  copy_MEPs_block_scheme(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, s_block_size, m_block_size, nthreads);
 #endif
   tock = tbb::tick_count::now();
   log_msg("MEP fragments copied");

@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 24 Feb 2016 05:34:49 PM CET
+ * Last Modified : Wed 24 Feb 2016 05:59:59 PM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -45,7 +45,8 @@ float margin_factor = 1.5;
 tbb::tick_count tick, tock;
 tbb::tick_count::interval_t total_time, read_offset_time, write_offset_time, copy_time;
 double total_size = 0;
-int nthreads = 0;
+int compute_threads = 0;
+int copy_threads = 0;
 int s_block_size = 1, m_block_size = 1;
 unsigned int srand_seed;
 bool use_srand_seed = false;
@@ -79,7 +80,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #if READ_OFFSETS_PARALLEL_LEVEL == 0
   get_read_offsets_serial_vesion(sources, read_offsets, total_sources, mep_factor);
 #elif READ_OFFSETS_PARALLEL_LEVEL == 1
-  get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor, nthreads);
+  get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor, compute_threads);
 #endif
 #ifdef VERBOSE_MODE
   fprintf(outstream, "\nAll read_offsets:\n");
@@ -102,7 +103,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #if WRITE_OFFSETS_PARALLEL_LEVEL == 0
   get_write_offsets_serial_vesion(sources, write_offsets, total_sources, mep_factor);
 #elif WRITE_OFFSETS_PARALLEL_LEVEL == 1
-  get_write_offsets_OMP_vesion(sources, write_offsets, total_sources, mep_factor, read_offsets, nthreads);
+  get_write_offsets_OMP_vesion(sources, write_offsets, total_sources, mep_factor, read_offsets, compute_threads);
 #endif
 #ifdef VERBOSE_MODE
   fprintf(outstream, "\nAll write_offsets:\n");
@@ -141,9 +142,9 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
 #if COPY_PARALLEL_LEVEL == 0
   copy_MEPs_serial_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources);
 #elif COPY_PARALLEL_LEVEL == 1
-  copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, nthreads);
+  copy_MEPs_OMP_version(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, copy_threads);
 #elif COPY_PARALLEL_LEVEL == 2
-  copy_MEPs_block_scheme(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, s_block_size, m_block_size, nthreads);
+  copy_MEPs_block_scheme(mep_contents, read_offsets, sorted_events, write_offsets, total_sources, mep_factor, sources, s_block_size, m_block_size, copy_threads);
 #endif
   tock = tbb::tick_count::now();
   log_msg("MEP fragments copied");
@@ -211,7 +212,8 @@ int main(int argc, char *argv[]) {
                           " -s, --sources \t\t number of sources\n"
                           " -n, --min-length \t minimum length\n"
                           " -x, --max-length \t maximum length\n"
-                          " -t, --threads \t\t number of threads\n"
+                          " --compute-threads \t number of threads for computing offsets\n"
+                          " --copy-threads \t number of threads for copying MEP fragments\n"
                           " -1, --s-block \t\t sources per_block (for blockscheme memcpy)\n"
                           " -2, --m-block \t\t MEP fragments per_block (for blockscheme memcpy)\n"
                           " --srand-seed \t\t use custom srand() seed\n"
@@ -230,7 +232,8 @@ int main(int argc, char *argv[]) {
     {"sources", required_argument, 0, 's'},
     {"min-length", required_argument, 0, 'n'},
     {"max-length", required_argument, 0, 'x'},
-    {"threads", required_argument, 0, 't'},
+    {"compute-threads", required_argument, 0, 0},
+    {"copy-threads", required_argument, 0, 0},
     {"s-block", required_argument, 0, '1'},
     {"m-block", required_argument, 0, '2'},
     {"srand-seed", required_argument, 0, 0},
@@ -246,6 +249,12 @@ int main(int argc, char *argv[]) {
     switch (opt) {
       case 0:
         if (longopts[option_index].flag == 0) {
+          if (strcmp(longopts[option_index].name, "compute-threads") == 0) {
+            compute_threads = get_argument_int_value(optarg, "--compute-threads");
+          }
+          if (strcmp(longopts[option_index].name, "copy-threads") == 0) {
+            copy_threads = get_argument_int_value(optarg, "--copy-threads");
+          }
           if (strcmp(longopts[option_index].name, "srand-seed") == 0) {
             srand_seed = get_argument_unsigned_int_value(optarg, "--srand-seed");
             use_srand_seed = true;
@@ -271,9 +280,6 @@ int main(int argc, char *argv[]) {
         break;
       case 'x':
         max_length = get_argument_long_value(optarg, "-x");
-        break;
-      case 't':
-        nthreads = get_argument_int_value(optarg, "-t");
         break;
       case '1':
         s_block_size = get_argument_int_value(optarg, "-1");
@@ -301,8 +307,11 @@ int main(int argc, char *argv[]) {
   if (use_srand_seed) {
     log_msg("srand() was initialized with seed " + to_string((long long) srand_seed));
   }
-  if (nthreads > 0) {
-    log_msg("The program will use " + to_string((long long) nthreads) + "threads");
+  if (compute_threads > 0) {
+    log_msg("The program will use " + to_string((long long) compute_threads) + " compute-threads");
+  }
+  if (copy_threads > 0) {
+    log_msg("The program will use " + to_string((long long) copy_threads) + " copy-threads");
   }
   log_msg("Command-line arguments parsed");
   /* ------------------------------------------------------------------------ */

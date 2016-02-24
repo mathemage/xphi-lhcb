@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 24 Feb 2016 05:39:58 PM CET
+   * Last Modified : Wed 24 Feb 2016 06:03:13 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -246,9 +246,10 @@ void copy_MEPs_serial_version(void **mep_contents, offset_t *read_offsets, void 
 
 
 void copy_MEPs_OMP_version(void **mep_contents, offset_t *read_offsets, void *sorted_events, offset_t *write_offsets, long long total_sources, size_t mep_factor, length_t *sources, int nthreads) {
-  log_msg("Copying MEP fragments for " + to_string(total_sources)
-      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
   if (nthreads > 0) {
+    log_msg("Copying MEP fragments for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP"
+        + ", and " + to_string((long long) nthreads) + " threads");
 #pragma omp parallel for num_threads(nthreads)
     for (long long i = 0; i < total_sources * mep_factor; i++) {
       long long si = i / mep_factor;
@@ -258,6 +259,8 @@ void copy_MEPs_OMP_version(void **mep_contents, offset_t *read_offsets, void *so
           sources[si * mep_factor + mi]);
     }
   } else {
+    log_msg("Copying MEP fragments for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
 #pragma omp parallel for
     for (long long i = 0; i < total_sources * mep_factor; i++) {
       long long si = i / mep_factor;

@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Tue 01 Dec 2015 05:09:55 PM CET
+   * Last Modified : Wed 24 Feb 2016 06:06:03 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -50,9 +50,10 @@ void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, lon
     exit(EXIT_FAILURE);
   }
 
-  log_msg("Computing read offsets for " + to_string(total_sources)
-      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
   if (nthreads > 0) {
+    log_msg("Computing read offsets for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP"
+        + ", and " + to_string((long long) nthreads) + " threads");
 #pragma omp parallel for num_threads(nthreads)
     for (long long si = 0; si < total_sources; si++) {
       read_offsets[si * mep_factor] = 0;
@@ -62,6 +63,8 @@ void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, lon
       }
     }
   } else {
+    log_msg("Computing read offsets for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
 #pragma omp parallel for
     for (long long si = 0; si < total_sources; si++) {
       read_offsets[si * mep_factor] = 0;
@@ -110,9 +113,10 @@ void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, lo
     exit(EXIT_FAILURE);
   }
 
-  log_msg("Computing write offsets for " + to_string(total_sources)
-      + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
   if (nthreads > 0) {
+    log_msg("Computing write offsets for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP"
+        + ", and " + to_string((long long) nthreads) + " threads");
 #pragma omp parallel for num_threads(nthreads)
     for (long long mi = 0; mi < mep_factor; mi++) {
       offset_t local_offset = 0;
@@ -126,6 +130,8 @@ void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, lo
       }
     }
   } else {
+    log_msg("Computing write offsets for " + to_string(total_sources)
+        + " source(s) and " + to_string((long long) mep_factor) + " MEP fragment(s) per source using OpenMP");
 #pragma omp parallel for
     for (long long mi = 0; mi < mep_factor; mi++) {
       offset_t local_offset = 0;

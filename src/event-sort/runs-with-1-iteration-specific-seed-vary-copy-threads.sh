@@ -43,7 +43,7 @@ executable="$prog_name".knc.exe
 
 function run_on_MIC {
   mic_num=$1
-  outdir="../../results/event-sort/custom-seed/vary-copy-threads"
+  outdir="../../results/event-sort/custom-seed/vary-copy-threads/seed-$seed"
   mkdir $outdir -p
 
   for cpthreads in 1 2 4 8 16 32 64

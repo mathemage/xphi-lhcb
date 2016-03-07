@@ -1,14 +1,15 @@
 #!/bin/bash
+# extract standard deviation from *.results.out files to a single *.dat file
 
-outdir="."
+basedir=${1:-./vary-copy-threads-exp-range}
 
 for s in 0 83 89
 do
   for m in 0 1 2
   do
-    outfile="$outdir/seed-$s-MIC-$m.dat"
+    outfile="$basedir/seed-$s-MIC-$m.dat"
     >$outfile
-    for f in seed-$s/runs-with-1-iteration-MIC$m-28.30.srand-seed-$s-copy-threads-{1..64}.results.out
+    for f in $basedir/seed-$s/runs-with-1-iteration-MIC$m-28.30.srand-seed-$s-copy-threads-{1..64}.results.out
     do
       if [ -f "$f" ]
       then

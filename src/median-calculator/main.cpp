@@ -5,7 +5,7 @@
 
    * Creation Date : 17-02-2016
 
-   * Last Modified : Wed 09 Mar 2016 11:26:17 AM CET
+   * Last Modified : Wed 09 Mar 2016 03:50:46 PM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -22,6 +22,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
   bool use_uncertainty = false;
+  const string delimiter = "\t";
   /* ------------------------------------------------------------------------ */
   /* PARSING ARGUMENTS */
   int opt;
@@ -84,8 +85,9 @@ int main(int argc, char *argv[]) {
     if (use_uncertainty) {
       cout << max(median - *min_element(ALL(data)), *max_element(ALL(data)) - median);
     } else {
-      cout << median << endl;
+      cout << median;
     }
+    cout << delimiter;
   }
 
   return 0;

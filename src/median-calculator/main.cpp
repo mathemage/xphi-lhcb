@@ -5,7 +5,7 @@
 
    * Creation Date : 17-02-2016
 
-   * Last Modified : Tue 08 Mar 2016 05:45:34 PM CET
+   * Last Modified : Wed 09 Mar 2016 11:26:17 AM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -14,10 +14,52 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <getopt.h>
 
 using namespace std;
 
-int main() {
+#define ALL(A)     (A).begin(), (A).end()
+
+int main(int argc, char *argv[]) {
+  bool use_uncertainty = false;
+  /* ------------------------------------------------------------------------ */
+  /* PARSING ARGUMENTS */
+  int opt;
+
+  const string help_msg = "Usage: %s [args]\n"
+                          "\n"
+                          " -u, --uncertainty \t calculate the maximum of (median - min) and (max - median)\n"
+                          " -h, --help \t\t show list of command-line options\n"
+                          "\n";
+
+  // test with:
+  //    ./median-calculator-icpc --uncertainty
+  //    ./median-calculator-icpc --help
+  const struct option longopts[] = {
+    {"uncertainty", no_argument, 0, 'u'},
+    {"help", no_argument, 0, 'h'},
+    {0, 0, 0, 0}
+  };
+
+  int option_index = 0;
+  while ((opt = getopt_long(argc, argv, "uh", longopts, &option_index)) != -1) {
+    switch (opt) {
+      case 0:
+        fprintf(stderr, help_msg.c_str(), argv[0]);
+        exit(EXIT_FAILURE);
+      case 'u':
+        use_uncertainty = true;
+        break;
+      case 'h':
+        fprintf(stderr, help_msg.c_str(), argv[0]);
+        exit(EXIT_SUCCESS);
+      default:
+        fprintf(stderr, help_msg.c_str(), argv[0]);
+        exit(EXIT_FAILURE);
+    }
+  }
+  /* ------------------------------------------------------------------------ */
+
   vector<double> data;
   double x;
   while (true) {
@@ -39,7 +81,11 @@ int main() {
       median /= 2;
     }
     
-    cout << median << endl;
+    if (use_uncertainty) {
+      cout << max(median - *min_element(ALL(data)), *max_element(ALL(data)) - median);
+    } else {
+      cout << median << endl;
+    }
   }
 
   return 0;

@@ -33,7 +33,7 @@ prefix-sum.cpp
 ~~~~~~~~~~~~~~
 
 - `prefix_sum_sequential()` = sequential algorithm for prefix sum, implemented as a templated function in `prefix-sum.h`
-- `get_read_offsets_serial_vesion()` = compute offsets for reading from MEPs without parallelization
+- `get_read_offsets_serial_version()` = compute offsets for reading from MEPs without parallelization
 - `get_read_offsets_OMP_version()` = compute offsets for reading from MEPs with OpenMP parallel for
-- `get_write_offsets_serial_vesion()` = compute offsets for writing into the buffer for sorted events without parallelization
-- `get_write_offsets_OMP_vesion()` = compute offsets for writing into the buffer for sorted events with OpenMP parallel for
+- `get_write_offsets_serial_version()` = compute offsets for writing into the buffer for sorted events without parallelization
+- `get_write_offsets_OMP_version()` = compute offsets for writing into the buffer for sorted events with OpenMP parallel for

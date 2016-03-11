@@ -642,7 +642,7 @@ The benchmarks tests with `get_read_offsets_OMP_version()`::
 Prefix-sum for write_offsets using OpenMP parallel for
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The benchmarks tests with `get_write_offsets_OMP_vesion()`::
+The benchmarks tests with `get_write_offsets_OMP_version()`::
 
   [kha@lhcb-phi event-sort]$ ./upload-to-MIC.sh -b
   Running benchmarks.sh

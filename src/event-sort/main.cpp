@@ -5,7 +5,7 @@
 
  * Creation Date : 25-08-2015
 
- * Last Modified : Wed 24 Feb 2016 05:59:59 PM CET
+ * Last Modified : Fri 11 Mar 2016 11:15:08 AM CET
 
  * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -78,7 +78,7 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   /* PREFIX OFFSETS FOR READING: EXCLUSIVE SCAN */
   tick = tbb::tick_count::now();
 #if READ_OFFSETS_PARALLEL_LEVEL == 0
-  get_read_offsets_serial_vesion(sources, read_offsets, total_sources, mep_factor);
+  get_read_offsets_serial_version(sources, read_offsets, total_sources, mep_factor);
 #elif READ_OFFSETS_PARALLEL_LEVEL == 1
   get_read_offsets_OMP_version(sources, read_offsets, total_sources, mep_factor, compute_threads);
 #endif
@@ -101,9 +101,9 @@ double stopwatch_an_iteration(length_t *sources, offset_t *read_offsets, offset_
   /* PREFIX OFFSETS FOR WRITING: EXCLUSIVE SCAN */
   tick = tbb::tick_count::now();
 #if WRITE_OFFSETS_PARALLEL_LEVEL == 0
-  get_write_offsets_serial_vesion(sources, write_offsets, total_sources, mep_factor);
+  get_write_offsets_serial_version(sources, write_offsets, total_sources, mep_factor);
 #elif WRITE_OFFSETS_PARALLEL_LEVEL == 1
-  get_write_offsets_OMP_vesion(sources, write_offsets, total_sources, mep_factor, read_offsets, compute_threads);
+  get_write_offsets_OMP_version(sources, write_offsets, total_sources, mep_factor, read_offsets, compute_threads);
 #endif
 #ifdef VERBOSE_MODE
   fprintf(outstream, "\nAll write_offsets:\n");

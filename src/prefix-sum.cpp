@@ -5,7 +5,7 @@
 
    * Creation Date : 13-08-2015
 
-   * Last Modified : Wed 24 Feb 2016 06:06:03 PM CET
+   * Last Modified : Fri 11 Mar 2016 11:17:26 AM CET
 
    * Created By : Karel Ha <mathemage@gmail.com>
 
@@ -15,14 +15,14 @@
 #include "utils.h"
 
 
-void get_read_offsets_serial_vesion(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor) {
+void get_read_offsets_serial_version(length_t *sources, offset_t *read_offsets, long long total_sources, size_t mep_factor) {
   if (total_sources < 0) {
-    fprintf(stderr, "get_read_offsets_serial_vesion: ");
+    fprintf(stderr, "get_read_offsets_serial_version: ");
     fprintf(stderr, "Invalid value of total_sources!\n");
     exit(EXIT_FAILURE);
   }
   if (mep_factor <= 0) {
-    fprintf(stderr, "get_read_offsets_serial_vesion: ");
+    fprintf(stderr, "get_read_offsets_serial_version: ");
     fprintf(stderr, "Invalid value of mep_factor!\n");
     exit(EXIT_FAILURE);
   }
@@ -77,14 +77,14 @@ void get_read_offsets_OMP_version(length_t *sources, offset_t *read_offsets, lon
 }
 
 
-void get_write_offsets_serial_vesion(length_t *sources, offset_t *write_offsets, long long total_sources, size_t mep_factor) {
+void get_write_offsets_serial_version(length_t *sources, offset_t *write_offsets, long long total_sources, size_t mep_factor) {
   if (total_sources < 0) {
-    fprintf(stderr, "get_write_offsets_serial_vesion: ");
+    fprintf(stderr, "get_write_offsets_serial_version: ");
     fprintf(stderr, "Invalid value of total_sources!\n");
     exit(EXIT_FAILURE);
   }
   if (mep_factor <= 0) {
-    fprintf(stderr, "get_write_offsets_serial_vesion: ");
+    fprintf(stderr, "get_write_offsets_serial_version: ");
     fprintf(stderr, "Invalid value of mep_factor!\n");
     exit(EXIT_FAILURE);
   }
@@ -101,14 +101,14 @@ void get_write_offsets_serial_vesion(length_t *sources, offset_t *write_offsets,
 }
 
 
-void get_write_offsets_OMP_vesion(length_t *sources, offset_t *write_offsets, long long total_sources, size_t mep_factor, offset_t *read_offsets, int nthreads) {
+void get_write_offsets_OMP_version(length_t *sources, offset_t *write_offsets, long long total_sources, size_t mep_factor, offset_t *read_offsets, int nthreads) {
   if (total_sources < 0) {
-    fprintf(stderr, "get_write_offsets_OMP_vesion: ");
+    fprintf(stderr, "get_write_offsets_OMP_version: ");
     fprintf(stderr, "Invalid value of total_sources!\n");
     exit(EXIT_FAILURE);
   }
   if (mep_factor <= 0) {
-    fprintf(stderr, "get_write_offsets_OMP_vesion: ");
+    fprintf(stderr, "get_write_offsets_OMP_version: ");
     fprintf(stderr, "Invalid value of mep_factor!\n");
     exit(EXIT_FAILURE);
   }
